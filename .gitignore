@@ -32,7 +32,6 @@ reports
 
 #webapp
 zeppelin-web/node_modules
-zeppelin-web/dist
 zeppelin-web/.tmp
 zeppelin-web/.sass-cache
 zeppelin-web/bower_components
