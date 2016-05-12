@@ -15,27 +15,37 @@
  * limitations under the License.
  */
 'use strict';
-(function() {
+(function () {
     var zeppelinWebApp = angular.module('zeppelinWebApp', [
-            'ngCookies',
-            'ngAnimate',
-            'ngRoute',
-            'ngSanitize',
-            'angular-websocket',
-            'ui.ace',
-            'ui.bootstrap',
-            'as.sortable',
-            'ngTouch',
-            'ngDragDrop',
-            'angular.filter',
-            'monospaced.elastic',
-            'puElasticInput',
-            'xeditable',
-            'ngToast',
-            'focus-if',
-            'ngResource'
-        ])
-        .filter('breakFilter', function() {
+        'ngCookies',
+        'ngAnimate',
+        'ngRoute',
+        'ngSanitize',
+        'angular-websocket',
+        'ui.ace',
+        'ui.bootstrap',
+        'as.sortable',
+        'ngTouch',
+        'ngDragDrop',
+        'angular.filter',
+        'monospaced.elastic',
+        'puElasticInput',
+        'xeditable',
+        'ngToast',
+        'focus-if',
+        'ngResource',
+        'ui.grid',
+        'ui.grid.expandable',
+        'ui.grid.selection',
+        'ui.grid.pinning',
+        'ui.grid.infiniteScroll',
+        'ui.grid.autoResize',
+        'ui.grid.grouping',
+        'ui.grid.resizeColumns',
+        'ui.grid.exporter',
+        'ngJsonExplorer'
+    ])
+        .filter('breakFilter', function () {
             return function (text) {
                 if (!!text) {
                     return text.replace(/\n/g, '<br />');
@@ -47,41 +57,48 @@
             $httpProvider.defaults.withCredentials = true;
 
             $routeProvider
-                .when('/', {
-                    templateUrl: 'app/home/home.html'
-                })
-                .when('/notebook/:noteId', {
-                    templateUrl: 'app/notebook/notebook.html',
-                    controller: 'NotebookCtrl'
-                })
-                .when('/notebook/:noteId/paragraph?=:paragraphId', {
-                    templateUrl: 'app/notebook/notebook.html',
-                    controller: 'NotebookCtrl'
-                })
-                .when('/notebook/:noteId/paragraph/:paragraphId?', {
-                    templateUrl: 'app/notebook/notebook.html',
-                    controller: 'NotebookCtrl'
-                })
-                .when('/interpreter', {
-                    templateUrl: 'app/interpreter/interpreter.html',
-                    controller: 'InterpreterCtrl'
-                })
-                .when('/configuration', {
-                  templateUrl: 'app/configuration/configuration.html',
-                  controller: 'ConfigurationCtrl'
-                })
-                .when('/search/:searchTerm', {
-                    templateUrl: 'app/search/result-list.html',
-                    controller: 'SearchResultCtrl'
-                })
-                .otherwise({
-                    redirectTo: '/'
+                /*.when("/", {
+            templateUrl: "app/home/home.html"
+        })*/.when("/notebook/:noteId", {
+                    templateUrl: "app/notebook/notebook.html",
+                    controller: "NotebookCtrl"
+                }).when("/notebook/:noteId/paragraph?=:paragraphId", {
+                    templateUrl: "app/notebook/notebook.html",
+                    controller: "NotebookCtrl"
+                }).when("/notebook/:noteId/paragraph/:paragraphId?", {
+                    templateUrl: "app/notebook/notebook.html",
+                    controller: "NotebookCtrl"
+                }).when("/interpreter", {
+                    templateUrl: "app/interpreter/interpreter.html",
+                    controller: "InterpreterCtrl"
+                }).when("/configuration", {
+                    templateUrl: "app/configuration/configuration.html",
+                    controller: "ConfigurationCtrl"
+                }).when("/search/:searchTerm", {
+                    templateUrl: "app/search/result-list.html",
+                    controller: "SearchResultCtrl"
+                }).otherwise({
+                    redirectTo: "/notebook/" + menuData[0].notebooks[0]
                 });
 
             ngToastProvider.configure({
                 dismissButton: true,
                 dismissOnClick: false,
                 timeout: 6000
+            });
+        })
+        .run(function ($rootScope, $window, $interval, $q, $http) {
+            $('#pageLoader').show();
+            $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
+                $('#pageLoader').show();
+                console.log("Started");
+            });
+            $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
+                $('#pageLoader').hide();
+            });
+            $rootScope.$on('$viewContentLoaded', function () {
+                //$('#pageLoader').hide();
+                console.log("Ended");
             });
         });
 
@@ -92,11 +109,11 @@
         // withCredentials when running locally via grunt
         $http.defaults.withCredentials = true;
 
-        return $http.get(baseUrlSrv.getRestApiBase()+'/security/ticket').then(function(response) {
-            zeppelinWebApp.run(function($rootScope) {
+        return $http.get(baseUrlSrv.getRestApiBase() + '/security/ticket').then(function (response) {
+            zeppelinWebApp.run(function ($rootScope) {
                 $rootScope.ticket = angular.fromJson(response.data).body;
             });
-        }, function(errorResponse) {
+        }, function (errorResponse) {
             // Handle error case
         });
     }
@@ -106,9 +123,9 @@
     }
 
 
-    angular.element(document).ready(function() {
+    angular.element(document).ready(function () {
         auth().then(bootstrapApplication);
     });
 
-}());
+} ());
 

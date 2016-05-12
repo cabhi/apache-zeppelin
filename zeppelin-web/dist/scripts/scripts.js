@@ -97,6 +97,7 @@
             c.getHomeNotebook(), i()
         };
     j(), a.$on("setNoteContent", function (a, b) {
+        console.log(b);
         b ? (h.note = b, d.$broadcast("setLookAndFeel", "home"), h.viewOnly = !0, h.notebookHome = !0, h.staticHome = !1) : (h.staticHome = !0, h.notebookHome = !1)
     }), a.$on("setNoteMenu", function (b, c) {
         a.isReloadingNotes = !1
@@ -286,6 +287,7 @@
     }, a.sendNewName = function () {
         a.note.name && g.updateNotebook(a.note.id, a.note.name, a.note.config)
     }, a.$on("setNoteContent", function (b, d) {
+        console.log(d);
         a.paragraphUrl = c.paragraphId, a.asIframe = c.asIframe, a.paragraphUrl && (d = n(a.paragraphUrl, d), e.$broadcast("setIframe", a.asIframe)), null === a.note ? a.note = d : o(d), m(), p(q)
     });
     var m = function () {
@@ -943,6 +945,7 @@
         return !a
     };
     a.$on("updateParagraph", function (c, d) {
+        console.log(JSON.stringify(d));
         if (!(d.paragraph.id !== a.paragraph.id || d.paragraph.dateCreated === a.paragraph.dateCreated && d.paragraph.dateFinished === a.paragraph.dateFinished && d.paragraph.dateStarted === a.paragraph.dateStarted && d.paragraph.dateUpdated === a.paragraph.dateUpdated && d.paragraph.status === a.paragraph.status && d.paragraph.jobName === a.paragraph.jobName && d.paragraph.title === a.paragraph.title && q(d.paragraph.result) === q(a.paragraph.result) && d.paragraph.errorMessage === a.paragraph.errorMessage && angular.equals(d.paragraph.settings, a.paragraph.settings) && angular.equals(d.paragraph.config, a.paragraph.config))) {
             var e = a.getResultType(),
                 f = a.getResultType(d.paragraph),
@@ -958,8 +961,10 @@
             }
         }
     }), a.$on("appendParagraphOutput", function (b, c) {
+        console.log(c);
         a.paragraph.id === c.paragraphId && (a.flushStreamingOutput && (a.clearTextOutput(), a.flushStreamingOutput = !1), a.appendTextOutput(c.data))
     }), a.$on("updateParagraphOutput", function (b, c) {
+        console.log(c);
         a.paragraph.id === c.paragraphId && (a.clearTextOutput(), a.appendTextOutput(c.data))
     }), a.isRunning = function () {
         return "RUNNING" === a.paragraph.status || "PENDING" === a.paragraph.status
@@ -1843,7 +1848,6 @@
         }
     }
     function getMenuType(current) {
-        console.log(current);
         for (var i = 0; i < menuData.length; i++) {
             for (var j = 0; j < menuData[i].notebooks.length; j++) {
                 if (menuData[i].notebooks[j] == current) {
