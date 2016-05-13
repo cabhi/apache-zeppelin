@@ -47,4 +47,3 @@ var colSettings = {
     ]
 };
 var refreshInterval = 10000;
-

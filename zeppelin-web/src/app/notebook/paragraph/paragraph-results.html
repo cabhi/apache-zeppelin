@@ -11,51 +11,36 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div
-  id="p{{paragraph.id}}_resize"
-  resize='{"allowresize": "{{!asIframe && !viewOnly}}", "graphType": "{{getResultType()}}"}'
-     resizable on-resize="resizeParagraph(width, height);">
-  <div ng-include src="'app/notebook/paragraph/paragraph-graph.html'"></div>
-
-  <div id="{{paragraph.id}}_comment"
-       class="text"
-       ng-if="getResultType()=='TABLE' && paragraph.result.comment"
-       ng-bind-html="paragraph.result.comment">
-  </div>
-
-  <div id="{{paragraph.id}}_text"
-       ng-if="getResultType() == 'TEXT'">
-    <div class="fa fa-level-down scroll-paragraph-down"
-         ng-show="showScrollDownIcon()"
-         ng-click="scrollParagraphDown()"
-         tooltip="Follow Output"></div>
-    <div id="p{{paragraph.id}}_text"
-         style="max-height: {{paragraph.config.graph.height}}px; overflow: auto"
-         class="text"></div>
-    <div class="fa fa-chevron-up scroll-paragraph-up"
-         ng-show="showScrollUpIcon()"
-         ng-click="scrollParagraphUp()"
-         tooltip="Scroll Top"></div>
-  </div>
-
-  <div id="p{{paragraph.id}}_html"
-       class="resultContained"
-       ng-if="getResultType() == 'HTML'">
-  </div>
-
-  <div id="p{{paragraph.id}}_angular"
-       class="resultContained"
-       ng-if="getResultType() == 'ANGULAR'">
-  </div>
-
-  <img id="{{paragraph.id}}_img"
-       ng-if="getResultType() == 'IMG'"
-       ng-src="{{getBase64ImageSrc(paragraph.result.msg)}}">
-  </img>
-
-  <div id="{{paragraph.id}}_error"
-       class="error text"
-       ng-if="paragraph.status == 'ERROR'"
-       ng-bind="paragraph.errorMessage">
-  </div>
+<div id="p{{paragraph.id}}_resize" resize="{&quot;allowresize&quot;: &quot;{{!asIframe && !viewOnly}}&quot;, &quot;graphType&quot;: &quot;{{getResultType()}}&quot;}"
+    resizable on-resize="resizeParagraph(width, height);">
+    <div ng-include src="'app/notebook/paragraph/paragraph-graph.html'"></div>
+    <div id="{{paragraph.id}}_comment" class="text" ng-if="getResultType()=='TABLE' && paragraph.result.comment" ng-bind-html="paragraph.result.comment">
+    </div>
+    <div ng-if="getResultType() == 'TEXT'">
+        <accordion close-others="{{false}}" class="log-viewer">
+            <accordion-group ng-repeat="log in data track by $index" ng-init="log.open=false" is-open="log.open">
+                <accordion-heading>
+                    <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': log.open, 'glyphicon-chevron-left': !log.open}"></i>
+                    <span ng-if="!log.summary">No summary to display</span>
+                    <span ng-if="log.summary" ng-bind-html="log.summary">No summary to display</span>
+                </accordion-heading>
+                 <div class="result" ng-if="!log.details && log.open">
+                    <json-explorer data='log'></json-explorer>
+                </div>
+                <div class="result" ng-if="log.details && log.open">
+                    <json-explorer data='log.details'></json-explorer>
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+    <!--<div id="{{paragraph.id}}_text" ng-if="getResultType() == 'TEXT'">
+        <div class="fa fa-level-down scroll-paragraph-down" ng-show="showScrollDownIcon()" ng-click="scrollParagraphDown()" tooltip="Follow Output"></div>
+        <div id="p{{paragraph.id}}_text" style="max-height: {{paragraph.config.graph.height}}px; overflow: auto" class="text"></div>
+        <div class="fa fa-chevron-up scroll-paragraph-up" ng-show="showScrollUpIcon()" ng-click="scrollParagraphUp()"
+        tooltip="Scroll Top"></div>
+    </div>-->
+    <div id="p{{paragraph.id}}_html" class="resultContained" ng-if="getResultType() == 'HTML'"> </div>
+    <div id="p{{paragraph.id}}_angular" class="resultContained" ng-if="getResultType() == 'ANGULAR'"> </div> <img id="{{paragraph.id}}_img" ng-if="getResultType() == 'IMG'" ng-src="{{getBase64ImageSrc(paragraph.result.msg)}}">
+    <div id="{{paragraph.id}}_error" class="error text" ng-if="paragraph.status == 'ERROR'" ng-bind="paragraph.errorMessage">
+    </div>
 </div>

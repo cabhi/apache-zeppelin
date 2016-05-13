@@ -61,6 +61,9 @@ module.exports = function(config) {
       'bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js',
       'bower_components/floatThead/dist/jquery.floatThead.js',
       'bower_components/floatThead/dist/jquery.floatThead.min.js',
+      'bower_components/angular-ui-grid/ui-grid.js',
+      'bower_components/ng-json-explorer/dist/angular-json-explorer.js',
+      'bower_components/ng-json-explorer/dist/angular-json-explorer.min.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'src/app/app.js',

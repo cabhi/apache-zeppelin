@@ -47,7 +47,9 @@ limitations under the License.
   <link rel="stylesheet" href="bower_components/highlightjs/styles/github.css" />
   <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.css" />
   <link rel="stylesheet" href="bower_components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" />
-  <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.min.css"></link>
+  <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+  <link rel="stylesheet" href="bower_components/ng-json-explorer/dist/angular-json-explorer.css" />
+  <link rel="stylesheet" href="bower_components/ng-json-explorer/dist/angular-json-explorer.min.css" />
   <!-- endbower -->
   <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/all.css" />
   <!-- endbuild -->
@@ -62,9 +64,9 @@ limitations under the License.
   <link rel="stylesheet" href="fonts/simple-line-icons.css">
   <link rel="stylesheet" href="fonts/custom-font.css">
   <!-- endbuild -->
-  <link rel="stylesheet" ng-href="assets/styles/looknfeel/{{looknfeel}}.css">
-  <link rel="stylesheet" ng-href="assets/styles/looknfeel/wize-analytics/wiz-main.css">
+  <link rel="stylesheet" ng-href="assets/styles/looknfeel/{{looknfeel}}.css"/>
   <link rel="stylesheet" href="assets/styles/fontImport.css" />
+  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz-main.css"/>
 </head>
 
 <body ng-class="{'bodyAsIframe': asIframe}">
@@ -144,7 +146,9 @@ limitations under the License.
   <script src="bower_components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
   <script src="bower_components/floatThead/dist/jquery.floatThead.js"></script>
   <script src="bower_components/floatThead/dist/jquery.floatThead.min.js"></script>
-  <script src="bower_components/angular-ui-grid/ui-grid.min.js"></script>
+  <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+  <script src="bower_components/ng-json-explorer/dist/angular-json-explorer.js"></script>
+  <script src="bower_components/ng-json-explorer/dist/angular-json-explorer.min.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:js({.tmp,src}) scripts/scripts.js -->
@@ -175,6 +179,14 @@ limitations under the License.
   <script src="components/searchService/search.service.js"></script>
   <script src="components/login/login.controller.js"></script>
   <script src="components/sidebar/sidebar.controller.js"></script>
+  <script src="components/navbar/menu-data.js"></script>
+  <script type="text/javascript">
+    $(function(){
+    	$(document).on('click', '.toggle-menu', function(){
+    		$('.aside-nav').toggleClass('collapsed');
+    	})
+    })
+  </script>
   <!-- endbuild -->
 </body>
 
