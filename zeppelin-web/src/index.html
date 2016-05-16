@@ -64,9 +64,9 @@ limitations under the License.
   <link rel="stylesheet" href="fonts/simple-line-icons.css">
   <link rel="stylesheet" href="fonts/custom-font.css">
   <!-- endbuild -->
-  <link rel="stylesheet" ng-href="assets/styles/looknfeel/{{looknfeel}}.css"/>
+  <link rel="stylesheet" ng-href="assets/styles/looknfeel/{{looknfeel}}.css" />
   <link rel="stylesheet" href="assets/styles/fontImport.css" />
-  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz-main.css"/>
+  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz-main.css" />
 </head>
 
 <body ng-class="{'bodyAsIframe': asIframe}">
@@ -102,7 +102,6 @@ limitations under the License.
     <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
   <!-- endbuild -->
-
   <!-- build:js(.) scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -179,7 +178,10 @@ limitations under the License.
   <script src="components/searchService/search.service.js"></script>
   <script src="components/login/login.controller.js"></script>
   <script src="components/sidebar/sidebar.controller.js"></script>
+  <!-- endbuild -->
+  <!-- build:js({.tmp,src}) scripts/menu-data.js -->
   <script src="components/navbar/menu-data.js"></script>
+  <!-- endbuild -->
   <script type="text/javascript">
     $(function(){
     	$(document).on('click', '.toggle-menu', function(){
@@ -187,7 +189,6 @@ limitations under the License.
     	})
     })
   </script>
-  <!-- endbuild -->
 </body>
 
 </html>
