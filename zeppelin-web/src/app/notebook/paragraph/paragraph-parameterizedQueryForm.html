@@ -15,7 +15,7 @@ limitations under the License.
   <div class="form-group col-sm-6 col-md-6 col-lg-4" ng-repeat="formulaire in paragraph.settings.forms" ng-Init="loadForm(formulaire, paragraph.settings.params)">
     <label class="control-label input-sm" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }">{{formulaire.name}}</label>
     <div>
-      <span ng-if="formulaire.name.indexOf('date') == -1">
+      <span ng-if="formulaire.name.indexOf('Date') == -1 && formulaire.name.indexOf('Filter') == -1">
       <input class="form-control input-sm" ng-if="!paragraph.settings.forms[formulaire.name].options" ng-enter="runParagraph(getEditorValue())"
         ng-model="paragraph.settings.params[formulaire.name]" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }"
         name="{{formulaire.name}}" />
@@ -34,10 +34,11 @@ limitations under the License.
         </label>
       </div>
       </span>
-      <input placeholder={{formulaire.name}} type="date" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }"
-        name="{{formulaire.name}}" ng-if="formulaire.name.indexOf('date') > -1" ng-model="paragraph.settings.params[formulaire.name]"
+      <input placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }"
+        name="{{formulaire.name}}" ng-if="formulaire.name.indexOf('Date') > -1" ng-model="paragraph.settings.params[formulaire.name]"
         datepicker-popup="{{format}}" is-open="$parent.openedDate[$index]" close-text="Close" ng-click="$parent.openedDate[$index] = true"
       />
+      <filter-strip ng-if="formulaire.name.indexOf('Filter') > -1" columns="columns" filters="paragraph.settings.params[formulaire.name]" operators='["=", "!=", "<", ">", "<=", ">=", "contains", "starts with", "ends with"]'></filter-strip>
     </div>
   </div>
 </form>

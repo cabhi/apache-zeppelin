@@ -228,6 +228,7 @@ angular.module('zeppelinWebApp')
         }
         if (data && data.rows && data.rows.length > 0) {
           $scope.data = data.rows;
+          $scope.columns = $scope.data[0].details ? Object.keys($scope.data[0].details) : Object.keys($scope.data[0]);
         }
       };
       $timeout(retryRenderer);
