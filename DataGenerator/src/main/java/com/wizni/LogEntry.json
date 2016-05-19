@@ -1,0 +1,101 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+{
+  "metadata": {
+	  "timestamp": string,
+	  "level": enum(LogSeverity),
+	  "projectId": string,	//remove
+	  "serviceName": string,
+	  "region": string,
+	  "zone": string,
+	  "userId": string,
+  },
+  "insertId": string,	//remove
+  "log": string,	//check
+  "httpRequest": {
+	  "requestMethod": string,
+	  "requestUrl": string,
+	  "requestSize": string,
+	  "status": number,
+	  "responseSize": string,
+	  "userAgent": string,
+	  "remoteIp": string,
+	  "serverIp": string, //remove
+	  "referer": string, //remove
+	  "cacheLookup": boolean, //remove
+	  "cacheHit": boolean, //remove
+	  "cacheValidatedWithOriginServer": boolean, //remove
+	  "cacheFillBytes": string,  //remove
+  },
+  "operation": {  // remove
+	  "id": string,
+	  "producer": string,
+	  "first": boolean,
+	  "last": boolean,
+  },
+  "structPayload": {
+	  "appId": string,
+	  "moduleId": string,   
+	  "versionId": string,
+	  "requestId": string,
+	  "ip": string,
+	  "startTime": string,   
+	  "endTime": string,
+	  "latency": string,  //check
+	  "megaCycles": string, //check
+	  "method": string,   
+	  "resource": string,
+	  "httpVersion": string,
+	  "status": number,  //remove
+	  "responseSize": string, //remove
+	  "referrer": string,  //remove
+	  "userAgent": string, //remove
+	  "nickname": string,  //check
+	  "urlMapEntry": string, //check
+	  "host": string,  //check
+	  "cost": number,  //check
+	  "taskQueueName": string,  //check
+	  "taskName": string,  //check
+	  "wasLoadingRequest": boolean,  //check
+	  "pendingTime": string,  //check
+	  "instanceIndex": number,   //check
+	  "finished": boolean,  //remove
+	  "first": boolean,   //remove
+	  "instanceId": string,
+	  "line": [
+	    {
+		  "time": string,
+		  "level": enum(LogSeverity),
+		  "logMessage": string,
+		  "sourceLocation": {
+			  "file": string,
+			  "line": string,
+			  "functionName": string,
+		  }
+		}
+	  ],
+	  "appEngineRelease": string,  //remove
+	  "traceId": string,   //remove
+	  "sourceReference": [
+	    {
+		  "repository": string,
+		  "revisionId": string,
+		}
+	  ]
+  }
+}
