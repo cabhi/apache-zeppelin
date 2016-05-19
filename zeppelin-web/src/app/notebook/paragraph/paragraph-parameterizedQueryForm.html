@@ -38,7 +38,7 @@ limitations under the License.
         name="{{formulaire.name}}" ng-if="formulaire.name.indexOf('Date') > -1" ng-model="paragraph.settings.params[formulaire.name]"
         datepicker-popup="{{format}}" is-open="$parent.openedDate[$index]" close-text="Close" ng-click="$parent.openedDate[$index] = true"
       />
-      <filter-strip ng-if="formulaire.name.indexOf('Filter') > -1" columns="columns" filters="paragraph.settings.params[formulaire.name]" operators='["=", "!=", "<", ">", "<=", ">=", "contains", "starts with", "ends with"]'></filter-strip>
+      <filter-strip ng-if="formulaire.name.indexOf('Filter') > -1" columns="columns" filters="paragraph.settings.params[formulaire.name]" operators='["=", "!=", "<", ">", "<=", ">=", "contains", "starts with", "ends with"]' onFilterChange="runParagraph(getEditorValue())"></filter-strip>
     </div>
   </div>
 </form>

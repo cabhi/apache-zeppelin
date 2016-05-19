@@ -6,7 +6,7 @@ angular.module('zeppelinWebApp')
             restrict: 'E',
             replace: true,
             transclude: true,
-            scope: { filters: '=', operators: '=', columns: '=' },
+            scope: { filters: '=', operators: '=', columns: '=', onFilterChange: '&' },
             templateUrl: 'components/filter-strip/filter-strip.html',
             controller: "filterStripCtrl"
         };
@@ -20,11 +20,13 @@ angular.module('zeppelinWebApp').controller('filterStripCtrl', function ($scope,
             $scope.filters = [];
         }
         $scope.filters.push({ column: column, operator: operator, operand: operand });
+        $scope.onFilterChange();
     };
 
     function removeFilter(filter) {
         $scope.filters = _.remove($scope.filters, function (n) {
             return !(filter.$$hashKey === n.$$hashKey);
         });
+        $scope.onFilterChange();
     };
 });

@@ -14,7 +14,7 @@
                     <option ng-repeat="column in columns" value="{{column}}" ng-selected="{{column==newCol}}">{{column}}</option>
                 </select>
                 <select name="op" id="op" ng-model="newOp" required="required">
-                    <option value="" ng-selected="{{''==newCol}}">Operator</option>
+                    <option value="" ng-selected="{{''==newOp}}">Operator</option>
                     <option ng-repeat="operator in operators" value="{{operator}}" ng-selected="{{operator==newOp}}">{{operator}}</option>
                 </select>
                 <input type="text" ng-model="newOprnd" placeholder="Value" required="required" />
