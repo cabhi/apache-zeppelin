@@ -17,20 +17,15 @@
 
 package org.apache.zeppelin.elasticsearch;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.wnameless.json.flattener.JsonFlattener;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.wizni.LogEntry;
+import com.wizni.OldFormat;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.zeppelin.interpreter.Interpreter;
@@ -60,10 +55,13 @@ import org.elasticsearch.search.aggregations.metrics.InternalMetricsAggregation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.wnameless.json.flattener.JsonFlattener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -93,9 +91,7 @@ public class ElasticsearchInterpreter extends Interpreter {
 
   private static final List<String> COMMANDS = Arrays.asList(
     "count", "delete", "get", "help", "index", "search");
-
-  private static final Pattern FIELD_NAME_PATTERN = Pattern.compile("\\[\\\\\"(.+)\\\\\"\\](.*)");
-
+    
 
   public static final String ELASTICSEARCH_HOST = "elasticsearch.host";
   public static final String ELASTICSEARCH_PORT = "elasticsearch.port";
@@ -121,6 +117,10 @@ public class ElasticsearchInterpreter extends Interpreter {
   private int port = 9300;
   private String clusterName = "elasticsearch";
   private int resultSize = 10;
+  
+  private Gson gsonParser = new Gson();
+  
+  LoadingCache<Request, InterpreterResult> elasticCache;
 
   public ElasticsearchInterpreter(Properties property) {
     super(property);
@@ -128,6 +128,15 @@ public class ElasticsearchInterpreter extends Interpreter {
     this.port = Integer.parseInt(getProperty(ELASTICSEARCH_PORT));
     this.clusterName = getProperty(ELASTICSEARCH_CLUSTER_NAME);
     this.resultSize = Integer.parseInt(getProperty(ELASTICSEARCH_RESULT_SIZE));
+    
+    elasticCache = CacheBuilder.newBuilder().maximumSize(0)
+            .expireAfterAccess(3, TimeUnit.DAYS)
+            .build(new CacheLoader<Request, InterpreterResult>(){
+              @Override
+              public InterpreterResult load(Request req) throws Exception {
+                return processSearchInternal(req);
+              } 
+            });
   }
 
   @Override
@@ -152,11 +161,14 @@ public class ElasticsearchInterpreter extends Interpreter {
       client.close();
     }
   }
-
+  
   @Override
   public InterpreterResult interpret(String cmd, InterpreterContext interpreterContext) {
     logger.info("Run Elasticsearch command '" + cmd + "'");
-
+    
+    cmd = enhanceCommand(cmd);
+ 
+    logger.info("Run Enhanced Elasticsearch command '" + cmd + "'");
     if (StringUtils.isEmpty(cmd) || StringUtils.isEmpty(cmd.trim())) {
       return new InterpreterResult(InterpreterResult.Code.SUCCESS);
     }
@@ -275,15 +287,15 @@ public class ElasticsearchInterpreter extends Interpreter {
 
   /**
    * Processes a "get" request.
-   *
+   * 
    * @param urlItems Items of the URL
    * @return Result of the get request, it contains a JSON-formatted string
    */
   private InterpreterResult processGet(String[] urlItems) {
 
-    if (urlItems.length != 3
-        || StringUtils.isEmpty(urlItems[0])
-        || StringUtils.isEmpty(urlItems[1])
+    if (urlItems.length != 3 
+        || StringUtils.isEmpty(urlItems[0]) 
+        || StringUtils.isEmpty(urlItems[1]) 
         || StringUtils.isEmpty(urlItems[2])) {
       return new InterpreterResult(InterpreterResult.Code.ERROR,
                                    "Bad URL (it should be /index/type/id)");
@@ -300,13 +312,13 @@ public class ElasticsearchInterpreter extends Interpreter {
                     InterpreterResult.Type.TEXT,
                     json);
     }
-
+        
     return new InterpreterResult(InterpreterResult.Code.ERROR, "Document not found");
   }
 
   /**
    * Processes a "count" request.
-   *
+   * 
    * @param urlItems Items of the URL
    * @param data May contains the JSON of the request
    * @return Result of the count request, it contains the total hits
@@ -325,41 +337,120 @@ public class ElasticsearchInterpreter extends Interpreter {
       InterpreterResult.Type.TEXT,
       "" + response.getHits().getTotalHits());
   }
+  
+  static class Request{
+    String[] urlItems;
+    String data;
+    int size;
+      
+    Request(String[] urlItems, String data, int size) {
+      this.urlItems = urlItems;
+      this.data = data;
+      this.size = size;
+    }
+      
+    public String[] getUrlItems() {
+      return urlItems;
+    }
+    public void setUrlItems(String[] urlItems) {
+      this.urlItems = urlItems;
+    }
+    public String getData() {
+      return data;
+    }
+    public void setData(String data) {
+      this.data = data;
+    }
+    public int getSize() {
+      return size;
+    }
+    public void setSize(int size) {
+      this.size = size;
+    }
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((data == null) ? 0 : data.hashCode());
+      result = prime * result + size;
+      result = prime * result + Arrays.hashCode(urlItems);
+      return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      Request other = (Request) obj;
+      if (data == null) {
+        if (other.data != null)
+          return false;
+      } else if (!data.equals(other.data))
+        return false;
+      if (size != other.size)
+        return false;
+      if (!Arrays.equals(urlItems, other.urlItems))
+        return false;
+      return true;
+    }
+    
+    @Override
+    public String toString() {
+      return "Request [urlItems=" + Arrays.toString(urlItems) + ", data="
+        + data + ", size=" + size + "]";
+    }
+      
+  }
+ 
 
   /**
    * Processes a "search" request.
-   *
+   * 
    * @param urlItems Items of the URL
    * @param data May contains the JSON of the request
    * @param size Limit of result set
    * @return Result of the search request, it contains a tab-formatted string of the matching hits
+ * @throws ExecutionException 
    */
-  private InterpreterResult processSearch(String[] urlItems, String data, int size) {
+  private InterpreterResult processSearch(String[] urlItems, String data, int size) 
+      throws ExecutionException {
 
     if (urlItems.length > 2) {
       return new InterpreterResult(InterpreterResult.Code.ERROR,
                                    "Bad URL (it should be /index1,index2,.../type1,type2,...)");
     }
-
-    final SearchResponse response = searchData(urlItems, data, size);
-
+    
+    
+    
+    Request req = new Request(urlItems, data, size);
+    return elasticCache.get(req);
+    
+  }
+  
+  private InterpreterResult processSearchInternal(Request req) {
+    final SearchResponse response = searchData(req.getUrlItems(), req.getData(), req.getSize());
     return buildResponseMessage(response);
   }
+  
+  
 
   /**
    * Processes a "index" request.
-   *
+   * 
    * @param urlItems Items of the URL
    * @param data JSON to be indexed
    * @return Result of the index request, it contains the id of the document
    */
   private InterpreterResult processIndex(String[] urlItems, String data) {
-
+        
     if (urlItems.length < 2 || urlItems.length > 3) {
       return new InterpreterResult(InterpreterResult.Code.ERROR,
                                    "Bad URL (it should be /index/type or /index/type/id)");
     }
-
+        
     final IndexResponse response = client
       .prepareIndex(urlItems[0], urlItems[1], urlItems.length == 2 ? null : urlItems[2])
       .setSource(data)
@@ -373,15 +464,15 @@ public class ElasticsearchInterpreter extends Interpreter {
 
   /**
    * Processes a "delete" request.
-   *
+   * 
    * @param urlItems Items of the URL
    * @return Result of the delete request, it contains the id of the deleted document
    */
   private InterpreterResult processDelete(String[] urlItems) {
 
-    if (urlItems.length != 3
-        || StringUtils.isEmpty(urlItems[0])
-        || StringUtils.isEmpty(urlItems[1])
+    if (urlItems.length != 3 
+        || StringUtils.isEmpty(urlItems[0]) 
+        || StringUtils.isEmpty(urlItems[1]) 
         || StringUtils.isEmpty(urlItems[2])) {
       return new InterpreterResult(InterpreterResult.Code.ERROR,
                                    "Bad URL (it should be /index/type/id)");
@@ -390,23 +481,23 @@ public class ElasticsearchInterpreter extends Interpreter {
     final DeleteResponse response = client
       .prepareDelete(urlItems[0], urlItems[1], urlItems[2])
       .get();
-
+        
     if (response.isFound()) {
       return new InterpreterResult(
         InterpreterResult.Code.SUCCESS,
         InterpreterResult.Type.TEXT,
         response.getId());
     }
-
+        
     return new InterpreterResult(InterpreterResult.Code.ERROR, "Document not found");
   }
-
+    
   private SearchResponse searchData(String[] urlItems, String query, int size) {
 
     final SearchRequestBuilder reqBuilder = new SearchRequestBuilder(
       client, SearchAction.INSTANCE);
     reqBuilder.setIndices();
-
+        
     if (urlItems.length >= 1) {
       reqBuilder.setIndices(StringUtils.split(urlItems[0], ","));
     }
@@ -446,63 +537,231 @@ public class ElasticsearchInterpreter extends Interpreter {
       resMsg = XContentHelper.toString((InternalMetricsAggregation) agg).toString();
     }
     else if (agg instanceof InternalSingleBucketAggregation) {
-      resMsg = XContentHelper.toString((InternalSingleBucketAggregation) agg).toString();
+      InternalSingleBucketAggregation singleBucketAggregation = 
+              (InternalSingleBucketAggregation) agg;
+      if (singleBucketAggregation.getAggregations().asList()
+              .get(0) instanceof InternalMultiBucketAggregation) {
+        InternalMultiBucketAggregation multiBucketAgg = 
+              (InternalMultiBucketAggregation) singleBucketAggregation
+              .getAggregations().asList().get(0);
+        resMsg = buildMultiBucketResponse(multiBucketAgg).toString();
+        resType = InterpreterResult.Type.TABLE;
+      }
+      else
+        resMsg = XContentHelper.toString(singleBucketAggregation);
     }
     else if (agg instanceof InternalMultiBucketAggregation) {
-      final StringBuffer buffer = new StringBuffer("key\tdoc_count");
-
       final InternalMultiBucketAggregation multiBucketAgg = (InternalMultiBucketAggregation) agg;
-      for (MultiBucketsAggregation.Bucket bucket : multiBucketAgg.getBuckets()) {
-        buffer.append("\n")
-          .append(bucket.getKeyAsString())
-          .append("\t")
-          .append(bucket.getDocCount());
-      }
-
+      resMsg = buildMultiBucketResponse(multiBucketAgg).toString();
       resType = InterpreterResult.Type.TABLE;
-      resMsg = buffer.toString();
     }
 
     return new InterpreterResult(InterpreterResult.Code.SUCCESS, resType, resMsg);
   }
+  
+  private String buildMultiBucketResponse(InternalMultiBucketAggregation multiBucketAgg) {
+    StringBuffer buffer = null;
+    if (multiBucketAgg.getBuckets().size() > 0 && multiBucketAgg.getBuckets()
+             .get(0).getAggregations().asList().size() > 0)
+      buffer = buildBucketResponse(multiBucketAgg);
+    else {
+      buffer = new StringBuffer("key\tcount");
+      for (MultiBucketsAggregation.Bucket bucket : multiBucketAgg.getBuckets()) {
+        buffer.append("\n")
+          .append(enhance(bucket.getKeyAsString()))
+          .append("\t")
+          .append(bucket.getDocCount());
+      }
+    }
+      
+    return buffer.toString();
+  }
+  
+  private StringBuffer buildBucketResponse(InternalMultiBucketAggregation multiBucketAgg){
+    StringBuffer buffer = new StringBuffer("key1\tkey2\tcount");
+    for (MultiBucketsAggregation.Bucket bucket : multiBucketAgg.getBuckets()) {
+      String key1Val = enhance(bucket.getKeyAsString());
+      final Aggregation agg = bucket.getAggregations().asList().get(0);
+      final InternalMultiBucketAggregation inMultiBucketAgg = (InternalMultiBucketAggregation) agg;
+      for (MultiBucketsAggregation.Bucket inBucket : inMultiBucketAgg.getBuckets()) {
+        buffer.append("\n")
+          .append(key1Val)
+          .append("\t")
+          .append(enhance(inBucket.getKeyAsString()))
+          .append("\t")
+          .append(inBucket.getDocCount());
+      }
+    }
+      
+    return buffer;
+  }
+  
+  private String buildSearchHitsWithFieldsResponseMessage(SearchHit[] hits) {
+      // First : get all the keys in order to build an ordered list of the
+      // values for each hit
+      //
+    final List<Map<String, SearchHitField>> flattenHits = new LinkedList<>();
+    final Set<String> keys = new TreeSet<>();
+    for (SearchHit hit : hits) {
+      final Map<String, SearchHitField> flattenMap = hit.getFields();
+      flattenHits.add(flattenMap);
 
-  private String buildSearchHitsResponseMessage(SearchHit[] hits) {
+      for (String key : flattenMap.keySet()) {
+        keys.add(key);
+      }
+    }
+    // Next : build the header of the table
+    //
+    final StringBuffer buffer = new StringBuffer();
+    for (String key : keys) {
+      buffer.append(enhanceHeaders(key)).append('\t');
+    }
+    buffer.replace(buffer.lastIndexOf("\t"), buffer.lastIndexOf("\t") + 1,
+            "\n");
 
+    // Finally : build the result by using the key set
+    //
+    for (Map<String, SearchHitField> hit : flattenHits) {
+      for (String key : keys) {
+        final SearchHitField val = hit.get(key);
+        if (val != null) {
+          String str = val.getValue().toString().replaceAll("\n", "\\\\n");
+          buffer.append(enhance(str));
+        }
+        buffer.append('\t');
+      }
+      buffer.replace(buffer.lastIndexOf("\t"),
+        buffer.lastIndexOf("\t") + 1, "\n");
+    }
+
+    return buffer.toString();
+  }
+  
+  private InterpreterResult buildSearchHitsResponseMessage(SearchHit[] hits) {
+    if (hits == null || hits.length == 0) {
+      return new InterpreterResult(
+        InterpreterResult.Code.SUCCESS,
+        InterpreterResult.Type.TEXT,
+        "");
+    }        
+    if (hits[0].getSourceAsString() == null) {
+      return new InterpreterResult(
+        InterpreterResult.Code.SUCCESS,
+        InterpreterResult.Type.TABLE,
+        buildSearchHitsWithFieldsResponseMessage(hits));
+    }
+    
+    StringBuffer jsonResponse = new StringBuffer("{\"rows\":[");
+    String prefix = "";
+    final Map<String, Object> hitFields = new HashMap<>();
+    Gson gson = new Gson();
+    for (SearchHit hit : hits) {
+      String json = hit.getSourceAsString();
+//      if(json == null) {
+//        hitFields.clear();
+//        for (SearchHitField hitField : hit.getFields().values()) {
+//          hitFields.put(hitField.getName(), hitField.getValues());
+//        }
+//        json = gson.toJson(hitFields);
+//      }
+      
+      jsonResponse.append(prefix);
+      prefix = ",";
+      jsonResponse.append("{\"summary\":\"");
+      jsonResponse.append(getSummary(json));
+      jsonResponse.append("\", \"details\":");
+      jsonResponse.append(getDetails(json));
+      jsonResponse.append("}");
+    } 
+    jsonResponse.append("]}");
+    
+    return new InterpreterResult(
+      InterpreterResult.Code.SUCCESS,
+      InterpreterResult.Type.TEXT,
+      jsonResponse.toString());
+  }
+  
+  private String getDetails(String json) {
+    try {
+      LogEntry entry = gsonParser.fromJson(json, LogEntry.class);
+      entry.getMetadata().setTimestamp(parseDate(entry.getMetadata().getTimestamp()));
+      
+      entry.getAppInfo().setStartTime(parseDate(entry.getAppInfo().getStartTime()));
+      entry.getAppInfo().setEndTime(parseDate(entry.getAppInfo().getEndTime()));
+      
+      for (int i = 0; i < entry.getAppInfo().getLines().length; i++){
+        String time = entry.getAppInfo().getLines()[i].getTime();
+        entry.getAppInfo().getLines()[i].setTime(parseDate(time));
+      }
+      
+      return gson.toJson(entry);
+    } catch (Exception ex) {
+    }
+    
+    try {
+      OldFormat oldEntry = gsonParser.fromJson(json, OldFormat.class);
+      oldEntry.setDate(parseDate(oldEntry.getDate()));
+      return gson.toJson(oldEntry);
+    } catch (Exception ex) {
+      return json;
+    }
+  }
+  
+  private String getSummary(String details) {
+    StringBuffer summary = new StringBuffer();
+    try {
+      LogEntry entry = gsonParser.fromJson(details, LogEntry.class);
+      summary.append(parseDate(entry.getMetadata().getTimestamp()));
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(entry.getHttpResponse().getStatus());
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(entry.getHttpResponse().getResponseTime());
+      summary.append("ms");
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(entry.getMetadata().getLevel());
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(entry.getHttpRequest().getRemoteIp());
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(entry.getHttpRequest().getRequestUrl());
+      return summary.toString();
+    } catch (Exception ex) {
+      //return "No summary to display, please expand";
+    }
+    
+    try {
+      OldFormat oldEntry = gsonParser.fromJson(details, OldFormat.class);
+      summary.append(parseDate(oldEntry.getDate()));
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(oldEntry.getLogLevel());
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(oldEntry.getHttpMethod());
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(oldEntry.getRequest());
+      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
+      summary.append(oldEntry.getStatusCode());
+    } catch (Exception ex) {
+      return "No summary to display, please expand";
+    }
+    
+    return summary.toString();
+  }
+
+  private String buildSearchHitsResponseMessageOriginal (SearchHit[] hits) {
+        
     if (hits == null || hits.length == 0) {
       return "";
     }
+    
+    if (hits[0].getSourceAsString() == null)
+      return buildSearchHitsWithFieldsResponseMessage(hits);
 
     //First : get all the keys in order to build an ordered list of the values for each hit
     //
-    final Map<String, Object> hitFields = new HashMap<>();
     final List<Map<String, Object>> flattenHits = new LinkedList<>();
     final Set<String> keys = new TreeSet<>();
     for (SearchHit hit : hits) {
-      // Fields can be found either in _source, or in fields (it depends on the query)
-      //
-      String json = hit.getSourceAsString();
-      if (json == null) {
-        hitFields.clear();
-        for (SearchHitField hitField : hit.getFields().values()) {
-          hitFields.put(hitField.getName(), hitField.getValues());
-        }
-        json = gson.toJson(hitFields);
-      }
-
-      final Map<String, Object> flattenJsonMap = JsonFlattener.flattenAsMap(json);
-      final Map<String, Object> flattenMap = new HashMap<>();
-      for (Iterator<String> iter = flattenJsonMap.keySet().iterator(); iter.hasNext(); ) {
-        // Replace keys that match a format like that : [\"keyname\"][0]
-        final String fieldName = iter.next();
-        final Matcher fieldNameMatcher = FIELD_NAME_PATTERN.matcher(fieldName);
-        if (fieldNameMatcher.matches()) {
-          flattenMap.put(fieldNameMatcher.group(1) + fieldNameMatcher.group(2),
-            flattenJsonMap.get(fieldName));
-        }
-        else {
-          flattenMap.put(fieldName, flattenJsonMap.get(fieldName));
-        }
-      }
+      final String json = hit.getSourceAsString();
+      final Map<String, Object> flattenMap = JsonFlattener.flattenAsMap(json);
       flattenHits.add(flattenMap);
 
       for (String key : flattenMap.keySet()) {
@@ -514,7 +773,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     //
     final StringBuffer buffer = new StringBuffer();
     for (String key : keys) {
-      buffer.append(key).append('\t');
+      buffer.append(enhanceHeaders(key)).append('\t');
     }
     buffer.replace(buffer.lastIndexOf("\t"), buffer.lastIndexOf("\t") + 1, "\n");
 
@@ -524,7 +783,8 @@ public class ElasticsearchInterpreter extends Interpreter {
       for (String key : keys) {
         final Object val = hit.get(key);
         if (val != null) {
-          buffer.append(val);
+          String str = val.toString().replaceAll("\n", "\\\\n");
+          buffer.append(enhance(str));
         }
         buffer.append('\t');
       }
@@ -532,6 +792,73 @@ public class ElasticsearchInterpreter extends Interpreter {
     }
 
     return buffer.toString();
+  }
+  
+  private static String enhanceCommand(String cmd){
+    cmd = cmd.replaceAll("\\{\"logLevel\":\\}", "{\"logLevel\":*}");
+    cmd = cmd.replaceAll("\\{\"userId\":\\}", "{\"userId\":*}");
+    cmd = cmd.replaceAll("\\{\"statusMessage\":\\}", "{\"statusMessage\":*}");
+    //cmd = cmd.replaceAll("\\{\"statusCode\":\\}", "{\"statusCode\":*}");
+    cmd = cmd.replaceAll("\\{\"term\":\\{\"statusCode\":\\}\\},", "");
+    cmd = cmd.replaceAll("\\{\"match\":\\{\"statusCode\":\\}\\},", "");
+    cmd = cmd.replaceAll("\\{\"request\":\\}", "{\"request\":*}");
+    cmd = cmd.replaceAll("\\{\"reqId\":\\}", "{\"reqId\":*}");
+    cmd = cmd.replaceAll("\\{\"httpMethod\":\\}", "{\"httpMethod\":*}");
+    
+    cmd = cmd.replaceAll("\\{\"level\":\\}", "{\"level\":*}");
+    cmd = cmd.replaceAll("\\{\"hostname\":\\}", "{\"hostname\":*}");
+    //cmd = cmd.replaceAll("\\{\"logtime\":\\}", "{\"logtime\":*}");
+    cmd = cmd.replaceAll("\\{\"wildcard\":\\{\"logtime\":\\}\\},", "");
+    cmd = cmd.replaceAll("\\{\"log\":\\}", "{\"log\":*}");
+    
+    cmd = cmd.replaceAll("\\{\"requestId\":\\}", "{\"requestId\":*}");
+    cmd = cmd.replaceAll("\\{\"requestURL\":\\}", "{\"requestURL\":*}");
+    cmd = cmd.replaceAll("\\{\"requestMethod\":\\}", "{\"requestMethod\":*}");
+    
+    cmd = cmd.replaceAll("\\{\"term\":\\{\"httpResponse.status\":\\}\\},", "");
+    cmd = cmd.replaceAll("\\{\"term\":\\{\"httpResponse.status\":all\\}\\},", "");
+    
+    return cmd;
+  }
+  
+  private static String enhanceHeaders(String val){
+    return val.substring(0, 1).toUpperCase() + val.substring(1);
+  }
+  
+  private static String enhance(Object val){
+    return val.toString();
+//    String res = parseDate(val.toString());
+//    return removeUrlHeader(res);
+  }
+  
+  private static String removeUrlHeader(String val){
+    return val.replaceAll("/rest-api", "");
+  }
+  
+  private static String parseDate(String val){     
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    SimpleDateFormat outputFormatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+    try {
+      Date date = formatter.parse(val);
+      return outputFormatter.format(date).toString();
+    } catch (ParseException e){
+      return val;
+    }
+  }
+  
+  public static void main(String[] args) {
+//    System.out.println(enhanceHeaders("reqId"));
+//    System.out.println(enhanceHeaders("logLevel"));
+//    System.out.println(enhanceHeaders("request"));
+//    System.out.println(enhanceHeaders("Response"));
+      
+//    System.out.println(enhanceCommand("{\"wildcard\":{\"logLevel\":}},{\"wildcard\":"
+//      + "{\"userId\":}}" +
+//      ",{\"wildcard\":{\"statusMessage\":}},{\"wildcard\":{\"request\":}},{\"term\""
+//      + ":{\"statusCode\":}},{\"wildcard\":{\"httpMethod\":}}"));
+//    System.out.println(parseDate("2016-04-20T00:00:00"));
+      
+    System.out.println(removeUrlHeader("/rest-api/tapps/foundationalservice"));
   }
 
   private InterpreterResult buildResponseMessage(SearchResponse response) {
@@ -541,10 +868,14 @@ public class ElasticsearchInterpreter extends Interpreter {
     if (aggregations != null && aggregations.asList().size() > 0) {
       return buildAggResponseMessage(aggregations);
     }
+    
+    return buildSearchHitsResponseMessage(response.getHits().getHits());
 
-    return new InterpreterResult(
-      InterpreterResult.Code.SUCCESS,
-      InterpreterResult.Type.TABLE,
-      buildSearchHitsResponseMessage(response.getHits().getHits()));
+//    return new InterpreterResult(
+//      InterpreterResult.Code.SUCCESS,
+//      InterpreterResult.Type.TABLE,
+//      buildSearchHitsResponseMessage(response.getHits().getHits()));
   }
+  
+
 }
