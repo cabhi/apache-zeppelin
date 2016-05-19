@@ -9,8 +9,14 @@
         <li class="fil-add">
             <button ng-hide="filterAdd" class="btn-fil-add" ng-click="filterAdd=true">+</button>
             <div class="fil-new" ng-show="filterAdd">
-                <select name="col" id="col" ng-options="column for column in columns" ng-model="newCol" required="required"></select>
-                <select name="op" id="op" ng-options="operator for operator in operators" ng-model="newOp" required="required"></select>
+                <select name="col" id="col" ng-model="newCol" required="required">
+                    <option value="" ng-selected="{{''==newCol}}">Column</option>
+                    <option ng-repeat="column in columns" value="{{column}}" ng-selected="{{column==newCol}}">{{column}}</option>
+                </select>
+                <select name="op" id="op" ng-model="newOp" required="required">
+                    <option value="" ng-selected="{{''==newCol}}">Operator</option>
+                    <option ng-repeat="operator in operators" value="{{operator}}" ng-selected="{{operator==newOp}}">{{operator}}</option>
+                </select>
                 <input type="text" ng-model="newOprnd" placeholder="Value" required="required" />
                 <button ng-disabled="!newCol.trim().length > 0 || !newOp.trim().length > 0 || !newOprnd.trim().length > 0" ng-click="saveFilter(newCol, newOp, newOprnd);newOprnd=newOp=newCol='';filterAdd=false;">Ok</button>
                 <button ng-click="newOprnd=newOp=newCol='';filterAdd=false;">Cancel</button>

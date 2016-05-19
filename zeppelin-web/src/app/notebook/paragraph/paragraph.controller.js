@@ -697,6 +697,12 @@ angular.module('zeppelinWebApp')
 
       commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
     };
+    
+    $scope.changeParamDependency = function () {
+      var newParams = angular.copy($scope.paragraph.settings.params);
+      var newConfig = angular.copy($scope.paragraph.config);
+      commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
+    };
 
     $scope.toggleGraphOption = function () {
       var newConfig = angular.copy($scope.paragraph.config);
