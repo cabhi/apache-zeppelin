@@ -1,0 +1,561 @@
+{
+  "paragraphs": [
+    {
+      "title": "Request Frequency",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs {\n    \"aggs\" : {\n        \"methods_over_time\" : {\n            \"date_histogram\" : {\n                \"field\" : \"date\",\n                \"interval\" : \"day\",\n                \"format\" : \"yyyy-MM-dd\"\n            }\n        }\n    }\n}",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "key",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "count",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "key",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          },
+          "lineWithFocus": false
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1459798805116_-592448939",
+      "id": "20160405-011005_1027261913",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 5, 2016 1:10:05 AM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Response Time Histogram",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs {\n    \"aggs\" : {\n        \"response_ranges\" : {\n            \"range\" : {\n                \"field\" : \"responseTime\",\n                \"ranges\" : [\n                    { \"to\" : 10 },\n                    { \"from\" : 10, \"to\" : 30 },\n                    { \"from\" : 30, \"to\" : 50 },\n                    { \"from\" : 50, \"to\" : 100 },\n                    { \"from\" : 100 }\n                ]\n            }\n        }\n    }\n}",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "key",
+              "index": 0.0,
+              "aggr": "sum",
+              "$$hashKey": "object:1990"
+            }
+          ],
+          "values": [
+            {
+              "name": "count",
+              "index": 1.0,
+              "aggr": "sum",
+              "$$hashKey": "object:1999"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "key",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1459798961255_1671611159",
+      "id": "20160405-011241_1203271093",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 5, 2016 1:12:41 AM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Application Distribution",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "AppId",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "AppId",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1459799640141_-334090314",
+      "id": "20160405-012400_1916184740",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 5, 2016 1:24:00 AM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "HTTP Method Distribution",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "HttpMethod",
+              "index": 3.0,
+              "aggr": "sum",
+              "$$hashKey": "object:734"
+            }
+          ],
+          "values": [
+            {
+              "name": "HttpMethod",
+              "index": 3.0,
+              "aggr": "sum",
+              "$$hashKey": "object:743"
+            }
+          ],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1459678473760_225135505",
+      "id": "20160403-154433_567528633",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 3, 2016 3:44:33 PM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "HTTP Status Code Distribution",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "StatusCode",
+              "index": 9.0,
+              "aggr": "sum",
+              "$$hashKey": "object:2120"
+            }
+          ],
+          "values": [
+            {
+              "name": "ReqId",
+              "index": 5.0,
+              "aggr": "sum",
+              "$$hashKey": "object:2129"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "AppId",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "Date",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461073076653_603440246",
+      "id": "20160419-190756_272742117",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 19, 2016 7:07:56 PM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Log Distribution",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "LogLevel",
+              "index": 4.0,
+              "aggr": "sum",
+              "$$hashKey": "object:872"
+            }
+          ],
+          "values": [
+            {
+              "name": "LogLevel",
+              "index": 4.0,
+              "aggr": "sum",
+              "$$hashKey": "object:881"
+            }
+          ],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1459798632435_-966838622",
+      "id": "20160405-010712_219036097",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 5, 2016 1:07:12 AM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Log Distribution Over Time",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs {\n  \"aggs\" : {\n    \"messages\" : {\n      \"filters\" : {\n        \"filters\" : {\n          \"error\" :   { \"term\" : { \"logLevel\" : \"error\"   }},\n          \"info\" : { \"term\" : { \"logLevel\" : \"info\" }}\n        }\n      },\n     \"aggs\" : {\n        \"messages_over_time\" : {\n            \"date_histogram\" : {\n                \"field\" : \"date\",\n                \"interval\" : \"day\",\n                \"format\" : \"yyyy-MM-dd\"\n            }\n        }\n    }\n    }\n  }\n}",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:58 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "key2",
+              "index": 1.0,
+              "aggr": "sum",
+              "$$hashKey": "object:905"
+            }
+          ],
+          "values": [
+            {
+              "name": "count",
+              "index": 2.0,
+              "aggr": "sum",
+              "$$hashKey": "object:917"
+            }
+          ],
+          "groups": [
+            {
+              "name": "key1",
+              "index": 0.0,
+              "aggr": "sum",
+              "$$hashKey": "object:911"
+            }
+          ],
+          "scatter": {
+            "xAxis": {
+              "name": "key1",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "key2",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461140820198_-475697882",
+      "id": "20160420-135700_554433208",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 20, 2016 1:57:00 PM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Error Distribution",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:58 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "Error",
+              "index": 2.0,
+              "aggr": "sum",
+              "$$hashKey": "object:977"
+            }
+          ],
+          "values": [
+            {
+              "name": "Error",
+              "index": 2.0,
+              "aggr": "sum",
+              "$$hashKey": "object:986"
+            }
+          ],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "title": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461080024720_638690702",
+      "id": "20160419-210344_2059783892",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 19, 2016 9:03:44 PM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Users Access Distribution",
+      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:58 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "lineChart",
+          "height": 300.0,
+          "optionOpen": true,
+          "keys": [
+            {
+              "name": "UserId",
+              "index": 11.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "UserId",
+              "index": 11.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "tableHide": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461106161351_-863016539",
+      "id": "20160420-041921_1231014268",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+      },
+      "dateCreated": "Apr 20, 2016 4:19:21 AM",
+      "dateStarted": "May 9, 2016 4:06:52 PM",
+      "dateFinished": "May 9, 2016 4:06:52 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "",
+      "authenticationInfo": {},
+      "dateUpdated": "May 9, 2016 4:06:58 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461267511448_-1166735444",
+      "id": "20160421-153831_1367426329",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": ""
+      },
+      "dateCreated": "Apr 21, 2016 3:38:31 PM",
+      "dateStarted": "May 9, 2016 4:06:53 PM",
+      "dateFinished": "May 9, 2016 4:06:53 PM",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "All Apps",
+  "id": "2BFF7MCKJ",
+  "angularObjects": {
+    "2BHT3NF2Y": [],
+    "2BK8TGTRZ": [],
+    "2BKNMAUU8": [],
+    "2BJ16MSWM": [],
+    "2BJYHVCZB": [],
+    "2BG3YGH11": [],
+    "2BG5XMYRE": [],
+    "2BG563A8D": [],
+    "2BHGTPDA7": [],
+    "2BJXAUFDY": [],
+    "2BGC4A8WZ": [],
+    "2BJWZREV6": [],
+    "2BK5Q5SPB": [],
+    "2BKM4BU6F": [],
+    "2BH441GBZ": [],
+    "2BHA564CY": [],
+    "2BGXWXKFZ": [],
+    "2BJUGENHE": []
+  },
+  "config": {
+    "looknfeel": "report"
+  },
+  "info": {}
+}
