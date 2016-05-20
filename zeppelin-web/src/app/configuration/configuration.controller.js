@@ -13,22 +13,22 @@
  */
 'use strict';
 
-angular.module('zeppelinWebApp').controller('ConfigurationCtrl', function($scope, $route, $routeParams, $location,
-                                                                          $rootScope, $http, baseUrlSrv) {
+angular.module('zeppelinWebApp').controller('ConfigurationCtrl', function ($scope, $route, $routeParams, $location,
+  $rootScope, $http, baseUrlSrv) {
   $scope.configrations = [];
   $scope._ = _;
-
-  var getConfigurations = function() {
-    $http.get(baseUrlSrv.getRestApiBase()+'/configurations/all').
-    success(function(data, status, headers, config) {
-      $scope.configurations = data.body;
-    }).
-    error(function(data, status, headers, config) {
-      console.log('Error %o %o', status, data.message);
-    });
+  $('#pageLoader').hide();
+  var getConfigurations = function () {
+    $http.get(baseUrlSrv.getRestApiBase() + '/configurations/all').
+      success(function (data, status, headers, config) {
+        $scope.configurations = data.body;
+      }).
+      error(function (data, status, headers, config) {
+        console.log('Error %o %o', status, data.message);
+      });
   };
 
-  var init = function() {
+  var init = function () {
     getConfigurations();
   };
 

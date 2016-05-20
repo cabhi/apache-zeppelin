@@ -13,8 +13,9 @@
  */
 'use strict';
 
-angular.module('zeppelinWebApp').controller('HomeCtrl', function($scope, notebookListDataFactory, websocketMsgSrv, $rootScope, arrayOrderingSrv, $http, baseUrlSrv) {
+angular.module('zeppelinWebApp').controller('HomeCtrl', function ($scope, notebookListDataFactory, websocketMsgSrv, $rootScope, arrayOrderingSrv, $http, baseUrlSrv) {
   var vm = this;
+  $('#pageLoader').hide();
   vm.notes = notebookListDataFactory;
   vm.websocketMsgSrv = websocketMsgSrv;
   vm.arrayOrderingSrv = arrayOrderingSrv;
@@ -28,24 +29,24 @@ angular.module('zeppelinWebApp').controller('HomeCtrl', function($scope, noteboo
 
   $scope.isReloading = false;
 
-  var getZeppelinVersion = function() {
-    $http.get(baseUrlSrv.getRestApiBase() +'/version').
+  var getZeppelinVersion = function () {
+    $http.get(baseUrlSrv.getRestApiBase() + '/version').
       success(function (data, status, headers, config) {
         $scope.zeppelinVersion = data.body;
       }).
-      error(function(data, status, headers, config) {
+      error(function (data, status, headers, config) {
         console.log('Error %o %o', status, data.message);
       });
   };
-  
-  var initHome = function() {
+
+  var initHome = function () {
     websocketMsgSrv.getHomeNotebook();
     getZeppelinVersion();
   };
 
   initHome();
 
-  $scope.$on('setNoteContent', function(event, note) {
+  $scope.$on('setNoteContent', function (event, note) {
     if (note) {
       vm.note = note;
 
@@ -63,11 +64,11 @@ angular.module('zeppelinWebApp').controller('HomeCtrl', function($scope, noteboo
     }
   });
 
-  $scope.$on('setNoteMenu', function(event, notes) {
+  $scope.$on('setNoteMenu', function (event, notes) {
     $scope.isReloadingNotes = false;
   });
 
-  $scope.reloadNotebookList = function() {
+  $scope.reloadNotebookList = function () {
     websocketMsgSrv.reloadAllNotesFromRepo();
     $scope.isReloadingNotes = true;
   };
