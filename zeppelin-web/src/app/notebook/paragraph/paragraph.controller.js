@@ -67,6 +67,11 @@ angular.module('zeppelinWebApp')
       }
     }
     var paragraphScope = $rootScope.$new(true, $rootScope);
+    $scope.multiSelectConfig = getMultiselectConfig();
+    $scope.multiSelectConfig.colsEvents = {
+      onItemSelect: onParaAdd,
+      onItemDeselect: onParaRemove
+    };
 
     // to keep backward compatibility
     $scope.compiledScope = paragraphScope;
@@ -80,6 +85,7 @@ angular.module('zeppelinWebApp')
           });
           if (filtered.length === 1) {
             var paragraph = filtered[0];
+            paragraph.config.derivedFrom = getDerivedFrom(paragraph);
             websocketMsgSrv.runParagraph(paragraph.id, paragraph.title, paragraph.text,
               paragraph.config, paragraph.settings.params);
           } else {
@@ -164,6 +170,9 @@ angular.module('zeppelinWebApp')
       } else if ($scope.getResultType() === 'TEXT') {
         $scope.renderText();
       }
+      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function(o) { return o.id!=$scope.paragraph.id; });
+      $scope.multiSelectConfig.colsList = _.map(paragraphs, colSelectList);
+      $scope.multiSelectConfig.selectedCols = _.map($scope.paragraph.config.paramsDerivedFrom, setSelected);
     };
 
     $scope.renderHtml = function () {
@@ -533,6 +542,7 @@ angular.module('zeppelinWebApp')
     };
 
     $scope.runParagraph = function (data) {
+      $scope.paragraph.config.derivedFrom = getDerivedFrom($scope.paragraph);
       websocketMsgSrv.runParagraph($scope.paragraph.id, $scope.paragraph.title,
         data, $scope.paragraph.config, $scope.paragraph.settings.params);
       $scope.originalText = angular.copy(data);
@@ -697,7 +707,7 @@ angular.module('zeppelinWebApp')
 
       commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
     };
-    
+
     $scope.changeParamDependency = function () {
       var newParams = angular.copy($scope.paragraph.settings.params);
       var newConfig = angular.copy($scope.paragraph.config);
@@ -1154,6 +1164,10 @@ angular.module('zeppelinWebApp')
 
     $scope.$on('runParagraph', function (event) {
       $scope.runParagraph($scope.editor.getValue());
+    });
+
+    $scope.$on('updateDerivedParams', function (event, paraId) {
+      var isDerived = isDerived($scope.paragraph, paraId);
     });
 
     $scope.$on('openEditor', function (event) {
@@ -2267,4 +2281,65 @@ angular.module('zeppelinWebApp')
       $scope.keepScrollDown = false;
     };
 
+    function getMultiselectConfig() {
+      var response = {
+        colsTranslationTexts: {
+          selectionCount: 'Selected',
+          dynamicButtonTextSuffix: 'Selected'
+        },
+        colsSettings: {
+          enableSearch: true,
+          scrollableHeight: '200px',
+          scrollable: true,
+          showCheckAll: false,
+          showUncheckAll: false,
+          dynamicTitle: true,
+          smartButtonMaxItems: 0
+        },
+        selectedCols: [],
+        colsList: []
+      };
+      return response;
+    };
+
+    function onParaAdd(item) {
+      $scope.paragraph.config.paramsDerivedFrom = _.map($scope.multiSelectConfig.selectedCols, parseSelection);
+      $scope.changeParamDependency();
+    }
+
+    function onParaRemove(item) {
+      $scope.paragraph.config.paramsDerivedFrom = _.map($scope.multiSelectConfig.selectedCols, parseSelection)
+      $scope.changeParamDependency();
+    }
+
+    function colSelectList(para) {
+      var col = new Object();
+      col.id = para.id;
+      col.label = para.id;
+      col.disabled = false;
+      return col;
+    }
+
+    function parseSelection(item) {
+      return item.id;
+    }
+
+    function setSelected(para) {
+      var col = new Object();
+      col.id = para;
+      col.label = para;
+      col.disabled = false;
+      return col;
+    }
+
+    function getDerivedFrom(para) {
+      var paragraphs = _.remove($scope.$parent.$parent.note.paragraphs, function (n) {
+        return !(para.id === n.id) && isDerived(para, n.id);
+      });
+      return paragraphs;
+    }
+
+    function isDerived(para, id) {
+      return _.lastIndexOf(para.config.paramsDerivedFrom, id) > -1;
+    }
   });
