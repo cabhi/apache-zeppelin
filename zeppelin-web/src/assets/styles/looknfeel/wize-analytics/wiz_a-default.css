@@ -31,7 +31,7 @@ only screen and (min-resolution: 192dpi),
 only screen and (min-resolution: 2dppx) {
 
     .logo-wrapper h5{
-        background-image: url('../assets/images/logo-@2x.png');
+        background-image: url('../../../assets/images/wize-analytics_images/logo-@2x.png');
         background-size:76px 24px;
     }
 
@@ -127,12 +127,13 @@ only screen and (min-resolution: 2dppx) {
  /*aside control ends*/
  
  /*navbar start*/
-.navbar-default{
+.navbar-default.displayNavBar2{
 	background-color: #e85b5d;
 	border-radius: 0px;
 	border-left: none;
 	border-right: none;
 	border-top: none;
+	margin: 0 -10px;
 }
 .navbar-default.displayNavBar2 .navbar-nav>li>a{
 color:#fff !important;
@@ -222,7 +223,11 @@ color:#a51719 !important;
 .paragraphForm.form-horizontal .form-group select.input-sm{
  border-radius:0px;
 }
-
+.noteAction{
+	position: relative;
+	top: 0;
+	z-index: auto;
+}
 .noteAction span, .noteAction button, .noteAction form{
 visibility:visible;
 }
@@ -238,7 +243,7 @@ margin-top:5px !important;
 
 .form-control-static2{
 font-size:16px !important;
-text-transformation:uppercase;
+text-transform:uppercase;
 color:#e85b5d !important;
 }
 
