@@ -1,0 +1,103 @@
+{
+  "paragraphs": [
+    {
+      "text": "%elasticsearch\nsize 5000\nsearch /demo-test/logs {\"fields\": [\"log\", \"logLevel\", \"timestamp\"],\n     \"filter\": {\"and\": [\n         {\"wildcard\":{\"logLevel\":${Log Level\u003d*}}},\n         {\"wildcard\":{\"appId\":\"ace\"},\n         {\"wildcard\":{\"userId\":${User\u003d*}}},\n         {\"wildcard\":{\"statusMessage\":${Status Message\u003d*}}},\n         {\"wildcard\":{\"log\":${log\u003d*}}},\n         {\"wildcard\":{\"httpMethod\":${Http Method\u003d*}}}\n    ]}}",
+      "dateUpdated": "Apr 22, 2016 2:46:12 PM",
+      "config": {
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {
+          "httpMethod": "*",
+          "logLevel": "*",
+          "log": "*",
+          "userId": "*",
+          "statusMessage": "*"
+        },
+        "forms": {
+          "logLevel": {
+            "name": "logLevel",
+            "defaultValue": "*",
+            "hidden": false
+          },
+          "httpMethod": {
+            "name": "httpMethod",
+            "defaultValue": "*",
+            "hidden": false
+          },
+          "log": {
+            "name": "log",
+            "defaultValue": "*",
+            "hidden": false
+          },
+          "userId": {
+            "name": "userId",
+            "defaultValue": "*",
+            "hidden": false
+          },
+          "statusMessage": {
+            "name": "statusMessage",
+            "defaultValue": "*",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1461350772160_-1538613525",
+      "id": "20160422-144612_1496561796",
+      "result": {
+        "code": "ERROR",
+        "type": "TEXT",
+        "msg": "Error : all shards failed"
+      },
+      "dateCreated": "Apr 22, 2016 2:46:12 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "dateUpdated": "Apr 22, 2016 2:46:12 PM",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461350772162_-1537844028",
+      "id": "20160422-144612_723532771",
+      "dateCreated": "Apr 22, 2016 2:46:12 PM",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "LogViewer-ACE",
+  "id": "2BH3PB4TY",
+  "angularObjects": {
+    "2BJHF72VR": [],
+    "2BHAU1U4T": [],
+    "2BHYQVC1Y": [],
+    "2BFXF5N3B": [],
+    "2BKPP8K19": [],
+    "2BHRQYVDZ": [],
+    "2BKPNDE98": [],
+    "2BJ5VB93W": [],
+    "2BJF9XJUE": [],
+    "2BJKRUMHT": [],
+    "2BFXH883N": [],
+    "2BG2UQ57P": [],
+    "2BG1C5FZ1": [],
+    "2BK5JCFFR": []
+  },
+  "config": {},
+  "info": {}
+}

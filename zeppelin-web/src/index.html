@@ -66,7 +66,7 @@ limitations under the License.
   <!-- endbuild -->
   <link rel="stylesheet" ng-href="assets/styles/looknfeel/{{looknfeel}}.css" />
   <link rel="stylesheet" href="assets/styles/fontImport.css" />
-  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz-main.css" />
+  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz_a-default.css" />
 </head>
 
 <body ng-class="{'bodyAsIframe': asIframe}">
@@ -75,16 +75,16 @@ limitations under the License.
     <![endif]-->
   <toast></toast>
 
-  <section>
+  <main class="wiz_a-common-container">
     <aside ng-include class="aside-nav" src="'components/sidebar/sidebar.html'"></aside>
 
     <div id="main" class="">
       <div ng-include src="'components/navbar/navbar.html'"></div>
       <div class="container">
-        <div ng-view></div>
+        <div ng-view class="wiz_a-common-noteAction_wrapper"></div>
       </div>
     </div>
-  </section>
+  </main>
 
   <div ng-include src="'components/modal-shortcut/modal-shortcut.html'"></div>
   <div ng-controller="NotenameCtrl as notenamectrl">

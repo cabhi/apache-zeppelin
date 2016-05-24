@@ -2,7 +2,14 @@
 Description: Works common for Wize Analytics default
 Domain: Wize
 */
-
+body{
+	margin: 0;
+	padding:0;
+}
+.wiz_a-common-container:after{
+	clear:both;
+	content: '';
+}
 /*logo start*/
 .logo-wrapper{
 	background-color:#e85b5d ;
@@ -12,7 +19,7 @@ Domain: Wize
 }
 
 .logo-wrapper h5{
-	background-image: url('../assets/images/logo-@1x.png');
+	background-image: url('/assets/images/wize-analytics_images/wize-logo@1x.png');
 	background-repeat: no-repeat;
 	width: 76px;
 	margin: 0px;
@@ -31,7 +38,7 @@ only screen and (min-resolution: 192dpi),
 only screen and (min-resolution: 2dppx) {
 
     .logo-wrapper h5{
-        background-image: url('../assets/images/logo-@2x.png');
+        background-image: url('/assets/images/wize-analytics_images/wize-logo@1x.png');
         background-size:76px 24px;
     }
 
@@ -101,6 +108,7 @@ only screen and (min-resolution: 2dppx) {
 	-moz-transition: all 0.5s; 
 	-webkit-transition: all 0.5s; 
 	-o-transition: all 0.5s;
+	padding: 0 10px;
  }
 
 
@@ -127,12 +135,13 @@ only screen and (min-resolution: 2dppx) {
  /*aside control ends*/
  
  /*navbar start*/
-.navbar-default{
+.navbar-default.displayNavBar2{
 	background-color: #e85b5d;
 	border-radius: 0px;
 	border-left: none;
 	border-right: none;
 	border-top: none;
+	margin: 0 -10px;
 }
 .navbar-default.displayNavBar2 .navbar-nav>li>a{
 color:#fff !important;
@@ -187,6 +196,10 @@ color:#a51719 !important;
 /*grid collapse expand ends*/
 
 /*json viewer start*/
+.log-viewer .panel .panel-collapse{
+	transition:none !important;
+}
+
 .json-formatter-row .toggler::after {
     content: "\f0da";
  font-family: 'FontAwesome';
@@ -222,7 +235,15 @@ color:#a51719 !important;
 .paragraphForm.form-horizontal .form-group select.input-sm{
  border-radius:0px;
 }
-
+.wiz_a-common-noteAction_wrapper{
+	margin: 0 -24px;
+}
+.noteAction{
+	position: relative;
+	top: 0;
+	z-index: auto;
+	margin: 0;
+}
 .noteAction span, .noteAction button, .noteAction form{
 visibility:visible;
 }
@@ -238,7 +259,7 @@ margin-top:5px !important;
 
 .form-control-static2{
 font-size:16px !important;
-text-transformation:uppercase;
+text-transform:uppercase;
 color:#e85b5d !important;
 }
 
