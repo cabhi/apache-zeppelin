@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Tue May 10 14:27:24 IST 2016:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0154-99e2-93da-000035fe7648 
-on database directory /private/var/folders/8c/259v_3t56l94gmtr39qlngp80000gp/T/spark-77d267b0-9ade-436b-9832-3570d3262741/metastore with class loader sun.misc.Launcher$AppClassLoader@6e0be858 
+Tue May 24 15:22:26 IST 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0154-e22e-00f9-000033752d78 
+on database directory /Users/wiznidev/Projects/wize-analytics/bin/metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@733b066f 
 Loaded from file:/Users/wiznidev/Projects/wize-analytics/interpreter/spark/dep/zeppelin-spark-dependencies-0.6.0-incubating-SNAPSHOT.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_51-b16

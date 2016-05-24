@@ -13,51 +13,51 @@
  */
 'use strict';
 
-angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope, websocketEvents) {
+angular.module('zeppelinWebApp').service('websocketMsgSrv', function ($rootScope, websocketEvents) {
 
   return {
 
-    getHomeNotebook: function() {
-      websocketEvents.sendNewEvent({op: 'GET_HOME_NOTE'});
+    getHomeNotebook: function () {
+      websocketEvents.sendNewEvent({ op: 'GET_HOME_NOTE' });
     },
 
-    createNotebook: function(noteName) {
-      websocketEvents.sendNewEvent({op: 'NEW_NOTE',data: {name: noteName}});
+    createNotebook: function (noteName) {
+      websocketEvents.sendNewEvent({ op: 'NEW_NOTE', data: { name: noteName } });
     },
 
-    deleteNotebook: function(noteId) {
-      websocketEvents.sendNewEvent({op: 'DEL_NOTE', data: {id: noteId}});
+    deleteNotebook: function (noteId) {
+      websocketEvents.sendNewEvent({ op: 'DEL_NOTE', data: { id: noteId } });
     },
 
-    cloneNotebook: function(noteIdToClone, newNoteName ) {
-      websocketEvents.sendNewEvent({op: 'CLONE_NOTE', data: {id: noteIdToClone, name: newNoteName}});
+    cloneNotebook: function (noteIdToClone, newNoteName) {
+      websocketEvents.sendNewEvent({ op: 'CLONE_NOTE', data: { id: noteIdToClone, name: newNoteName } });
     },
 
-    getNotebookList: function() {
-      websocketEvents.sendNewEvent({op: 'LIST_NOTES'});
+    getNotebookList: function () {
+      websocketEvents.sendNewEvent({ op: 'LIST_NOTES' });
     },
 
-    reloadAllNotesFromRepo: function() {
-      websocketEvents.sendNewEvent({op: 'RELOAD_NOTES_FROM_REPO'});
+    reloadAllNotesFromRepo: function () {
+      websocketEvents.sendNewEvent({ op: 'RELOAD_NOTES_FROM_REPO' });
     },
 
-    getNotebook: function(noteId) {
-      websocketEvents.sendNewEvent({op: 'GET_NOTE', data: {id: noteId}});
+    getNotebook: function (noteId) {
+      websocketEvents.sendNewEvent({ op: 'GET_NOTE', data: { id: noteId } });
     },
 
-    updateNotebook: function(noteId, noteName, noteConfig) {
-      websocketEvents.sendNewEvent({op: 'NOTE_UPDATE', data: {id: noteId, name: noteName, config : noteConfig}});
+    updateNotebook: function (noteId, noteName, noteConfig) {
+      websocketEvents.sendNewEvent({ op: 'NOTE_UPDATE', data: { id: noteId, name: noteName, config: noteConfig } });
     },
 
-    moveParagraph: function(paragraphId, newIndex) {
-      websocketEvents.sendNewEvent({ op: 'MOVE_PARAGRAPH', data : {id: paragraphId, index: newIndex}});
+    moveParagraph: function (paragraphId, newIndex) {
+      websocketEvents.sendNewEvent({ op: 'MOVE_PARAGRAPH', data: { id: paragraphId, index: newIndex } });
     },
 
-    insertParagraph: function(newIndex) {
-      websocketEvents.sendNewEvent({ op: 'INSERT_PARAGRAPH', data : {index: newIndex}});
+    insertParagraph: function (newIndex) {
+      websocketEvents.sendNewEvent({ op: 'INSERT_PARAGRAPH', data: { index: newIndex } });
     },
 
-    updateAngularObject: function(noteId, paragraphId, name, value, interpreterGroupId) {
+    updateAngularObject: function (noteId, paragraphId, name, value, interpreterGroupId) {
       websocketEvents.sendNewEvent({
         op: 'ANGULAR_OBJECT_UPDATED',
         data: {
@@ -70,7 +70,7 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    clientBindAngularObject: function(noteId, name, value, paragraphId) {
+    clientBindAngularObject: function (noteId, name, value, paragraphId) {
       websocketEvents.sendNewEvent({
         op: 'ANGULAR_OBJECT_CLIENT_BIND',
         data: {
@@ -82,7 +82,7 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    clientUnbindAngularObject: function(noteId, name, paragraphId) {
+    clientUnbindAngularObject: function (noteId, name, paragraphId) {
       websocketEvents.sendNewEvent({
         op: 'ANGULAR_OBJECT_CLIENT_UNBIND',
         data: {
@@ -93,11 +93,11 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    cancelParagraphRun: function(paragraphId) {
-      websocketEvents.sendNewEvent({op: 'CANCEL_PARAGRAPH', data: {id: paragraphId}});
+    cancelParagraphRun: function (paragraphId) {
+      websocketEvents.sendNewEvent({ op: 'CANCEL_PARAGRAPH', data: { id: paragraphId } });
     },
 
-    runParagraph: function(paragraphId, paragraphTitle, paragraphData, paragraphConfig, paragraphParams) {
+    runParagraph: function (paragraphId, paragraphTitle, paragraphData, paragraphConfig, paragraphParams) {
       websocketEvents.sendNewEvent({
         op: 'RUN_PARAGRAPH',
         data: {
@@ -110,31 +110,46 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    removeParagraph: function(paragraphId) {
-      websocketEvents.sendNewEvent({op: 'PARAGRAPH_REMOVE', data: {id: paragraphId}});
-    },
-
-    clearParagraphOutput: function(paragraphId) {
-      websocketEvents.sendNewEvent({op: 'PARAGRAPH_CLEAR_OUTPUT', data: {id: paragraphId}});
-    },
-
-    completion: function(paragraphId, buf, cursor) {
+    nextPage: function (paragraphId, paragraphTitle, paragraphData, paragraphConfig, paragraphParams, limit, skip) {
       websocketEvents.sendNewEvent({
-        op : 'COMPLETION',
-        data : {
-          id : paragraphId,
-          buf : buf,
-          cursor : cursor
+        op: 'NEXT_PAGE',
+        data: {
+          id: paragraphId,
+          title: paragraphTitle,
+          paragraph: paragraphData,
+          config: paragraphConfig,
+          params: paragraphParams,
+          limit: limit,
+          skip: skip
         }
       });
     },
 
-    commitParagraph: function(paragraphId, paragraphTitle, paragraphData, paragraphConfig, paragraphParams) {
+    removeParagraph: function (paragraphId) {
+      websocketEvents.sendNewEvent({ op: 'PARAGRAPH_REMOVE', data: { id: paragraphId } });
+    },
+
+    clearParagraphOutput: function (paragraphId) {
+      websocketEvents.sendNewEvent({ op: 'PARAGRAPH_CLEAR_OUTPUT', data: { id: paragraphId } });
+    },
+
+    completion: function (paragraphId, buf, cursor) {
+      websocketEvents.sendNewEvent({
+        op: 'COMPLETION',
+        data: {
+          id: paragraphId,
+          buf: buf,
+          cursor: cursor
+        }
+      });
+    },
+
+    commitParagraph: function (paragraphId, paragraphTitle, paragraphData, paragraphConfig, paragraphParams) {
       websocketEvents.sendNewEvent({
         op: 'COMMIT_PARAGRAPH',
         data: {
           id: paragraphId,
-          title : paragraphTitle,
+          title: paragraphTitle,
           paragraph: paragraphData,
           config: paragraphConfig,
           params: paragraphParams
@@ -142,7 +157,7 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    importNotebook: function(notebook) {
+    importNotebook: function (notebook) {
       websocketEvents.sendNewEvent({
         op: 'IMPORT_NOTE',
         data: {
@@ -151,7 +166,7 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    checkpointNotebook: function(noteId, commitMessage) {
+    checkpointNotebook: function (noteId, commitMessage) {
       websocketEvents.sendNewEvent({
         op: 'CHECKPOINT_NOTEBOOK',
         data: {
@@ -161,7 +176,7 @@ angular.module('zeppelinWebApp').service('websocketMsgSrv', function($rootScope,
       });
     },
 
-    isConnected: function(){
+    isConnected: function () {
       return websocketEvents.isConnected();
     }
 
