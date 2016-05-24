@@ -1393,7 +1393,7 @@ angular.module('zeppelinWebApp')
               $scope.defined = true;
             }
           }
-          a.data.push(row);
+          $scope.data.push(row);
         }
         $scope.gridOptions.columnDefs = colSettings && colSettings[$routeParams.noteId] ? colSettings[$routeParams.noteId] : colDef;
       };
