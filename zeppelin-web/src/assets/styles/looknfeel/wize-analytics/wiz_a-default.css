@@ -3,6 +3,10 @@ Description: Works common for Wize Analytics default
 Domain: Wize
 */
 
+.wiz_a-common-container:after{
+	clear:both;
+	content: '';
+}
 /*logo start*/
 .logo-wrapper{
 	background-color:#e85b5d ;

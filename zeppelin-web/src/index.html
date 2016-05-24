@@ -75,7 +75,7 @@ limitations under the License.
     <![endif]-->
   <toast></toast>
 
-  <section>
+  <main class="wiz_a-common-container">
     <aside ng-include class="aside-nav" src="'components/sidebar/sidebar.html'"></aside>
 
     <div id="main" class="">
@@ -84,7 +84,7 @@ limitations under the License.
         <div ng-view></div>
       </div>
     </div>
-  </section>
+  </main>
 
   <div ng-include src="'components/modal-shortcut/modal-shortcut.html'"></div>
   <div ng-controller="NotenameCtrl as notenamectrl">
