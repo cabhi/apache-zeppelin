@@ -64,6 +64,7 @@ module.exports = function(config) {
       'bower_components/angular-ui-grid/ui-grid.js',
       'bower_components/ng-json-explorer/dist/angular-json-explorer.js',
       'bower_components/ng-json-explorer/dist/angular-json-explorer.min.js',
+      'bower_components/angularjs-dropdown-multiselect/src/angularjs-dropdown-multiselect.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'src/app/app.js',

@@ -177,6 +177,9 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
       //   callback: function(result) {
       //     if (result) {
       _.forEach($scope.note.paragraphs, function (n, key) {
+        if(!n){
+          return;
+        }
         angular.element('#' + n.id + '_paragraphColumn_main').scope().runParagraph(n.text);
       });
       //     }

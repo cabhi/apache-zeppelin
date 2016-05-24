@@ -43,7 +43,8 @@
         'ui.grid.grouping',
         'ui.grid.resizeColumns',
         'ui.grid.exporter',
-        'ngJsonExplorer'
+        'ngJsonExplorer',
+        'angularjs-dropdown-multiselect'
     ])
         .filter('breakFilter', function () {
             return function (text) {

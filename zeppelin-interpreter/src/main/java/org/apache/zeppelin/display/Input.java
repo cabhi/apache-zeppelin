@@ -19,6 +19,8 @@ package org.apache.zeppelin.display;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.gson.internal.StringMap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -324,7 +326,10 @@ public class Input implements Serializable {
       }
 
       String expanded;
-      if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
+      
+      if (input.name.contains("Filter")) {
+        expanded = getFilterTabQuery(value);
+      } else if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
         String delimiter = input.argument;
         if (delimiter == null) {
           delimiter = DEFAULT_DELIMITER;
@@ -350,6 +355,61 @@ public class Input implements Serializable {
     }
 
     return replaced;
+  }
+  
+  public static String getFilterTabQuery(Object filterTabValue) {
+    StringBuffer query = new StringBuffer();
+    List<StringMap<String>> values = (List<StringMap<String>>) filterTabValue;
+    for (StringMap<String> value: values) {
+      String field = value.get("column");
+      String operator = value.get("operator");
+      String operand = value.get("operand");
+      
+      String type = "number";
+      try {
+        Double.parseDouble(operand);
+      } catch (NumberFormatException ex) {
+        type = "string";
+      }
+      
+      switch (operator) {
+          case "=": 
+            query.append("{\"term\":").append("{").append(field).append(":")
+              .append(operand).append("}}");
+            break;
+          case "!=": 
+            query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
+              .append("{").append(field).append(":").append(operand).append("}}}}");
+            break;
+          case "<": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"lt\":").append(operand).append("}}}");
+            break;
+          case "<=": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"lte\":").append(operand).append("}}}");
+            break;
+          case ">": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"gt\":").append(operand).append("}}}");
+            break;
+          case ">=": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"gte\":").append(operand).append("}}}");
+            break;
+          case "contains": 
+            query.append("{\"wildcard\":").append("{").append(field).append(":")
+              .append(operand).append("}}");
+            break; 
+          case "starts with":
+            query.append("{\"prefix\":").append("{").append(field).append(":")
+              .append(operand).append("}}");
+      }
+      
+      query.append(",");
+    }
+    
+    return query.toString();
   }
 
 
