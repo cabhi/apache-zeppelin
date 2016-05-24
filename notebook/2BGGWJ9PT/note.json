@@ -1,0 +1,23 @@
+{
+  "paragraphs": [
+    {
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1461268351553_-1774239754",
+      "id": "20160421-155231_532767266",
+      "dateCreated": "Apr 21, 2016 3:52:31 PM",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "ACE - Explore",
+  "id": "2BGGWJ9PT",
+  "angularObjects": {},
+  "config": {
+    "looknfeel": "default"
+  },
+  "info": {}
+}
