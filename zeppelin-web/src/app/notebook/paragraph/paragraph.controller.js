@@ -2356,7 +2356,7 @@ angular.module('zeppelinWebApp')
 
     function getDerivedFrom(para) {
       var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (n) {
-        return para.id != n.id && isDerived(para, n.id);
+        return isDerived(para, n.id);
       });
       return paragraphs;
     }
