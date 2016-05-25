@@ -300,18 +300,20 @@ outline:none !important;
 cursor:pointer !important;
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-left{
-padding-right:5px !important;
-font-size: 16px !important;
-line-height: 10px !important;
+padding-right:5px;
+font-size: 16px;
+line-height: 10px;
+width:14px;
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-left:before{
 font-family:"FontAwesome";
 content:"\f0da";
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-down{
-padding-right:5px !important;
-font-size: 16px !important;
-line-height: 10px !important;
+padding-right:5px;
+font-size: 16px;
+line-height: 10px;
+width:14px;
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-down:before{
 font-family:"FontAwesome";
