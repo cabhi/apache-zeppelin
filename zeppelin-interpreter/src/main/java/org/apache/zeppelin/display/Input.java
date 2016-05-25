@@ -182,6 +182,8 @@ public class Input implements Serializable {
   //                                                checkbox form with " or " as delimiter: will be
   //                                                expanded to "US or JP"
   private static final Pattern VAR_PTN = Pattern.compile("([_])?[$][{]([^=}]*([=][^}]*)?)[}]");
+  private static final Pattern DEPENDENT_VAR_PTN = 
+    Pattern.compile("([_])?[@][{]([^=}]*([=][^}]*)?)[}]");
 
   private static String[] getNameAndDisplayName(String str) {
     Pattern p = Pattern.compile("([^(]*)\\s*[(]([^)]*)[)]");
@@ -312,9 +314,28 @@ public class Input implements Serializable {
 
   private static final String DEFAULT_DELIMITER = ",";
 
-  public static String getSimpleQuery(Map<String, Object> params, String script) {
+  public static String resolveDependentParams(Map<String, Object> params, String script) {
     String replaced = script;
-
+      
+    Matcher match = DEPENDENT_VAR_PTN.matcher(replaced);
+    while (match.find()) {
+      Input input = getInputForm(match);
+      Object value;
+      if (params.containsKey(input.name)) {
+        value = params.get(input.name);
+      } else {
+        value = input.defaultValue;
+      }
+      replaced = match.replaceFirst(value.toString());
+      match = VAR_PTN.matcher(replaced);
+    }
+      
+    return replaced;
+  }
+  
+  public static String getSimpleQuery(Map<String, Object> params, String script) {
+    String replaced = resolveDependentParams(params, script);
+    
     Matcher match = VAR_PTN.matcher(replaced);
     while (match.find()) {
       Input input = getInputForm(match);
