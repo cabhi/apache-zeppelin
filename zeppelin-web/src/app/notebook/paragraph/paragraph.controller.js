@@ -170,7 +170,7 @@ angular.module('zeppelinWebApp')
       } else if ($scope.getResultType() === 'TEXT') {
         $scope.renderText();
       }
-      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function(o) { return o.id!=$scope.paragraph.id; });
+      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (o) { return o.id != $scope.paragraph.id; });
       $scope.multiSelectConfig.colsList = _.map(paragraphs, colSelectList);
       $scope.multiSelectConfig.selectedCols = _.map($scope.paragraph.config.paramsDerivedFrom, setSelected);
     };
@@ -548,6 +548,17 @@ angular.module('zeppelinWebApp')
       $scope.originalText = angular.copy(data);
       $scope.dirtyText = undefined;
     };
+
+    $scope.nextPage = function () {
+      var data = $scope.getEditorValue();
+      $scope.paragraph.config.derivedFrom = getDerivedFrom($scope.paragraph);
+      websocketMsgSrv.nextPage($scope.paragraph.id, $scope.paragraph.title,
+        data, $scope.paragraph.config, $scope.paragraph.settings.params,
+        $scope.paragraph.settings.params.pageSize ? $scope.paragraph.settings.params.pageSize : 100,
+        $scope.data.length);
+      $scope.originalText = angular.copy(data);
+      $scope.dirtyText = undefined;
+    }
 
     $scope.saveParagraph = function () {
       if ($scope.dirtyText === undefined || $scope.dirtyText === $scope.originalText) {
@@ -1290,36 +1301,36 @@ angular.module('zeppelinWebApp')
     };
 
     var setTable = function (type, data, refresh) {
-      var getTableContentFormat = function (d) {
-        if (isNaN(d)) {
-          if (d.length > '%html'.length && '%html ' === d.substring(0, '%html '.length)) {
-            return 'html';
-          } else {
-            return '';
-          }
-        } else {
-          return '';
-        }
-      };
+      // var getTableContentFormat = function (d) {
+      //   if (isNaN(d)) {
+      //     if (d.length > '%html'.length && '%html ' === d.substring(0, '%html '.length)) {
+      //       return 'html';
+      //     } else {
+      //       return '';
+      //     }
+      //   } else {
+      //     return '';
+      //   }
+      // };
 
-      var formatTableContent = function (d) {
-        if (isNaN(d)) {
-          var f = getTableContentFormat(d);
-          if (f !== '') {
-            return d.substring(f.length + 2);
-          } else {
-            return d;
-          }
-        } else {
-          var dStr = d.toString();
-          var splitted = dStr.split('.');
-          var formatted = splitted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-          if (splitted.length > 1) {
-            formatted += '.' + splitted[1];
-          }
-          return formatted;
-        }
-      };
+      // var formatTableContent = function (d) {
+      //   if (isNaN(d)) {
+      //     var f = getTableContentFormat(d);
+      //     if (f !== '') {
+      //       return d.substring(f.length + 2);
+      //     } else {
+      //       return d;
+      //     }
+      //   } else {
+      //     var dStr = d.toString();
+      //     var splitted = dStr.split('.');
+      //     var formatted = splitted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      //     if (splitted.length > 1) {
+      //       formatted += '.' + splitted[1];
+      //     }
+      //     return formatted;
+      //   }
+      // };
 
 
       var renderTable = function () {
@@ -1393,7 +1404,7 @@ angular.module('zeppelinWebApp')
               $scope.defined = true;
             }
           }
-          a.data.push(row);
+          $scope.data.push(row);
         }
         $scope.gridOptions.columnDefs = colSettings && colSettings[$routeParams.noteId] ? colSettings[$routeParams.noteId] : colDef;
       };
@@ -1530,7 +1541,18 @@ angular.module('zeppelinWebApp')
           }
         } catch (ignoreErr) {
         }
-
+        if ($scope.chart[type].multibar) {
+          $scope.chart[type].multibar.dispatch.on('elementClick', function (e) {
+            console.log('element: ' + e.value);
+            console.dir(e.point);
+          });
+        }
+        if ($scope.chart[type].pie) {
+          $scope.chart[type].pie.dispatch.on('elementClick', function (e) {
+            console.log('element: ' + e.value);
+            console.dir(e.point);
+          });
+        }
         var chartEl = d3.select('#p' + $scope.paragraph.id + '_' + type + ' svg')
           .attr('height', $scope.paragraph.config.graph.height)
           .datum(d3g)
@@ -2333,8 +2355,8 @@ angular.module('zeppelinWebApp')
     }
 
     function getDerivedFrom(para) {
-      var paragraphs = _.remove($scope.$parent.$parent.note.paragraphs, function (n) {
-        return !(para.id === n.id) && isDerived(para, n.id);
+      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (n) {
+        return isDerived(para, n.id);
       });
       return paragraphs;
     }
