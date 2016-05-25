@@ -2355,8 +2355,8 @@ angular.module('zeppelinWebApp')
     }
 
     function getDerivedFrom(para) {
-      var paragraphs = _.remove($scope.$parent.$parent.note.paragraphs, function (n) {
-        return !(para.id === n.id) && isDerived(para, n.id);
+      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (n) {
+        return para.id != n.id && isDerived(para, n.id);
       });
       return paragraphs;
     }
