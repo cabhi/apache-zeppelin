@@ -21,12 +21,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
+import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
@@ -969,12 +971,27 @@ public class NotebookServer extends WebSocketServlet implements
       p.setAuthenticationInfo(new AuthenticationInfo());
     }
 
-    Map<String, Object> params = (Map<String, Object>) fromMessage
-       .get("params");
-    p.settings.setParams(params);
     Map<String, Object> config = (Map<String, Object>) fromMessage
        .get("config");
     p.setConfig(config);
+    
+    
+    Map<String, Object> params = (Map<String, Object>) fromMessage
+      .get("params");
+    
+    //add depedency params
+    List<StringMap<Object>> dependencyList = (List<StringMap<Object>>) config.get("derivedFrom");
+    for (StringMap<Object> dependency: dependencyList) {
+      StringMap<Object> settings = (StringMap<Object>) dependency.get("settings");
+      StringMap<Object> dependencyParams = (StringMap<Object>) settings.get("params");
+      
+      for (Entry<String, Object> dependencyParam: dependencyParams.entrySet()) {
+        params.put(dependencyParam.getKey(), dependencyParam.getValue());
+      }
+    }
+    
+    p.settings.setParams(params);
+    
     // if it's the last paragraph, let's add a new one
     boolean isTheLastParagraph = note.getLastParagraph().getId()
         .equals(p.getId());
