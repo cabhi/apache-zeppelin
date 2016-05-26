@@ -384,19 +384,16 @@ public class Input implements Serializable {
     for (StringMap<String> value: values) {
       String field = value.get("column");
       String operator = value.get("operator");
-      String operand = value.get("operand");
-      
-      String type = "number";
-      try {
-        Double.parseDouble(operand);
-      } catch (NumberFormatException ex) {
-        type = "string";
-      }
-      
+      String operand = value.get("operand"); 
       switch (operator) {
           case "=": 
-            query.append("{\"term\":").append("{").append(field).append(":")
+        	  if(field.equalsIgnoreCase("requestId")){
+            query.append("{\"term\":").append("{").append(field).append(".raw:")
               .append(operand).append("}}");
+        	  }else{
+        		  query.append("{\"term\":").append("{").append(field).append(":")
+                  .append(operand).append("}}");
+        	  }
             break;
           case "!=": 
             query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
@@ -419,12 +416,17 @@ public class Input implements Serializable {
               .append("{\"gte\":").append(operand).append("}}}");
             break;
           case "contains": 
-            query.append("{\"wildcard\":").append("{").append(field).append(":")
+        	  if(isValidWord(operand)){
+        		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
+                  .append(operand).append("*}}"); 
+        	  }else{
+            query.append("{\"match_phrase\":").append("{").append(field).append(":")
               .append(operand).append("}}");
+        	  }
             break; 
           case "starts with":
-            query.append("{\"prefix\":").append("{").append(field).append(":")
-              .append(operand).append("}}");
+            query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
+              .append(operand).append("\"}}");
       }
       
       query.append(",");
@@ -432,7 +434,9 @@ public class Input implements Serializable {
     
     return query.toString();
   }
-
+  public static boolean isValidWord(String inputString) {
+	    return inputString.matches("[A-Za-z]*");
+	}
 
   public static String[] split(String str) {
     return str.split(";(?=([^\"']*\"[^\"']*\")*[^\"']*$)");
