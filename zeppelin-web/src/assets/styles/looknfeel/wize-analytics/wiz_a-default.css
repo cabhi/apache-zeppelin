@@ -220,6 +220,10 @@ border-radius:0px;
 .angular-json-explorer{
 	font-family: 'ProximaNova';
 }
+.angular-json-explorer a.collapser:hover,
+.angular-json-explorer a.collapser:focus{
+	outline: none;
+}
 .json-formatter-row .toggler::after {
     content: "\f0da";
  font-family: 'FontAwesome';
@@ -312,7 +316,8 @@ padding: 0 20px 20px;
 }
 .paragraph-col .focused{
 	box-shadow: none;
-	border-color: inherit;
+	border: 1px solid #e5e5e5;
+	border-bottom: 2px solid #e85b5d;
 }
 .paragraph-margin {
     margin-right: 0;
@@ -327,13 +332,17 @@ padding: 0 20px 20px;
 .panel-group div.panel.panel-default{
 border-radius: 0;
 }
+.panel-group div.panel.panel-default > div.panel-heading {
+    color: #212121;
+    background-color: #f0f3f4;
+    border-color: #e5e5e5;
+}
 .panel-group div.panel.panel-default > div.panel-heading > .panel-title{
-font-size:13px !important;
-border-color:#ccc !important;
+font-size:13px;
 }
 .panel-group .panel+.panel {
-    margin-top: 0px !important;
- border-top:none !important;
+    margin-top: 0;
+ border-top:none;
 }
 .accordion-toggle:hover,
 .accordion-toggle:focus{
