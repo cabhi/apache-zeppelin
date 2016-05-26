@@ -8,7 +8,7 @@ make_snapshot:
   image: wizni/maven:3.3.3
   script:
    - ( cd DataGenerator; mvn clean install )
-   - mvn clean package -DskipTests -Pbuild-distr
+   - mvn clean package -DskipTests -Dcheckstyle.skip -Pbuild-distr
    - cp zeppelin-distribution/target/zeppelin*.tar.gz /snapshots/
   artifacts:
    name: "zeppelin_${CI_BUILD_REF_NAME}"
