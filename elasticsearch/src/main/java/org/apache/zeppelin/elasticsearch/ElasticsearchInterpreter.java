@@ -24,8 +24,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.wizni.LogEntry;
-import com.wizni.OldFormat;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.zeppelin.interpreter.Interpreter;
@@ -667,11 +665,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       
       jsonResponse.append(prefix);
       prefix = ",";
-      jsonResponse.append("{\"summary\":\"");
-      jsonResponse.append(getSummary(json));
-      jsonResponse.append("\", \"details\":");
-      jsonResponse.append(getDetails(json));
-      jsonResponse.append("}");
+      jsonResponse.append(json);
     } 
     jsonResponse.append("]}");
     
@@ -679,71 +673,6 @@ public class ElasticsearchInterpreter extends Interpreter {
       InterpreterResult.Code.SUCCESS,
       InterpreterResult.Type.TEXT,
       jsonResponse.toString());
-  }
-  
-  private String getDetails(String json) {
-    try {
-      LogEntry entry = gsonParser.fromJson(json, LogEntry.class);
-      entry.getMetadata().setTimestamp(parseDate(entry.getMetadata().getTimestamp()));
-      
-      entry.getAppInfo().setStartTime(parseDate(entry.getAppInfo().getStartTime()));
-      entry.getAppInfo().setEndTime(parseDate(entry.getAppInfo().getEndTime()));
-      
-      for (int i = 0; i < entry.getAppInfo().getLines().length; i++){
-        String time = entry.getAppInfo().getLines()[i].getTime();
-        entry.getAppInfo().getLines()[i].setTime(parseDate(time));
-      }
-      
-      return gson.toJson(entry);
-    } catch (Exception ex) {
-    }
-    
-    try {
-      OldFormat oldEntry = gsonParser.fromJson(json, OldFormat.class);
-      oldEntry.setDate(parseDate(oldEntry.getDate()));
-      return gson.toJson(oldEntry);
-    } catch (Exception ex) {
-      return json;
-    }
-  }
-  
-  private String getSummary(String details) {
-    StringBuffer summary = new StringBuffer();
-    try {
-      LogEntry entry = gsonParser.fromJson(details, LogEntry.class);
-      summary.append(parseDate(entry.getMetadata().getTimestamp()));
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpResponse().getStatus());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpResponse().getResponseTime());
-      summary.append("ms");
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getMetadata().getLevel());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpRequest().getRemoteIp());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpRequest().getRequestUrl());
-      return summary.toString();
-    } catch (Exception ex) {
-      //return "No summary to display, please expand";
-    }
-    
-    try {
-      OldFormat oldEntry = gsonParser.fromJson(details, OldFormat.class);
-      summary.append(parseDate(oldEntry.getDate()));
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getLogLevel());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getHttpMethod());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getRequest());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getStatusCode());
-    } catch (Exception ex) {
-      return "No summary to display, please expand";
-    }
-    
-    return summary.toString();
   }
 
   private String buildSearchHitsResponseMessageOriginal (SearchHit[] hits) {
