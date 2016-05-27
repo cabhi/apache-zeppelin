@@ -182,6 +182,8 @@ public class Input implements Serializable {
   //                                                checkbox form with " or " as delimiter: will be
   //                                                expanded to "US or JP"
   private static final Pattern VAR_PTN = Pattern.compile("([_])?[$][{]([^=}]*([=][^}]*)?)[}]");
+  private static final Pattern DEPENDENT_VAR_PTN = 
+    Pattern.compile("([_])?[@][{]([^=}]*([=][^}]*)?)[}]");
 
   private static String[] getNameAndDisplayName(String str) {
     Pattern p = Pattern.compile("([^(]*)\\s*[(]([^)]*)[)]");
@@ -312,9 +314,28 @@ public class Input implements Serializable {
 
   private static final String DEFAULT_DELIMITER = ",";
 
-  public static String getSimpleQuery(Map<String, Object> params, String script) {
+  public static String resolveDependentParams(Map<String, Object> params, String script) {
     String replaced = script;
-
+      
+    Matcher match = DEPENDENT_VAR_PTN.matcher(replaced);
+    while (match.find()) {
+      Input input = getInputForm(match);
+      Object value;
+      if (params.containsKey(input.name)) {
+        value = params.get(input.name);
+      } else {
+        value = input.defaultValue;
+      }
+      replaced = match.replaceFirst(value.toString());
+      match = VAR_PTN.matcher(replaced);
+    }
+      
+    return replaced;
+  }
+  
+  public static String getSimpleQuery(Map<String, Object> params, String script) {
+    String replaced = resolveDependentParams(params, script);
+    
     Matcher match = VAR_PTN.matcher(replaced);
     while (match.find()) {
       Input input = getInputForm(match);
@@ -363,19 +384,16 @@ public class Input implements Serializable {
     for (StringMap<String> value: values) {
       String field = value.get("column");
       String operator = value.get("operator");
-      String operand = value.get("operand");
-      
-      String type = "number";
-      try {
-        Double.parseDouble(operand);
-      } catch (NumberFormatException ex) {
-        type = "string";
-      }
-      
+      String operand = value.get("operand"); 
       switch (operator) {
           case "=": 
-            query.append("{\"term\":").append("{").append(field).append(":")
+        	  if(field.equalsIgnoreCase("requestId")){
+            query.append("{\"term\":").append("{").append(field).append(".raw:")
               .append(operand).append("}}");
+        	  }else{
+        		  query.append("{\"term\":").append("{").append(field).append(":")
+                  .append(operand).append("}}");
+        	  }
             break;
           case "!=": 
             query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
@@ -398,12 +416,17 @@ public class Input implements Serializable {
               .append("{\"gte\":").append(operand).append("}}}");
             break;
           case "contains": 
-            query.append("{\"wildcard\":").append("{").append(field).append(":")
+        	  if(isValidWord(operand)){
+        		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
+                  .append(operand).append("*}}"); 
+        	  }else{
+            query.append("{\"match_phrase\":").append("{").append(field).append(":")
               .append(operand).append("}}");
+        	  }
             break; 
           case "starts with":
-            query.append("{\"prefix\":").append("{").append(field).append(":")
-              .append(operand).append("}}");
+            query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
+              .append(operand).append("\"}}");
       }
       
       query.append(",");
@@ -411,7 +434,9 @@ public class Input implements Serializable {
     
     return query.toString();
   }
-
+  public static boolean isValidWord(String inputString) {
+	    return inputString.matches("[A-Za-z]*");
+	}
 
   public static String[] split(String str) {
     return str.split(";(?=([^\"']*\"[^\"']*\")*[^\"']*$)");

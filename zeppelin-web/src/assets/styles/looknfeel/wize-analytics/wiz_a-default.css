@@ -2,7 +2,22 @@
 Description: Works common for Wize Analytics default
 Domain: Wize
 */
+@font-face {
+    font-family: 'ProximaNova';    
+    src: url('fonts/proximanova-regular-webfont.woff') format('woff');    
+}
+@font-face {
+    font-family: 'ProximaNova-Light';    
+    src: url('fonts/proximanova-light-webfont.woff') format('woff');    
+}
+@font-face {
+    font-family: 'ProximaNova-Bold';    
+    src: url('fonts/proximanova-bold-webfont.woff') format('woff');    
+}
 body{
+	background-color: #f0f3f4;
+	color:#212121;
+	font-family: 'ProximaNova';
 	margin: 0;
 	padding:0;
 }
@@ -136,25 +151,30 @@ only screen and (min-resolution: 2dppx) {
  
  /*navbar start*/
 .navbar-default.displayNavBar2{
-	background-color: #e85b5d;
+	background-color: #fff;
 	border-radius: 0px;
 	border-left: none;
 	border-right: none;
 	border-top: none;
 	margin: 0 -10px;
 }
+.navbar-default.displayNavBar2 .navbar-collapse{
+	padding-left: 0;
+	padding-right: 0;
+}
 .navbar-default.displayNavBar2 .navbar-nav>li>a{
-color:#fff !important;
+color:#212121;
 }
 .navbar-default.displayNavBar2 .navbar-nav>li>a:hover{
-color:#fff !important;
+color:#212121;
 }
 .navbar-default.displayNavBar2 .navbar-nav>.open>a, .navbar-default.displayNavBar2 .navbar-nav>.open>a:focus, .navbar-default.displayNavBar2 .navbar-nav>.open>a:hover{
-color:#fff;
-background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(217,31,33,1) 100%);
+color:#212121;
+background-color: #f5f5f5;
+/*background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(217,31,33,1) 100%);
 background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(217,31,33,1) 100%);
 background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(217,31,33,1) 100%); 
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#d91f21',GradientType=0 );
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#d91f21',GradientType=0 );*/
 }
 .navbar-default.displayNavBar2 .navbar-nav>li>.dropdown-menu {
     margin-top: 0;
@@ -167,11 +187,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 border-radius:0px;
 }
 .server-status{
-color:#fff !important;
+	padding-right: 2px;
 }
-.server-disconnected{
-color:#a51719 !important;
-}
+
 /*navbar ends*/
 
  
@@ -199,7 +217,13 @@ color:#a51719 !important;
 .log-viewer .panel .panel-collapse{
 	transition:none !important;
 }
-
+.angular-json-explorer{
+	font-family: 'ProximaNova';
+}
+.angular-json-explorer a.collapser:hover,
+.angular-json-explorer a.collapser:focus{
+	outline: none;
+}
 .json-formatter-row .toggler::after {
     content: "\f0da";
  font-family: 'FontAwesome';
@@ -226,6 +250,12 @@ color:#a51719 !important;
 }
 /*json viewer ends*/
 
+.paragraph .control{
+background: transparent;
+right: 10px;
+top: 10px;
+padding: 15px;
+}
 
 .paragraphForm.form-horizontal .form-group {
     margin-right: 0;
@@ -235,14 +265,25 @@ color:#a51719 !important;
 .paragraphForm.form-horizontal .form-group select.input-sm{
  border-radius:0px;
 }
+
+.new-paragraph:hover{
+	background-color: #239c72;
+	margin: -7px 0 0 0;
+}
+.new-paragraph:hover .plus-sign{
+	color:#fff;
+}
 .wiz_a-common-noteAction_wrapper{
 	margin: 0 -24px;
 }
 .noteAction{
 	position: relative;
+	padding: 10px 5px 10px 10px;
+	height: auto;
 	top: 0;
 	z-index: auto;
 	margin: 0;
+	box-shadow: none;
 }
 .noteAction span, .noteAction button, .noteAction form{
 visibility:visible;
@@ -258,40 +299,50 @@ margin-top:5px !important;
 }
 
 .form-control-static2{
-font-size:16px !important;
-text-transform:uppercase;
-color:#e85b5d !important;
+	font-family: 'ProximaNova-Light';
+	font-size:24px;
+	text-transform:uppercase;
 }
 
 .open>.dropdown-menu{
-border-radius:0px !important;
+border-radius:0;
 }
 
 /*noteAction ends*/
 
 /*json viewer container start*/
 .paragraph-col{
-border:1px solid #e5e5e5 !important;
+padding: 0 20px 20px;
+}
+.paragraph-col .focused{
+	box-shadow: none;
+	border: 1px solid #e5e5e5;
+	border-bottom: 2px solid #e85b5d;
 }
 .paragraph-margin {
-    margin-right: 0 !important;
-    margin-left: 0 !important;
-    border: none !important;
+    margin-right: 0;
+    margin-left: 0;
+    border-bottom: 2px solid #e85b5d;
+	border-radius: 0;
 }
 /*json viewer container ends*/
 
 /*accordian interaction control adjustments start*/
 
 .panel-group div.panel.panel-default{
-border-radius: 0px !important;
+border-radius: 0;
+}
+.panel-group div.panel.panel-default > div.panel-heading {
+    color: #212121;
+    background-color: #f0f3f4;
+    border-color: #e5e5e5;
 }
 .panel-group div.panel.panel-default > div.panel-heading > .panel-title{
-font-size:13px !important;
-border-color:#ccc !important;
+font-size:13px;
 }
 .panel-group .panel+.panel {
-    margin-top: 0px !important;
- border-top:none !important;
+    margin-top: 0;
+ border-top:none;
 }
 .accordion-toggle:hover,
 .accordion-toggle:focus{
@@ -300,18 +351,20 @@ outline:none !important;
 cursor:pointer !important;
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-left{
-padding-right:5px !important;
-font-size: 16px !important;
-line-height: 10px !important;
+padding-right:5px;
+font-size: 16px;
+line-height: 10px;
+width:14px;
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-left:before{
 font-family:"FontAwesome";
 content:"\f0da";
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-down{
-padding-right:5px !important;
-font-size: 16px !important;
-line-height: 10px !important;
+padding-right:5px;
+font-size: 16px;
+line-height: 10px;
+width:14px;
 }
 .accordion-toggle i.pull-left.glyphicon.glyphicon-chevron-down:before{
 font-family:"FontAwesome";

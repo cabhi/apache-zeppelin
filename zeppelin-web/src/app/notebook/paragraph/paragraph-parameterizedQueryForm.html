@@ -36,7 +36,7 @@ limitations under the License.
       </span>
       <input placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }"
         name="{{formulaire.name}}" ng-if="formulaire.name.indexOf('Date') > -1" ng-model="paragraph.settings.params[formulaire.name]"
-        datepicker-popup="{{format}}" is-open="$parent.openedDate[$index]" close-text="Close" ng-click="$parent.openedDate[$index] = true"
+        datetimepicker options="{format: 'MM/DD/YYYY hh:mm:ss A'}"
       />
       <filter-strip ng-if="formulaire.name.indexOf('Filter') > -1" columns="columns" filters="paragraph.settings.params[formulaire.name]" operators='["=", "!=", "<", ">", "<=", ">=", "contains", "starts with", "ends with"]' onFilterChange="runParagraph(getEditorValue())"></filter-strip>
     </div>
