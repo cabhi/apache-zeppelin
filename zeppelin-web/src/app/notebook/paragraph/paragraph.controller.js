@@ -503,6 +503,7 @@ angular.module('zeppelinWebApp')
             // rendering output can took some time. So delay scrolling event firing for sometime.
             setTimeout(function () {
               $rootScope.$broadcast('scrollToCursor');
+              $rootScope.$broadcast('updateDerivedParams');
             }, 500);
           }
         }
@@ -1179,6 +1180,9 @@ angular.module('zeppelinWebApp')
 
     $scope.$on('updateDerivedParams', function (event, paraId) {
       var isDerived = isDerived($scope.paragraph, paraId);
+      if (isDerived) {
+        $scope.runParagraph($scope.getEditorValue());
+      }
     });
 
     $scope.$on('openEditor', function (event) {
@@ -1541,16 +1545,31 @@ angular.module('zeppelinWebApp')
           }
         } catch (ignoreErr) {
         }
+        console.log(type);
+        console.dir($scope.chart[type]);
+        if($scope.chart[type].scatter){
+          $scope.chart[type].scatter.dispatch.on("elementClick", function (e) {
+            console.dir(e);
+          });
+        }
+        if($scope.chart[type].lines){
+          $scope.chart[type].lines.dispatch.on("elementClick", function (e) {
+            console.dir(e);
+          });
+        }
+        if($scope.chart[type].stacked){
+          $scope.chart[type].stacked.dispatch.on("areaClick", function (e) {
+            console.dir(e);
+          });
+        }
         if ($scope.chart[type].multibar) {
           $scope.chart[type].multibar.dispatch.on('elementClick', function (e) {
-            console.log('element: ' + e.value);
-            console.dir(e.point);
+            console.log(e);
           });
         }
         if ($scope.chart[type].pie) {
           $scope.chart[type].pie.dispatch.on('elementClick', function (e) {
-            console.log('element: ' + e.value);
-            console.dir(e.point);
+            console.log(e);
           });
         }
         var chartEl = d3.select('#p' + $scope.paragraph.id + '_' + type + ' svg')
@@ -1915,7 +1934,7 @@ angular.module('zeppelinWebApp')
       var colNameIndex = {};
       var colIdx = 0;
       var rowIndexValue = {};
-
+      console.log(keys, groups, values);
       for (var k in rows) {
         traverse(sKey, schema[sKey], k, rows[k], function (rowName, rowValue, colName, value) {
           //console.log("RowName=%o, row=%o, col=%o, value=%o", rowName, rowValue, colName, value);
