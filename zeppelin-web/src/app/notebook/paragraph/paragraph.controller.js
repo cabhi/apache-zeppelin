@@ -16,7 +16,7 @@
 
 angular.module('zeppelinWebApp')
   .controller('ParagraphCtrl', function ($scope, $rootScope, $route, $window, $element, $routeParams, $location,
-    $timeout, $compile, websocketMsgSrv, ngToast, $interval, $sce, utils) {
+    $timeout, $compile, websocketMsgSrv, ngToast, $interval, $sce, DataTypes, utils) {
     var ANGULAR_FUNCTION_OBJECT_NAME_PREFIX = '_Z_ANGULAR_FUNC_';
     $scope.parentNote = null;
     $scope.paragraph = null;
@@ -249,7 +249,8 @@ angular.module('zeppelinWebApp')
 
     $scope.getLogSummary = function (row) {
       var summaryParts = _.map(extractLogFieldPref($scope.logViewFields), function (field) {
-          return utils.getPath(row, field);
+        var value = utils.getPath(row, field);
+        return DataTypes.format(_.last(field.split('.')), value);
       });
       var availableWidth = angular.element('#p' + $scope.paragraph.id + '_resize').width(),
         padding = availableWidth / summaryParts.length - 20;

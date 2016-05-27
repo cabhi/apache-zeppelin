@@ -1,0 +1,6 @@
+{
+  "timestamp": "DateTime",
+  "responseTime": "millisecond",
+  "requestSize": "byte",
+  "responseSize": "byte"
+}
