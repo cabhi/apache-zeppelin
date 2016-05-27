@@ -36,6 +36,7 @@ angular.module('zeppelinWebApp')
       expandableRowHeight: 300,
       expandableRowTemplate: 'app/notebook/paragraph/json-viewer.html'
     };
+    $scope.isDerived = isDerived;
     var colDef = [];
     function onRegisterApi(gridApi) {
       if (gridApi.expandable) {
@@ -503,7 +504,7 @@ angular.module('zeppelinWebApp')
             // rendering output can took some time. So delay scrolling event firing for sometime.
             setTimeout(function () {
               $rootScope.$broadcast('scrollToCursor');
-              $rootScope.$broadcast('updateDerivedParams');
+              $rootScope.$broadcast('updateDerivedParams', $scope.paragraph.id);
             }, 500);
           }
         }
@@ -1179,8 +1180,17 @@ angular.module('zeppelinWebApp')
     });
 
     $scope.$on('updateDerivedParams', function (event, paraId) {
-      var isDerived = isDerived($scope.paragraph, paraId);
+      var isDerived =$scope.isDerived($scope.paragraph, paraId);
       if (isDerived) {
+        $scope.runParagraph($scope.getEditorValue());
+      }
+    });
+    
+    $scope.$on('drillDown', function (event, args) {
+      console.dir(args);
+      var isDerived = $scope.isDerived($scope.paragraph, args.paraId);
+      if (isDerived) {
+        $scope.paragraph.config.drillDown = args.params;
         $scope.runParagraph($scope.getEditorValue());
       }
     });
@@ -1555,6 +1565,10 @@ angular.module('zeppelinWebApp')
             params[$scope.paragraph.config.graph.keys[0].name] = e.point.x;
             params[$scope.paragraph.config.graph.groups[0].name] = e.series.key;
             console.dir(params);
+            var args = {};
+            args.paraId = $scope.paragraph.id;
+            args.params = params;
+            $rootScope.$broadcast("drillDown", args);
           });
         }
         else if($scope.chart[type].stacked){
@@ -1563,6 +1577,10 @@ angular.module('zeppelinWebApp')
             var params = {};
             params[$scope.paragraph.config.graph.groups[0].name] = e.series;
             console.dir(params);
+            var args = {};
+            args.paraId = $scope.paragraph.id;
+            args.params = params;
+            $rootScope.$broadcast("drillDown", args);
           });
         }
         else if($scope.chart[type].lines){
@@ -1576,6 +1594,10 @@ angular.module('zeppelinWebApp')
              var params = {};
             params[$scope.paragraph.config.graph.keys[0].name] = e.label;
             console.dir(params);
+            var args = {};
+            args.paraId = $scope.paragraph.id;
+            args.params = params;
+            $rootScope.$broadcast("drillDown", args);
           });
         }
         else if($scope.chart[type].scatter){
