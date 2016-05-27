@@ -1547,31 +1547,38 @@ angular.module('zeppelinWebApp')
         }
         console.log(type);
         console.dir($scope.chart[type]);
-        if($scope.chart[type].scatter){
-          $scope.chart[type].scatter.dispatch.on("elementClick", function (e) {
-            console.dir(e);
+        if ($scope.chart[type].multibar) {
+          $scope.chart[type].multibar.dispatch.on('elementClick', function (e) {
+            console.log(e);
+            console.log($scope.paragraph.config.graph.keys);
+            var params = {};
+            params[$scope.paragraph.config.graph.keys[0].name] = e.point.x;
+            params[$scope.paragraph.config.graph.groups[0].name] = e.series.key;
+            console.dir(params);
           });
         }
-        if($scope.chart[type].lines){
-          $scope.chart[type].lines.dispatch.on("elementClick", function (e) {
-            console.dir(e);
-          });
-        }
-        if($scope.chart[type].stacked){
+        else if($scope.chart[type].stacked){
           $scope.chart[type].stacked.dispatch.on("areaClick", function (e) {
             console.dir(e);
           });
         }
-        if ($scope.chart[type].multibar) {
-          $scope.chart[type].multibar.dispatch.on('elementClick', function (e) {
-            console.log(e);
+        else if($scope.chart[type].lines){
+          $scope.chart[type].lines.dispatch.on("elementClick", function (e) {
+            console.dir(e);
           });
         }
-        if ($scope.chart[type].pie) {
+        else if ($scope.chart[type].pie) {
           $scope.chart[type].pie.dispatch.on('elementClick', function (e) {
             console.log(e);
           });
         }
+        else if($scope.chart[type].scatter){
+          $scope.chart[type].scatter.dispatch.on("elementClick", function (e) {
+            console.dir(e);
+          });
+        }
+        
+        
         var chartEl = d3.select('#p' + $scope.paragraph.id + '_' + type + ' svg')
           .attr('height', $scope.paragraph.config.graph.height)
           .datum(d3g)
