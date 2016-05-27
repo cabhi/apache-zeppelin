@@ -24,8 +24,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.wizni.LogEntry;
-import com.wizni.OldFormat;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.zeppelin.interpreter.Interpreter;
@@ -62,6 +60,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -667,11 +667,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       
       jsonResponse.append(prefix);
       prefix = ",";
-      jsonResponse.append("{\"summary\":\"");
-      jsonResponse.append(getSummary(json));
-      jsonResponse.append("\", \"details\":");
-      jsonResponse.append(getDetails(json));
-      jsonResponse.append("}");
+      jsonResponse.append(json);
     } 
     jsonResponse.append("]}");
     
@@ -679,71 +675,6 @@ public class ElasticsearchInterpreter extends Interpreter {
       InterpreterResult.Code.SUCCESS,
       InterpreterResult.Type.TEXT,
       jsonResponse.toString());
-  }
-  
-  private String getDetails(String json) {
-    try {
-      LogEntry entry = gsonParser.fromJson(json, LogEntry.class);
-      entry.getMetadata().setTimestamp(parseDate(entry.getMetadata().getTimestamp()));
-      
-      entry.getAppInfo().setStartTime(parseDate(entry.getAppInfo().getStartTime()));
-      entry.getAppInfo().setEndTime(parseDate(entry.getAppInfo().getEndTime()));
-      
-      for (int i = 0; i < entry.getAppInfo().getLines().length; i++){
-        String time = entry.getAppInfo().getLines()[i].getTime();
-        entry.getAppInfo().getLines()[i].setTime(parseDate(time));
-      }
-      
-      return gson.toJson(entry);
-    } catch (Exception ex) {
-    }
-    
-    try {
-      OldFormat oldEntry = gsonParser.fromJson(json, OldFormat.class);
-      oldEntry.setDate(parseDate(oldEntry.getDate()));
-      return gson.toJson(oldEntry);
-    } catch (Exception ex) {
-      return json;
-    }
-  }
-  
-  private String getSummary(String details) {
-    StringBuffer summary = new StringBuffer();
-    try {
-      LogEntry entry = gsonParser.fromJson(details, LogEntry.class);
-      summary.append(parseDate(entry.getMetadata().getTimestamp()));
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpResponse().getStatus());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpResponse().getResponseTime());
-      summary.append("ms");
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getMetadata().getLevel());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpRequest().getRemoteIp());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(entry.getHttpRequest().getRequestUrl());
-      return summary.toString();
-    } catch (Exception ex) {
-      //return "No summary to display, please expand";
-    }
-    
-    try {
-      OldFormat oldEntry = gsonParser.fromJson(details, OldFormat.class);
-      summary.append(parseDate(oldEntry.getDate()));
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getLogLevel());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getHttpMethod());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getRequest());
-      summary.append(" &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;");
-      summary.append(oldEntry.getStatusCode());
-    } catch (Exception ex) {
-      return "No summary to display, please expand";
-    }
-    
-    return summary.toString();
   }
 
   private String buildSearchHitsResponseMessageOriginal (SearchHit[] hits) {
@@ -794,30 +725,25 @@ public class ElasticsearchInterpreter extends Interpreter {
     return buffer.toString();
   }
   
+  private static final Pattern EMPTY_1 = Pattern.
+    compile("\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*,");
+  private static final Pattern EMPTY_2 = Pattern.
+    compile(",\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*");
+  private static final Pattern EMPTY_3 = Pattern.
+    compile("\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*");
+   
+  
   private static String enhanceCommand(String cmd){
-    cmd = cmd.replaceAll("\\{\"logLevel\":\\}", "{\"logLevel\":*}");
-    cmd = cmd.replaceAll("\\{\"userId\":\\}", "{\"userId\":*}");
-    cmd = cmd.replaceAll("\\{\"statusMessage\":\\}", "{\"statusMessage\":*}");
-    //cmd = cmd.replaceAll("\\{\"statusCode\":\\}", "{\"statusCode\":*}");
-    cmd = cmd.replaceAll("\\{\"term\":\\{\"statusCode\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"match\":\\{\"statusCode\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"request\":\\}", "{\"request\":*}");
-    cmd = cmd.replaceAll("\\{\"reqId\":\\}", "{\"reqId\":*}");
-    cmd = cmd.replaceAll("\\{\"httpMethod\":\\}", "{\"httpMethod\":*}");
     
-    cmd = cmd.replaceAll("\\{\"level\":\\}", "{\"level\":*}");
-    cmd = cmd.replaceAll("\\{\"hostname\":\\}", "{\"hostname\":*}");
-    //cmd = cmd.replaceAll("\\{\"logtime\":\\}", "{\"logtime\":*}");
-    cmd = cmd.replaceAll("\\{\"wildcard\":\\{\"logtime\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"log\":\\}", "{\"log\":*}");
+    Matcher match = EMPTY_1.matcher(cmd);
+    cmd = match.replaceAll("");
     
-    cmd = cmd.replaceAll("\\{\"requestId\":\\}", "{\"requestId\":*}");
-    cmd = cmd.replaceAll("\\{\"requestURL\":\\}", "{\"requestURL\":*}");
-    cmd = cmd.replaceAll("\\{\"requestMethod\":\\}", "{\"requestMethod\":*}");
+    match = EMPTY_2.matcher(cmd);
+    cmd = match.replaceAll("");
     
-    cmd = cmd.replaceAll("\\{\"term\":\\{\"httpResponse.status\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"term\":\\{\"httpResponse.status\":all\\}\\},", "");
-    
+    match = EMPTY_3.matcher(cmd);
+    cmd = match.replaceAll("");
+        
     return cmd;
   }
   
@@ -852,13 +778,13 @@ public class ElasticsearchInterpreter extends Interpreter {
 //    System.out.println(enhanceHeaders("request"));
 //    System.out.println(enhanceHeaders("Response"));
       
-//    System.out.println(enhanceCommand("{\"wildcard\":{\"logLevel\":}},{\"wildcard\":"
-//      + "{\"userId\":}}" +
-//      ",{\"wildcard\":{\"statusMessage\":}},{\"wildcard\":{\"request\":}},{\"term\""
-//      + ":{\"statusCode\":}},{\"wildcard\":{\"httpMethod\":}}"));
+    System.out.println(enhanceCommand("{\"wildcard\":{\"logLevel\": \"more\"}},{\"wildcard\":"
+      + "{\"userId\":}}" +
+      ",{\"wildcard\":{\"statusMessage\":}},{\"wildcard\":{\"request\":some}},{\"term\""
+      + ":{\"statusCode\":}},{\"wildcard\":{\"httpMethod\":something}}"));
 //    System.out.println(parseDate("2016-04-20T00:00:00"));
       
-    System.out.println(removeUrlHeader("/rest-api/tapps/foundationalservice"));
+//    System.out.println(removeUrlHeader("/rest-api/tapps/foundationalservice"));
   }
 
   private InterpreterResult buildResponseMessage(SearchResponse response) {

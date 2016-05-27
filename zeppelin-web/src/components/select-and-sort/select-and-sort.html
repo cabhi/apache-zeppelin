@@ -1,0 +1,21 @@
+<div class="dropdown wiz_a-common-filterSearch" dropdown>
+  <button class="btn btn-default dropdown-toggle" dropdown-toggle>Column Preferences <span class="caret"></span>
+  </button>
+  <div class="dropdown-menu" role="menu">
+    <div class="actionContainer">
+      <div>
+        <button class="btn btn-success" ng-click="save()">Save</button>
+        <button class="btn btn-danger">Close</button>
+      </div>
+    </div>
+    <hr/>
+    <div id="notebook-list" class="scrollbar-container">
+      <ul>
+        <li ng-repeat="item in items" ng-click="$event.stopPropagation()">
+          <label>
+            <input type="checkbox" ng-model="item.selected"> {{item.name}}
+          </label>
+      </ul>
+    </div>
+  </div>
+</div>
