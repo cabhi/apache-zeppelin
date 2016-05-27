@@ -60,6 +60,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -723,30 +725,25 @@ public class ElasticsearchInterpreter extends Interpreter {
     return buffer.toString();
   }
   
+  private static final Pattern EMPTY_1 = Pattern.
+    compile("\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*,");
+  private static final Pattern EMPTY_2 = Pattern.
+    compile(",\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*");
+  private static final Pattern EMPTY_3 = Pattern.
+    compile("\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*");
+   
+  
   private static String enhanceCommand(String cmd){
-    cmd = cmd.replaceAll("\\{\"logLevel\":\\}", "{\"logLevel\":*}");
-    cmd = cmd.replaceAll("\\{\"userId\":\\}", "{\"userId\":*}");
-    cmd = cmd.replaceAll("\\{\"statusMessage\":\\}", "{\"statusMessage\":*}");
-    //cmd = cmd.replaceAll("\\{\"statusCode\":\\}", "{\"statusCode\":*}");
-    cmd = cmd.replaceAll("\\{\"term\":\\{\"statusCode\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"match\":\\{\"statusCode\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"request\":\\}", "{\"request\":*}");
-    cmd = cmd.replaceAll("\\{\"reqId\":\\}", "{\"reqId\":*}");
-    cmd = cmd.replaceAll("\\{\"httpMethod\":\\}", "{\"httpMethod\":*}");
     
-    cmd = cmd.replaceAll("\\{\"level\":\\}", "{\"level\":*}");
-    cmd = cmd.replaceAll("\\{\"hostname\":\\}", "{\"hostname\":*}");
-    //cmd = cmd.replaceAll("\\{\"logtime\":\\}", "{\"logtime\":*}");
-    cmd = cmd.replaceAll("\\{\"wildcard\":\\{\"logtime\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"log\":\\}", "{\"log\":*}");
+    Matcher match = EMPTY_1.matcher(cmd);
+    cmd = match.replaceAll("");
     
-    cmd = cmd.replaceAll("\\{\"requestId\":\\}", "{\"requestId\":*}");
-    cmd = cmd.replaceAll("\\{\"requestURL\":\\}", "{\"requestURL\":*}");
-    cmd = cmd.replaceAll("\\{\"requestMethod\":\\}", "{\"requestMethod\":*}");
+    match = EMPTY_2.matcher(cmd);
+    cmd = match.replaceAll("");
     
-    cmd = cmd.replaceAll("\\{\"term\":\\{\"httpResponse.status\":\\}\\},", "");
-    cmd = cmd.replaceAll("\\{\"term\":\\{\"httpResponse.status\":all\\}\\},", "");
-    
+    match = EMPTY_3.matcher(cmd);
+    cmd = match.replaceAll("");
+        
     return cmd;
   }
   
@@ -781,13 +778,13 @@ public class ElasticsearchInterpreter extends Interpreter {
 //    System.out.println(enhanceHeaders("request"));
 //    System.out.println(enhanceHeaders("Response"));
       
-//    System.out.println(enhanceCommand("{\"wildcard\":{\"logLevel\":}},{\"wildcard\":"
-//      + "{\"userId\":}}" +
-//      ",{\"wildcard\":{\"statusMessage\":}},{\"wildcard\":{\"request\":}},{\"term\""
-//      + ":{\"statusCode\":}},{\"wildcard\":{\"httpMethod\":}}"));
+    System.out.println(enhanceCommand("{\"wildcard\":{\"logLevel\": \"more\"}},{\"wildcard\":"
+      + "{\"userId\":}}" +
+      ",{\"wildcard\":{\"statusMessage\":}},{\"wildcard\":{\"request\":some}},{\"term\""
+      + ":{\"statusCode\":}},{\"wildcard\":{\"httpMethod\":something}}"));
 //    System.out.println(parseDate("2016-04-20T00:00:00"));
       
-    System.out.println(removeUrlHeader("/rest-api/tapps/foundationalservice"));
+//    System.out.println(removeUrlHeader("/rest-api/tapps/foundationalservice"));
   }
 
   private InterpreterResult buildResponseMessage(SearchResponse response) {
