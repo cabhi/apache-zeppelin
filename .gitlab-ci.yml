@@ -29,4 +29,4 @@ test_deploy:
   stage: trigger
   image: wizni/maven:3.3.3
   script:
-    - "curl -X POST -F token=${TEST_DEPLOY_TOKEN} -F ref=master http://188.166.190.20/api/v3/projects/7/trigger/builds"
+    - "curl -X POST -F token=${TEST_DEPLOY_TOKEN} -F ref=${TEST_DEPLOY_BRANCH} ${TEST_TRIGGER_API}"
