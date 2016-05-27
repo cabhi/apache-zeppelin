@@ -277,6 +277,7 @@ padding: 15px;
 	margin: 0 -24px;
 }
 .noteAction{
+	border-bottom: 1px solid #e5e5e5;
 	position: relative;
 	padding: 10px 5px 10px 10px;
 	height: auto;
@@ -322,6 +323,7 @@ padding: 0 20px 20px;
 .paragraph-margin {
     margin-right: 0;
     margin-left: 0;
+	border: 1px solid #e5e5e5;
     border-bottom: 2px solid #e85b5d;
 	border-radius: 0;
 }
