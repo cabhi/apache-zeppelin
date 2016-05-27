@@ -16,7 +16,7 @@
 
 angular.module('zeppelinWebApp')
   .controller('ParagraphCtrl', function ($scope, $rootScope, $route, $window, $element, $routeParams, $location,
-    $timeout, $compile, websocketMsgSrv, ngToast, $interval) {
+    $timeout, $compile, websocketMsgSrv, ngToast, $interval, $sce, utils) {
     var ANGULAR_FUNCTION_OBJECT_NAME_PREFIX = '_Z_ANGULAR_FUNC_';
     $scope.parentNote = null;
     $scope.paragraph = null;
@@ -214,6 +214,8 @@ angular.module('zeppelinWebApp')
 
     $scope.renderText = function () {
       var retryRenderer = function () {
+        var data = [],
+          firstItem = {};
 
         // var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
         // if (textEl.length) {
@@ -232,17 +234,60 @@ angular.module('zeppelinWebApp')
         //   $timeout(retryRenderer, 10);
         // }
         try {
-          var data = JSON.parse($scope.paragraph.result.msg);
-        }
-        catch (err) {
-        }
+          data = JSON.parse($scope.paragraph.result.msg);
+        } catch (err) {}
+
         if (data && data.rows && data.rows.length > 0) {
           $scope.data = data.rows;
-          $scope.columns = $scope.data[0].details ? Object.keys($scope.data[0].details) : Object.keys($scope.data[0]);
+          firstItem = $scope.data[0] || {};
+          $scope.columns = utils.getFlatObjectGraph(firstItem);
+          $scope.logViewFields = mergeLogFieldPref($scope.paragraph.settings.params.preferences);
         }
       };
       $timeout(retryRenderer);
     };
+
+    $scope.getLogSummary = function (row) {
+      var summaryParts = _.map(extractLogFieldPref($scope.logViewFields), function (field) {
+          return utils.getPath(row, field);
+      });
+      var availableWidth = angular.element('#p' + $scope.paragraph.id + '_resize').width(),
+        padding = availableWidth / summaryParts.length - 20;
+      return $sce.trustAsHtml('<span style="display: inline-block; width: ' + padding +'px;">' + summaryParts.join('</span><span style="display: inline-block; width: ' + padding +'px; text-align: right;">') + '</span>');
+    };
+
+    $scope.updatePref = function (newPref) {
+      $scope.paragraph.settings.params.preferences = extractLogFieldPref(newPref);
+    };
+
+    function mergeLogFieldPref(prefs) {
+      var allFields = $scope.columns;
+
+      if (!prefs || prefs.length === 0) {
+        prefs = _.take(allFields, 5);
+      }
+
+      var unselectedFields = _.difference(allFields, prefs);
+      var selectedPref = _.map(prefs, function (item) {
+        return {
+          field: item,
+          name: _.startCase(_.last(item.split('.'))),
+          selected: true
+        };
+      });
+      var unselectedPref = _.map(unselectedFields, function (item) {
+        return {
+          field: item,
+          name: _.startCase(_.last(item.split('.'))),
+          selected: false
+        };
+      });
+      return selectedPref.concat(unselectedPref);
+    }
+
+    function extractLogFieldPref(prefs) {
+      return prefs ? _(prefs).filter({selected: true}).map('field').value() : [];
+    }
 
     $scope.clearTextOutput = function () {
       var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
@@ -1185,7 +1230,7 @@ angular.module('zeppelinWebApp')
         $scope.runParagraph($scope.getEditorValue());
       }
     });
-    
+
     $scope.$on('drillDown', function (event, args) {
       console.dir(args);
       var isDerived = $scope.isDerived($scope.paragraph, args.paraId);
@@ -1605,8 +1650,8 @@ angular.module('zeppelinWebApp')
             console.dir(e);
           });
         }
-        
-        
+
+
         var chartEl = d3.select('#p' + $scope.paragraph.id + '_' + type + ' svg')
           .attr('height', $scope.paragraph.config.graph.height)
           .datum(d3g)
