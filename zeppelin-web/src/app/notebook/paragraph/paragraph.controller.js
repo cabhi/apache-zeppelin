@@ -1560,6 +1560,9 @@ angular.module('zeppelinWebApp')
         else if($scope.chart[type].stacked){
           $scope.chart[type].stacked.dispatch.on("areaClick", function (e) {
             console.dir(e);
+            var params = {};
+            params[$scope.paragraph.config.graph.groups[0].name] = e.series;
+            console.dir(params);
           });
         }
         else if($scope.chart[type].lines){
@@ -1570,6 +1573,9 @@ angular.module('zeppelinWebApp')
         else if ($scope.chart[type].pie) {
           $scope.chart[type].pie.dispatch.on('elementClick', function (e) {
             console.log(e);
+             var params = {};
+            params[$scope.paragraph.config.graph.keys[0].name] = e.label;
+            console.dir(params);
           });
         }
         else if($scope.chart[type].scatter){
