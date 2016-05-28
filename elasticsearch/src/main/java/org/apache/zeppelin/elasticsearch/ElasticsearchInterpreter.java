@@ -18,6 +18,7 @@
 package org.apache.zeppelin.elasticsearch;
 
 import com.github.wnameless.json.flattener.JsonFlattener;
+import com.google.common.base.Joiner;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -97,6 +98,7 @@ public class ElasticsearchInterpreter extends Interpreter {
   public static final String ELASTICSEARCH_PORT = "elasticsearch.port";
   public static final String ELASTICSEARCH_CLUSTER_NAME = "elasticsearch.cluster.name";
   public static final String ELASTICSEARCH_RESULT_SIZE = "elasticsearch.result.size";
+  public static final String ELASTICSEARCH_RESULT_FROM = "elasticsearch.result.from";
 
   static {
     Interpreter.register(
@@ -108,6 +110,7 @@ public class ElasticsearchInterpreter extends Interpreter {
           .add(ELASTICSEARCH_PORT, "9300", "The port for Elasticsearch")
           .add(ELASTICSEARCH_CLUSTER_NAME, "elasticsearch", "The cluster name for Elasticsearch")
           .add(ELASTICSEARCH_RESULT_SIZE, "10", "The size of the result set of a search query")
+          .add(ELASTICSEARCH_RESULT_FROM, "0", "The offset into the search query results")
           .build());
   }
 
@@ -117,6 +120,7 @@ public class ElasticsearchInterpreter extends Interpreter {
   private int port = 9300;
   private String clusterName = "elasticsearch";
   private int resultSize = 10;
+  private int resultFrom = 0;
   
   private Gson gsonParser = new Gson();
   
@@ -128,6 +132,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     this.port = Integer.parseInt(getProperty(ELASTICSEARCH_PORT));
     this.clusterName = getProperty(ELASTICSEARCH_CLUSTER_NAME);
     this.resultSize = Integer.parseInt(getProperty(ELASTICSEARCH_RESULT_SIZE));
+    this.resultFrom = Integer.parseInt(getProperty(ELASTICSEARCH_RESULT_FROM));
     
     elasticCache = CacheBuilder.newBuilder().maximumSize(0)
             .expireAfterAccess(3, TimeUnit.DAYS)
@@ -166,14 +171,15 @@ public class ElasticsearchInterpreter extends Interpreter {
   public InterpreterResult interpret(String cmd, InterpreterContext interpreterContext) {
     logger.info("Run Elasticsearch command '" + cmd + "'");
     
-    cmd = enhanceCommand(cmd);
- 
-    logger.info("Run Enhanced Elasticsearch command '" + cmd + "'");
     if (StringUtils.isEmpty(cmd) || StringUtils.isEmpty(cmd.trim())) {
       return new InterpreterResult(InterpreterResult.Code.SUCCESS);
     }
+    
+    cmd = enhanceCommand(cmd);
+    logger.info("Run Enhanced Elasticsearch command '" + cmd + "'");
 
     int currentResultSize = resultSize;
+    int currentResultFrom = resultFrom;
 
     if (client == null) {
       return new InterpreterResult(InterpreterResult.Code.ERROR,
@@ -185,6 +191,28 @@ public class ElasticsearchInterpreter extends Interpreter {
     // Process some specific commands (help, size, ...)
     if ("help".equalsIgnoreCase(items[0])) {
       return processHelp(InterpreterResult.Code.SUCCESS, null);
+    }
+    
+    int searchLineIndex = 0;
+    if ("from".equalsIgnoreCase(items[0])) {
+      // In this case, the line with from must be followed by line with size or a search,
+      // so we will continue with the next lines
+      final String[] lines = StringUtils.split(cmd.trim(), "\n", 2);
+      if (lines.length < 2) {
+        return processHelp(InterpreterResult.Code.ERROR,
+          "From cmd must be followed by either a Size cmd or a search");
+      }
+      
+      final String[] fromLine = StringUtils.split(lines[0], " ", 2);
+      if (fromLine.length != 2) {
+        return processHelp(InterpreterResult.Code.ERROR, "Right format is : from <value>");
+      }
+      currentResultFrom = Integer.parseInt(fromLine[1]);
+      items = StringUtils.split(lines[1].trim(), " ", 3);
+      
+      //remove 'from' line from cmd
+      lines[0] = null;
+      cmd = Joiner.on("\n").skipNulls().join(lines);
     }
 
     if ("size".equalsIgnoreCase(items[0])) {
@@ -224,7 +252,7 @@ public class ElasticsearchInterpreter extends Interpreter {
         return processCount(urlItems, data);
       }
       else if ("search".equalsIgnoreCase(method)) {
-        return processSearch(urlItems, data, currentResultSize);
+        return processSearch(urlItems, data, currentResultFrom, currentResultSize);
       }
       else if ("index".equalsIgnoreCase(method)) {
         return processIndex(urlItems, data);
@@ -330,7 +358,7 @@ public class ElasticsearchInterpreter extends Interpreter {
                                    "Bad URL (it should be /index1,index2,.../type1,type2,...)");
     }
 
-    final SearchResponse response = searchData(urlItems, data, 0);
+    final SearchResponse response = searchData(urlItems, data, 0, 0);
 
     return new InterpreterResult(
       InterpreterResult.Code.SUCCESS,
@@ -342,10 +370,12 @@ public class ElasticsearchInterpreter extends Interpreter {
     String[] urlItems;
     String data;
     int size;
+    int from;
       
-    Request(String[] urlItems, String data, int size) {
+    Request(String[] urlItems, String data, int from, int size) {
       this.urlItems = urlItems;
       this.data = data;
+      this.from = from;
       this.size = size;
     }
       
@@ -367,12 +397,20 @@ public class ElasticsearchInterpreter extends Interpreter {
     public void setSize(int size) {
       this.size = size;
     }
+    public int getFrom() {
+      return from;
+    }
+    public void setFrom(int from) {
+      this.from = from;
+    }
+
     @Override
     public int hashCode() {
       final int prime = 31;
       int result = 1;
       result = prime * result + ((data == null) ? 0 : data.hashCode());
       result = prime * result + size;
+      result = prime * result + from;
       result = prime * result + Arrays.hashCode(urlItems);
       return result;
     }
@@ -392,6 +430,8 @@ public class ElasticsearchInterpreter extends Interpreter {
         return false;
       if (size != other.size)
         return false;
+      if (from != other.from)
+        return false;
       if (!Arrays.equals(urlItems, other.urlItems))
         return false;
       return true;
@@ -400,7 +440,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     @Override
     public String toString() {
       return "Request [urlItems=" + Arrays.toString(urlItems) + ", data="
-        + data + ", size=" + size + "]";
+        + data + ", from=" + from + ", size=" + size + "]";
     }
       
   }
@@ -415,7 +455,7 @@ public class ElasticsearchInterpreter extends Interpreter {
    * @return Result of the search request, it contains a tab-formatted string of the matching hits
  * @throws ExecutionException 
    */
-  private InterpreterResult processSearch(String[] urlItems, String data, int size) 
+  private InterpreterResult processSearch(String[] urlItems, String data, int from, int size) 
       throws ExecutionException {
 
     if (urlItems.length > 2) {
@@ -425,13 +465,14 @@ public class ElasticsearchInterpreter extends Interpreter {
     
     
     
-    Request req = new Request(urlItems, data, size);
+    Request req = new Request(urlItems, data, from, size);
     return elasticCache.get(req);
     
   }
   
   private InterpreterResult processSearchInternal(Request req) {
-    final SearchResponse response = searchData(req.getUrlItems(), req.getData(), req.getSize());
+    final SearchResponse response = searchData(req.getUrlItems(), 
+        req.getData(), req.getSize(), req.getFrom());
     return buildResponseMessage(response);
   }
   
@@ -492,7 +533,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     return new InterpreterResult(InterpreterResult.Code.ERROR, "Document not found");
   }
     
-  private SearchResponse searchData(String[] urlItems, String query, int size) {
+  private SearchResponse searchData(String[] urlItems, String query, int size, int from) {
 
     final SearchRequestBuilder reqBuilder = new SearchRequestBuilder(
       client, SearchAction.INSTANCE);
@@ -519,6 +560,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     }
 
     reqBuilder.setSize(size);
+    reqBuilder.setFrom(from);
 
     final SearchResponse response = reqBuilder.get();
 

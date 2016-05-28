@@ -142,6 +142,12 @@ public class ElasticsearchInterpreterTest {
 
     InterpreterResult res = interpreter.interpret("size 10\nsearch /logs *", null);
     assertEquals(Code.SUCCESS, res.code());
+    
+    res = interpreter.interpret("from 5\nsize 5\nsearch /logs *", null);
+    assertEquals(Code.SUCCESS, res.code());
+    
+    res = interpreter.interpret("from 5\nsearch /logs *", null);
+    assertEquals(Code.SUCCESS, res.code());
 
     res = interpreter.interpret("search /logs {{{hello}}}", null);
     assertEquals(Code.ERROR, res.code());
