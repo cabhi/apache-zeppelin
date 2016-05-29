@@ -3,17 +3,20 @@ Description: Works for Wize Analytics select and sort module
 Domain: Wize
 */
 
-.wiz_a-common-colPref button.btn {
-    background-color: #f0f3f4;
+.wiz_a-common-colPref > .btn.btn-default:first-child{
     border-radius: 0;
+    background-color: #f0f3f4;
     border-bottom: none;
     color: #212121;
     padding: 5px;
     margin-bottom: -1px;
 }
-.wiz_a-common-colPref.open > button.btn,
-.wiz_a-common-colPref.open > button.btn:hover,
-.wiz_a-common-colPref.open > button.btn:focus{
+.wiz_a-common-colPref h4{
+    font-size: 16px;
+}
+.wiz_a-common-colPref.open > button.btn:first-child,
+.wiz_a-common-colPref.open > button.btn:first-child:hover,
+.wiz_a-common-colPref.open > button.btn:first-child:focus{
     background-color: #fff;
 }
 
