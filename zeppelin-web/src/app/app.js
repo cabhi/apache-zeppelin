@@ -45,7 +45,8 @@
         'ui.grid.exporter',
         'ngJsonExplorer',
         'angularjs-dropdown-multiselect',
-        'ui.sortable'
+        'ui.sortable',
+        'infinite-scroll'
     ])
         .filter('breakFilter', function () {
             return function (text) {

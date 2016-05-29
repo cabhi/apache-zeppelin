@@ -38,6 +38,8 @@ angular.module('zeppelinWebApp')
     };
     $scope.isDerived = isDerived;
     var colDef = [];
+    var pageOffset = 0;
+
     function onRegisterApi(gridApi) {
       if (gridApi.expandable) {
         gridApi.expandable.on.rowExpandedStateChanged(a, onExpand);
@@ -174,6 +176,7 @@ angular.module('zeppelinWebApp')
       var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (o) { return o.id != $scope.paragraph.id; });
       $scope.multiSelectConfig.colsList = _.map(paragraphs, colSelectList);
       $scope.multiSelectConfig.selectedCols = _.map($scope.paragraph.config.paramsDerivedFrom, setSelected);
+      $scope.paragraph.settings.params.from = pageOffset;
     };
 
     $scope.renderHtml = function () {
@@ -214,8 +217,8 @@ angular.module('zeppelinWebApp')
 
     $scope.renderText = function () {
       var retryRenderer = function () {
-        var data = [],
-          firstItem = {};
+        var data,
+            firstItem;
 
         // var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
         // if (textEl.length) {
@@ -238,7 +241,12 @@ angular.module('zeppelinWebApp')
         } catch (err) {}
 
         if (data && data.rows && data.rows.length > 0) {
-          $scope.data = data.rows;
+          console.log('Rendered from ' + $scope.paragraph.settings.params.from);
+          if ($scope.paragraph.settings.params.from > 0) {
+            $scope.data = ($scope.data || []).concat(data.rows);
+          } else {
+            $scope.data = data.rows;
+          }
           firstItem = $scope.data[0] || {};
           $scope.columns = utils.getFlatObjectGraph(firstItem);
           $scope.logViewFields = mergeLogFieldPref($scope.paragraph.settings.params.preferences);
@@ -554,9 +562,7 @@ angular.module('zeppelinWebApp')
             }, 500);
           }
         }
-
       }
-
     });
 
     $scope.$on('appendParagraphOutput', function (event, data) {
@@ -589,8 +595,9 @@ angular.module('zeppelinWebApp')
       websocketMsgSrv.cancelParagraphRun($scope.paragraph.id);
     };
 
-    $scope.runParagraph = function (data) {
+    $scope.runParagraph = function (data, offset) {
       $scope.paragraph.config.derivedFrom = getDerivedFrom($scope.paragraph);
+      $scope.paragraph.settings.params.from = pageOffset = (offset || '0');
       websocketMsgSrv.runParagraph($scope.paragraph.id, $scope.paragraph.title,
         data, $scope.paragraph.config, $scope.paragraph.settings.params);
       $scope.originalText = angular.copy(data);
@@ -598,15 +605,13 @@ angular.module('zeppelinWebApp')
     };
 
     $scope.nextPage = function () {
-      var data = $scope.getEditorValue();
-      $scope.paragraph.config.derivedFrom = getDerivedFrom($scope.paragraph);
-      websocketMsgSrv.nextPage($scope.paragraph.id, $scope.paragraph.title,
-        data, $scope.paragraph.config, $scope.paragraph.settings.params,
-        $scope.paragraph.settings.params.pageSize ? $scope.paragraph.settings.params.pageSize : 100,
-        $scope.data.length);
-      $scope.originalText = angular.copy(data);
-      $scope.dirtyText = undefined;
-    }
+      if (pageOffset === $scope.data.length) {
+        return;
+      }
+      pageOffset = $scope.data.length;
+      console.log('next page with offset ' + pageOffset);
+      $scope.runParagraph($scope.getEditorValue(), pageOffset);
+    };
 
     $scope.saveParagraph = function () {
       if ($scope.dirtyText === undefined || $scope.dirtyText === $scope.originalText) {
