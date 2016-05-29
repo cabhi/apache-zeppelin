@@ -2,7 +2,9 @@
 Description: Works for Wize Analytics select and sort module
 Domain: Wize
 */
-
+.wiz_a-common-colPref .btn{
+    border-radius: 0;
+}
 .wiz_a-common-colPref > .btn.btn-default:first-child{
     border-radius: 0;
     background-color: #f0f3f4;
