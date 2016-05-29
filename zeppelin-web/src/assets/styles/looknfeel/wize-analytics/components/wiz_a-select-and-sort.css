@@ -1,0 +1,97 @@
+/*Module Name: Wize analytics select and sort
+Description: Works for Wize Analytics select and sort module
+Domain: Wize
+*/
+
+.wiz_a-common-colPref button.btn {
+    border-radius: 0;
+    padding: 5px;
+}
+
+    .wiz_a-common-colPref button.btn > span.fa-filter {
+        font-size: 18px;
+    }
+
+.wiz_a-common-colPref > ul.dropdown-menu {
+    left: 0;
+    right: 0;
+    border-radius: 0;
+}
+
+    .wiz_a-common-colPref > ul.dropdown-menu > li {
+        padding: 5px 25px 15px;
+    }
+
+        .wiz_a-common-colPref > ul.dropdown-menu > li div.checkbox {
+            width: 150px;
+            display: inline-table;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+.wiz_a-common-colPref > ul.dropdown-menu > li div.checkbox:nth-child(3n+1){
+    border-right: 1.9px dotted #e85b5d;
+    padding-right: 30px;
+}
+            .wiz_a-common-colPref > ul.dropdown-menu > li div.checkbox > label {
+                line-height: 1.75;
+                width: 150px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .wiz_a-common-colPref > ul.dropdown-menu > li div.checkbox > span.fa {
+                color: #2672ec;
+                font-size: 15px;
+            }
+
+                .wiz_a-common-colPref > ul.dropdown-menu > li div.checkbox > span.fa + .fa {
+                    color: #518eef;
+                    margin-left: 3px;
+                }
+
+        .wiz_a-common-colPref > ul.dropdown-menu > li hr {
+            border-color: #d5d5d5;
+        }
+
+        .wiz_a-common-colPref > ul.dropdown-menu > li .actionContainer {
+            text-align: right;
+        }
+
+            .wiz_a-common-colPref > ul.dropdown-menu > li .actionContainer .btn {
+                width: 100px;
+            }
+
+                .wiz_a-common-colPref > ul.dropdown-menu > li .actionContainer .btn + .btn {
+                    margin-left: 15px;
+                }
+
+
+.wiz_a-common-colPref .vertical-line{
+    width: 0px;
+  height: 100%;
+  float: left; 
+  border: 1px inset; 
+}
+.wiz_a-common-colPref .connectedSortable {
+    border: 1px solid #d5d5d5;
+    border-bottom: 2px solid #e85b5d;
+    width: 100%;
+    min-height: 20px;
+    list-style-type: set;
+    margin: 0;
+    padding: 15px 0 10px 15px;
+    float: left;
+    margin-right: 10px;
+}
+
+    .wiz_a-common-colPref .connectedSortable li {
+        margin: 0 15px 5px 15px;
+        padding: 2px 5px;
+        font-size: 14px;
+        width: 139px;
+        font-family: "ProximaNova";
+        background: #f1f1f1;
+        float: left;
+    }
+

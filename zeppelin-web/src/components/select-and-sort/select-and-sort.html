@@ -1,4 +1,4 @@
-<div class="dropdown wiz_a-common-filterSearch" dropdown>
+<!--<div class="dropdown wiz_a-common-filterSearch" dropdown>
   <button class="btn btn-default dropdown-toggle" dropdown-toggle>Column Preferences <span class="caret"></span>
   </button>
   <div class="dropdown-menu" role="menu">
@@ -18,4 +18,36 @@
       </ul>
     </div>
   </div>
-</div>
+</div>-->
+
+<div class="dropdown wiz_a-common-colPref">
+            <button class="btn btn-default dropdown-toggle" type="button" id="colPrefList" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="fa fa-columns"></span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="colPrefList">
+                <li>
+                    <div class="row" ng-click="$event.stopPropagation()>
+                        <div id="notebook-list" class="col-md-6 scrollbar-container">
+                            <h4>Filter</h4>
+                            <div class="checkbox" ng-repeat="item in items">
+                                <label>
+                                    <input type="checkbox" ng-model="item.selected"> {{item.name}} 
+                                </label>
+                            </div>                    
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Drag to sort</h4>
+                            <ol id="sortable" class="connectedSortable">
+                                <li class="ui-state-default" ng-repeat="item in items">{{item.name}}</li>                                
+                            </ol>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row actionContainer">
+                        <div class="col-md-12">
+                            <button class="btn btn-success" ng-click="save()">Save</button><button class="btn btn-default">Close</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>

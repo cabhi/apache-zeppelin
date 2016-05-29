@@ -67,7 +67,7 @@ limitations under the License.
   <!-- endbuild -->
   <link rel="stylesheet" ng-href="assets/styles/looknfeel/{{looknfeel}}.css" />
   <link rel="stylesheet" href="assets/styles/fontImport.css" />
-  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz_a-default.css" />
+  <link rel="stylesheet" href="assets/styles/looknfeel/wize-analytics/wiz_a-index.css" />
 </head>
 
 <body ng-class="{'bodyAsIframe': asIframe}">
@@ -192,13 +192,22 @@ limitations under the License.
   <!-- build:js({.tmp,src}) scripts/menu-data.js -->
   <script src="components/navbar/menu-data.js"></script>
   <!-- endbuild -->
+  <!--select and sort-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script type="text/javascript">
     $(function(){
+      $( "#sortable").sortable({
+      //connectWith: ".connectedSortable"
+    }).disableSelection();
     	$(document).on('click', '.toggle-menu', function(){
     		$('.aside-nav').toggleClass('collapsed');
     	})
     })
+    
   </script>
+  <!--select and sort-->
 </body>
 
 </html>

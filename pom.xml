@@ -274,7 +274,7 @@
       </plugin>
 
       <!-- Checkstyle plugin -->
-      <plugin>
+     <!--> <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
@@ -304,7 +304,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
 
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>

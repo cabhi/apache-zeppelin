@@ -1,0 +1,8 @@
+/*Module Name: Wize analytics index
+Description: Works for Wize Analytics loading files
+Domain: Wize
+*/
+@import url("wiz_a-default.css");
+
+/*component styles loading*/
+@import url("components/wiz_a-select-and-sort.css");
