@@ -15,7 +15,7 @@ angular.module('zeppelinWebApp')
           $scope.items = angular.copy(newItems);
         });
         $scope.save = function () {
-          $scope.update({items : $scope.items});
+          $scope.update({items: $scope.items});
         };
       }
     };

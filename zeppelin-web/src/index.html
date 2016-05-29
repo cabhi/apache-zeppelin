@@ -131,6 +131,7 @@ limitations under the License.
   <script src="bower_components/angular-touch/angular-touch.js"></script>
   <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
   <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+  <script src="bower_components/angular-ui-sortable/sortable.js"></script>
   <script src="bower_components/angular-websocket/angular-websocket.min.js"></script>
   <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
   <script src="bower_components/lodash/lodash.js"></script>
@@ -193,19 +194,13 @@ limitations under the License.
   <script src="components/navbar/menu-data.js"></script>
   <!-- endbuild -->
   <!--select and sort-->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script type="text/javascript">
     $(function(){
-      $( "#sortable").sortable({
-      //connectWith: ".connectedSortable"
-    }).disableSelection();
     	$(document).on('click', '.toggle-menu', function(){
     		$('.aside-nav').toggleClass('collapsed');
     	})
     })
-    
+
   </script>
   <!--select and sort-->
 </body>

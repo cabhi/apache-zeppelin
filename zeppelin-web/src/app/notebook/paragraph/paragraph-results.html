@@ -17,7 +17,7 @@ limitations under the License.
     <div id="{{paragraph.id}}_comment" class="text" ng-if="getResultType()=='TABLE' && paragraph.result.comment" ng-bind-html="paragraph.result.comment">
     </div>
     <div ng-if="getResultType() == 'TEXT'">
-        <select-and-sort items="logViewFields" on-update="updatePref(items)"></select-and-sort>
+        <select-and-sort items="logViewFields" on-update="updatePref(items)" ng-if="data.length"></select-and-sort>
         <accordion close-others="{{false}}" class="log-viewer">
             <accordion-group ng-repeat="log in data track by $index" ng-init="log.open=false" is-open="log.open">
                 <accordion-heading>
