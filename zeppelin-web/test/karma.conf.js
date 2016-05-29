@@ -65,6 +65,7 @@ module.exports = function(config) {
       'bower_components/ng-json-explorer/dist/angular-json-explorer.js',
       'bower_components/ng-json-explorer/dist/angular-json-explorer.min.js',
       'bower_components/ng-sortable/dist/ng-sortable.js',
+      'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
       'bower_components/ngtoast/dist/ngToast.js',
       'bower_components/d3/d3.js',
       'bower_components/nvd3/build/nv.d3.js',

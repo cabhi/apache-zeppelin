@@ -18,7 +18,7 @@ limitations under the License.
     </div>
     <div ng-if="getResultType() == 'TEXT'">
         <select-and-sort items="logViewFields" on-update="updatePref(items)" ng-if="data.length"></select-and-sort>
-        <accordion close-others="{{false}}" class="log-viewer">
+        <accordion close-others="{{false}}" class="log-viewer" infinite-scroll="nextPage()" infinite-scroll-distance="1" infinite-scroll-disabled="isRunning()" style="display: block;">
             <accordion-group ng-repeat="log in data track by $index" ng-init="log.open=false" is-open="log.open">
                 <accordion-heading>
                     <i class="pull-left glyphicon" ng-class="{'glyphicon-chevron-down': log.open, 'glyphicon-chevron-left': !log.open}"></i>
