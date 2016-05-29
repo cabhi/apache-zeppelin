@@ -990,6 +990,12 @@ public class NotebookServer extends WebSocketServlet implements
       }
     }
     
+    //add drill down params
+    StringMap<Object> drillDownParams = (StringMap<Object>) config.get("drillDown");
+    for (Entry<String, Object> drillDownParam: drillDownParams.entrySet()) {
+      params.put(drillDownParam.getKey(), drillDownParam.getValue());
+    }
+    
     p.settings.setParams(params);
     
     // if it's the last paragraph, let's add a new one
