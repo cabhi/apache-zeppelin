@@ -260,12 +260,13 @@ padding: 15px;
 .paragraphForm.form-horizontal .form-group {
     margin-right: 0;
     margin-left: 0;
-    width: 150px;
+    width: 185px;
 }
 .paragraphForm.form-horizontal > .form-group:nth-child(2){
-	width:250px;
+	width:215px;
 }
-.paragraphForm.form-horizontal .form-group select{
+.paragraphForm.form-horizontal .form-group select,
+.paragraphForm.form-horizontal .form-group input{
  border-radius:0;
 }
 .paragraphForm.form-horizontal .form-group label.control-label{

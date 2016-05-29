@@ -34,7 +34,7 @@ limitations under the License.
         </label>
       </div>
       </span>
-      <input placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }"
+      <input class="form-control" placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' } "
         name="{{formulaire.name}}" ng-if="formulaire.name.indexOf('Date') > -1" ng-model="paragraph.settings.params[formulaire.name]"
         datetimepicker options="{format: 'MM/DD/YYYY hh:mm:ss A'}"
       />
