@@ -6,3 +6,4 @@ Domain: Wize
 
 /*component styles loading*/
 @import url("components/wiz_a-select-and-sort.css");
+@import url("components/wiz_a-filter-strip.css");
