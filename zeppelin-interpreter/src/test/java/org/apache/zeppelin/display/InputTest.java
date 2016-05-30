@@ -17,6 +17,7 @@
 
 package org.apache.zeppelin.display;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,7 +99,7 @@ public class InputTest {
 
 
 	@Test
-	public void testFormSubstitution() {
+	public void testFormSubstitution() throws IOException {
 		// test form substitution without new forms
 		String script = "INPUT=${input_form=}SELECTED=${select_form(Selection Form)=,s_op1|s_op2|s_op3}\n" +
 				"CHECKED=${checkbox:checkbox_form=c_op1|c_op2,c_op1|c_op2|c_op3}";

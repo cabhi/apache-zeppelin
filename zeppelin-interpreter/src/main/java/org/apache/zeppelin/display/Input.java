@@ -21,16 +21,29 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.internal.StringMap;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.imageio.stream.FileImageInputStream;
 
 /**
  * Input type.
@@ -332,10 +345,30 @@ public class Input implements Serializable {
       
     return replaced;
   }
-  
-  public static String getSimpleQuery(Map<String, Object> params, String script) {
+  /*Formatting the date and returning the required format*/
+  public static String getFormatedDate(Date date){
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  	return sdf.format(date);
+  	}
+  public static String getSimpleQuery(Map<String, Object> params, String script) throws IOException {
     String replaced = resolveDependentParams(params, script);
-    
+    String fileName=getFileName(script);
+	List<String> properitiesFileValues=null;
+	
+    Map<String,Object>initialCheckMap= new HashMap<>();
+    if(initialCheckMap.get(fileName)==null){
+       	properitiesFileValues=getPropValues(fileName);
+    	initialCheckMap.put(fileName, getFormatedDate(new Date()));
+    	initialCheckMap.put("values", properitiesFileValues);
+    }else{
+    	String lastModifiedDate=(String)initialCheckMap.get(fileName);
+    	String currentDate=getFormatedDate(new Date());	
+    	if(lastModifiedDate.compareTo(currentDate)!=0){
+    		properitiesFileValues=getPropValues(fileName);
+        	initialCheckMap.put("values", properitiesFileValues);
+        	initialCheckMap.put(fileName,currentDate);
+        	}
+    }
     Matcher match = VAR_PTN.matcher(replaced);
     while (match.find()) {
       Input input = getInputForm(match);
@@ -345,11 +378,9 @@ public class Input implements Serializable {
       } else {
         value = input.defaultValue;
       }
-
-      String expanded;
-      
+      String expanded;      
       if (input.name.contains("Filter")) {
-        expanded = getFilterTabQuery(value);
+        expanded = getFilterTabQuery(value,(List<String>)initialCheckMap.get("values"));
       } else if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
         String delimiter = input.argument;
         if (delimiter == null) {
@@ -377,8 +408,39 @@ public class Input implements Serializable {
 
     return replaced;
   }
-  
-  public static String getFilterTabQuery(Object filterTabValue) {
+  /*Getting index name out of script */
+  public static String getFileName(String script){
+	  String str=script.substring(script.indexOf("/"), script.indexOf("{")).trim();
+	  String[] strArray=str.split("/");
+	  return strArray[1];
+  }
+  /*loading properties file  and reading the key and adding to list*/
+  public static List<String> getPropValues(String propertyFileName) throws IOException {
+	  InputStream inputStream=null;
+	  List<String> valuesList=  new ArrayList<String>();
+		try {
+			Properties prop = new Properties();
+			String path = String.format("%s/%s", System.getProperty("user.dir"), "elasticsearch/_templates/"+propertyFileName+".properties");
+			path=path.replace("zeppelin-server", "conf");
+			 inputStream =new FileInputStream(path);
+			if (inputStream != null) {
+				prop.load(inputStream);
+				 Enumeration<Object> em = prop.keys();
+				 while(em.hasMoreElements()){
+					 String key = (String)em.nextElement();
+					 valuesList.add(key); 
+				 }
+			} 
+			
+		} catch (Exception e) {
+			System.out.println("Exception: " + e);
+		} finally {
+			inputStream.close();
+		}
+		return valuesList;
+	}
+  /*Preparing query for FilterTab*/
+  public static String getFilterTabQuery(Object filterTabValue,List<String> rawFields) {
     StringBuffer query = new StringBuffer();
     List<StringMap<String>> values = (List<StringMap<String>>) filterTabValue;
     for (StringMap<String> value: values) {
@@ -387,7 +449,7 @@ public class Input implements Serializable {
       String operand = value.get("operand"); 
       switch (operator) {
           case "=": 
-        	  if(field.equalsIgnoreCase("requestId")){
+        	  if(rawFields.contains(field)){
             query.append("{\"term\":").append("{").append(field).append(".raw:")
               .append(operand).append("}}");
         	  }else{
@@ -428,10 +490,8 @@ public class Input implements Serializable {
             query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
               .append(operand).append("\"}}");
       }
-      
       query.append(",");
-    }
-    
+    } 
     return query.toString();
   }
   public static boolean isValidWord(String inputString) {
