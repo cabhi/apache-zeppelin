@@ -352,23 +352,7 @@ public class Input implements Serializable {
   	}
   public static String getSimpleQuery(Map<String, Object> params, String script) throws IOException {
     String replaced = resolveDependentParams(params, script);
-    String fileName=getFileName(script);
-	List<String> properitiesFileValues=null;
-	
-    Map<String,Object>initialCheckMap= new HashMap<>();
-    if(initialCheckMap.get(fileName)==null){
-       	properitiesFileValues=getPropValues(fileName);
-    	initialCheckMap.put(fileName, getFormatedDate(new Date()));
-    	initialCheckMap.put("values", properitiesFileValues);
-    }else{
-    	String lastModifiedDate=(String)initialCheckMap.get(fileName);
-    	String currentDate=getFormatedDate(new Date());	
-    	if(lastModifiedDate.compareTo(currentDate)!=0){
-    		properitiesFileValues=getPropValues(fileName);
-        	initialCheckMap.put("values", properitiesFileValues);
-        	initialCheckMap.put(fileName,currentDate);
-        	}
-    }
+    
     Matcher match = VAR_PTN.matcher(replaced);
     while (match.find()) {
       Input input = getInputForm(match);
@@ -379,7 +363,23 @@ public class Input implements Serializable {
         value = input.defaultValue;
       }
       String expanded;      
-      if (input.name.contains("Filter")) {
+      if (input.name.contains("FilterTab")) {
+    	  String fileName=getFileName(script);
+    		List<String> properitiesFileValues=null; 		
+    	    Map<String,Object>initialCheckMap= new HashMap<>();
+    	    if(initialCheckMap.get(fileName)==null){
+    	       	properitiesFileValues=getPropValues(fileName);
+    	    	initialCheckMap.put(fileName, getFormatedDate(new Date()));
+    	    	initialCheckMap.put("values", properitiesFileValues);
+    	    }else{
+    	    	String lastModifiedDate=(String)initialCheckMap.get(fileName);
+    	    	String currentDate=getFormatedDate(new Date());	
+    	    	if(lastModifiedDate.compareTo(currentDate)!=0){
+    	    		properitiesFileValues=getPropValues(fileName);
+    	        	initialCheckMap.put("values", properitiesFileValues);
+    	        	initialCheckMap.put(fileName,currentDate);
+    	        	}
+    	    }
         expanded = getFilterTabQuery(value,(List<String>)initialCheckMap.get("values"));
       } else if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
         String delimiter = input.argument;
@@ -451,10 +451,10 @@ public class Input implements Serializable {
           case "=": 
         	  if(rawFields.contains(field)){
             query.append("{\"term\":").append("{").append(field).append(".raw:")
-              .append(operand).append("}}");
+              .append(operand.toLowerCase()).append("}}");
         	  }else{
         		  query.append("{\"term\":").append("{").append(field).append(":")
-                  .append(operand).append("}}");
+                  .append(operand.toLowerCase()).append("}}");
         	  }
             break;
           case "!=": 
