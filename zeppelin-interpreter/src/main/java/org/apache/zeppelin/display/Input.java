@@ -367,7 +367,7 @@ public class Input implements Serializable {
     	  String fileName=getFileName(script);
     		List<String> properitiesFileValues=null; 		
     	    Map<String,Object>initialCheckMap= new HashMap<>();
-    	    if(initialCheckMap.get(fileName)==null){
+    	    /*if(initialCheckMap.get(fileName)==null){
     	       	properitiesFileValues=getPropValues(fileName);
     	    	initialCheckMap.put(fileName, getFormatedDate(new Date()));
     	    	initialCheckMap.put("values", properitiesFileValues);
@@ -379,7 +379,7 @@ public class Input implements Serializable {
     	        	initialCheckMap.put("values", properitiesFileValues);
     	        	initialCheckMap.put(fileName,currentDate);
     	        	}
-    	    }
+    	    }*/
         expanded = getFilterTabQuery(value,(List<String>)initialCheckMap.get("values"));
       } else if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
         String delimiter = input.argument;
@@ -449,10 +449,10 @@ public class Input implements Serializable {
       String operand = value.get("operand"); 
       switch (operator) {
           case "=": 
-        	  if(rawFields.contains(field)){
+        	  /*if(rawFields.contains(field)){
             query.append("{\"term\":").append("{").append(field).append(".raw:")
               .append(operand.toLowerCase()).append("}}");
-        	  }else{
+        	  }else*/{
         		  query.append("{\"term\":").append("{").append(field).append(":")
                   .append(operand.toLowerCase()).append("}}");
         	  }
