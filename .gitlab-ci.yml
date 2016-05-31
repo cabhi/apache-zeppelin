@@ -48,4 +48,4 @@ notify:
   - CI_ERROR_MSG="Build on $CI_BUILD_REF_NAME failed! Commit $(git log -1 --oneline) See <http://188.166.190.20/demo/$(basename "$PWD")/commit/${CI_BUILD_REF}/builds>" 
   - echo $CI_ERROR_MSG
   - echo "${PRE_LOAD}${CI_ERROR_MSG}${POST_LOAD}"
-  - curl -X POST --data-urlencode "'"${PRE_LOAD}${CI_ERROR_MSG}${POST_LOAD}"'" $CI_SLACK_WEBHOOK_URL
+  - curl -X POST --data-urlencode \'${PRE_LOAD}${CI_ERROR_MSG}${POST_LOAD}\' $CI_SLACK_WEBHOOK_URL
