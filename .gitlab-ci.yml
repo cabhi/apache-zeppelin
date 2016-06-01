@@ -25,7 +25,6 @@ make_docker:
   services:
   - docker:dind
   script:
-  - find . ! -name $CI_PROJECT_DIR/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz -type f -exec rm -f {} +
   - tar -zxf  $CI_PROJECT_DIR/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz -C $CI_PROJECT_DIR/
   - rm -f $CI_PROJECT_DIR/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz
   - sed -i "s/BUILD_COMMIT_ID/${CI_BUILD_REF}/g" $CI_PROJECT_DIR/Dockerfile
