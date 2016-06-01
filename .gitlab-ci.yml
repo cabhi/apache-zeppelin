@@ -13,7 +13,7 @@ make_snapshot:
    - mvn clean package -DskipTests -Dcheckstyle.skip -Pbuild-distr
    - cp zeppelin-distribution/target/zeppelin*.tar.gz /snapshots/
    - CI_SUCCESS_MSG="Build on $CI_BUILD_REF_NAME success! Commit $(git log -1 --oneline) Snapshot <http://188.166.190.20/demo/incubator-zeppelin/builds/${CI_BUILD_ID}/artifacts/file/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz>"
-   - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "PASS" "${CI_SUCCESS_MSG}" "$CI_SLACK_WEBHOOK_URL"es
+   - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "PASS" "${CI_SUCCESS_MSG}" "$CI_SLACK_WEBHOOK_URL"
   artifacts:
    name: "zeppelin_${CI_BUILD_REF_NAME}"
    paths:
@@ -41,7 +41,6 @@ demo_deploy:
   - 1.0.0
   script:
   - curl -X POST -F token=${DEMO_DEPLOY_TOKEN} -F ref=${DEMO_DEPLOY_BRANCH} ${DEMO_TRIGGER_API}
-  - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "PASS" "${CI_SUCCESS_MSG}" "$CI_SLACK_WEBHOOK_URL"
 
 notify:
   stage: notifications
