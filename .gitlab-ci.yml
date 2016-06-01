@@ -31,6 +31,7 @@ make_docker:
   - docker build -t wizni/zeppelin:${CI_BUILD_REF_NAME} .
   - docker inspect -f "{{json .ContainerConfig.Labels }}" wizni/zeppelin:${CI_BUILD_REF_NAME}
   - docker push wizni/zeppelin:${CI_BUILD_REF_NAME}
+  - CI_SUCCESS_MSG="Build on $CI_BUILD_REF_NAME success! Commit $(git log -1 --oneline) Snapshot <http://188.166.190.20/demo/incubator-zeppelin/builds/${CI_BUILD_ID}/artifacts/file/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz>"
 
 demo_deploy:
   stage: trigger
@@ -38,15 +39,15 @@ demo_deploy:
   only:
   - 1.0.0
   script:
-    - "curl -X POST -F token=${TEST_DEPLOY_TOKEN} -F ref=${TEST_DEPLOY_BRANCH} ${TEST_TRIGGER_API}"
-    
+  - curl -X POST -F token=${DEMO_DEPLOY_TOKEN} -F ref=${DEMO_DEPLOY_BRANCH} ${DEMO_TRIGGER_API}
+  - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "PASS" "${CI_SUCCESS_MSG}" "$CI_SLACK_WEBHOOK_URL"
+
 notify:
   stage: notifications
   dependencies: []
   when: on_failure
-  allow_failure: true
   script:
-  - CI_ERROR_MSG="Build on $CI_BUILD_REF_NAME failed! Commit $(git log -1 --oneline) See <http://188.166.190.20/demo/$(basename "$PWD")/commit/${CI_BUILD_REF}/builds>" 
+  - CI_ERROR_MSG="Build on $CI_BUILD_REF_NAME failed! Commit $(git log -1 --oneline) See <http://188.166.190.20/demo/$(basename "$PWD")/commit/${CI_BUILD_REF}/builds>"
   - echo $CI_ERROR_MSG
   - echo "${PRE_LOAD}${CI_ERROR_MSG}${POST_LOAD}"
-  - curl -X POST --data-urlencode \'${PRE_LOAD}${CI_ERROR_MSG}${POST_LOAD}\' $CI_SLACK_WEBHOOK_URL
+  - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "FAIL" "$CI_ERROR_MSG}" "$CI_SLACK_WEBHOOK_URL" 
