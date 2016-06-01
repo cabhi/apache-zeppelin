@@ -36,7 +36,7 @@ demo_deploy:
   stage: trigger
   dependencies: []
   only:
-  - demo_may31
+  - 1.0.0
   script:
     - "curl -X POST -F token=${TEST_DEPLOY_TOKEN} -F ref=${TEST_DEPLOY_BRANCH} ${TEST_TRIGGER_API}"
     
@@ -44,6 +44,7 @@ notify:
   stage: notifications
   dependencies: []
   when: on_failure
+  allow_failure: true
   script:
   - CI_ERROR_MSG="Build on $CI_BUILD_REF_NAME failed! Commit $(git log -1 --oneline) See <http://188.166.190.20/demo/$(basename "$PWD")/commit/${CI_BUILD_REF}/builds>" 
   - echo $CI_ERROR_MSG
