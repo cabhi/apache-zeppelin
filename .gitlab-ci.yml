@@ -5,7 +5,6 @@ stages:
   - make_docker
   - trigger
   - notifications
-
 make_snapshot:
   stage: build
   image: wizni/maven:3.3.3
@@ -14,6 +13,7 @@ make_snapshot:
    - mvn clean package -DskipTests -Dcheckstyle.skip -Pbuild-distr
    - cp zeppelin-distribution/target/zeppelin*.tar.gz /snapshots/
    - CI_SUCCESS_MSG="Build on $CI_BUILD_REF_NAME success! Commit $(git log -1 --oneline) Snapshot <http://188.166.190.20/demo/incubator-zeppelin/builds/${CI_BUILD_ID}/artifacts/file/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz>"
+   - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "PASS" "${CI_SUCCESS_MSG}" "$CI_SLACK_WEBHOOK_URL"es
   artifacts:
    name: "zeppelin_${CI_BUILD_REF_NAME}"
    paths:
@@ -25,7 +25,9 @@ make_docker:
   services:
   - docker:dind
   script:
+  - find . ! -name $CI_PROJECT_DIR/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz -type f -exec rm -f {} +
   - tar -zxf  $CI_PROJECT_DIR/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz -C $CI_PROJECT_DIR/
+  - rm -f $CI_PROJECT_DIR/zeppelin-distribution/target/zeppelin-0.6.0-incubating-SNAPSHOT.tar.gz
   - sed -i "s/BUILD_COMMIT_ID/${CI_BUILD_REF}/g" $CI_PROJECT_DIR/Dockerfile
   - sed -i "s/CI_BUILD_NUMBER/${CI_BUILD_ID}/g" $CI_PROJECT_DIR/Dockerfile
   - sed -i "s/BRANCH_NAME/${CI_BUILD_REF_NAME}/g" $CI_PROJECT_DIR/Dockerfile
@@ -50,4 +52,4 @@ notify:
   - CI_ERROR_MSG="Build on $CI_BUILD_REF_NAME failed! Commit $(git log -1 --oneline) See <http://188.166.190.20/demo/$(basename "$PWD")/commit/${CI_BUILD_REF}/builds>"
   - echo $CI_ERROR_MSG
   - echo "${PRE_LOAD}${CI_ERROR_MSG}${POST_LOAD}"
-  - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "FAIL" "$CI_ERROR_MSG" "$CI_SLACK_WEBHOOK_URL" 
+  - ./scripts/notify_slack.sh "$SLACK_CHANNEL" "FAIL" "$CI_ERROR_MSG" "$CI_SLACK_WEBHOOK_URL"
