@@ -267,6 +267,7 @@ angular.module('zeppelinWebApp')
 
     $scope.updatePref = function (newPref) {
       $scope.paragraph.settings.params.preferences = extractLogFieldPref(newPref);
+      $scope.runParagraph($scope.getEditorValue());
     };
 
     function mergeLogFieldPref(prefs) {
