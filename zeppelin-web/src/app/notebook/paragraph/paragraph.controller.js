@@ -56,7 +56,7 @@ angular.module('zeppelinWebApp')
       }
     }
     $scope.autoRefresh = function () {
-      $scope.stopAutoRef = $interval(autoRefresh, refreshInterval);
+      $scope.stopAutoRef = $interval(autoRefresh, 10000);
     }
     $scope.clearAutoRefresh = function () {
       if (angular.isDefined($scope.stopAutoRef)) {

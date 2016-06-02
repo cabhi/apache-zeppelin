@@ -14,46 +14,42 @@
 
 'use strict';
 
-angular.module('zeppelinWebApp').controller('NotenameCtrl', function($scope, notebookListDataFactory,
-                                                             $rootScope, $routeParams, websocketMsgSrv) {
-  var vm = this;
-  vm.clone = false;
-  vm.notes = notebookListDataFactory;
-  vm.websocketMsgSrv = websocketMsgSrv;
-  $scope.note = {};
+angular.module('zeppelinWebApp')
+  .controller('NotenameCtrl', function ($scope, notebookListDataFactory, $rootScope, $routeParams, websocketMsgSrv) {
+    var vm = this;
+    vm.clone = false;
+    vm.notes = notebookListDataFactory;
+    vm.websocketMsgSrv = websocketMsgSrv;
+    $scope.note = {};
 
-  vm.createNote = function() {
+    vm.createNote = function () {
       if (!vm.clone) {
-        vm.websocketMsgSrv.createNotebook($scope.note.notename);
+        vm.websocketMsgSrv.createNotebook('/' + $scope.note.category + '/' + $scope.note.notename);
       } else {
-       var noteId = $routeParams.noteId;
-       vm.websocketMsgSrv.cloneNotebook(noteId, $scope.note.notename);
+        var noteId = $routeParams.noteId;
+        vm.websocketMsgSrv.cloneNotebook(noteId, $scope.note.notename);
       }
-  };
+    };
 
-  vm.handleNameEnter = function(){
-    angular.element('#noteNameModal').modal('toggle');
-    vm.createNote();
-  };
+    vm.preVisible = function (clone) {
+      $scope.note.notename = vm.newNoteName();
+      vm.clone = clone;
+      $scope.$apply();
+    };
 
-  vm.preVisible = function(clone) {
-    $scope.note.notename = vm.newNoteName();
-    vm.clone = clone;
-    $scope.$apply();
-  };
+    $scope.categories = notebookListDataFactory.categories;
 
-  vm.newNoteName = function () {
-    var newCount = 1;
-    angular.forEach(vm.notes.list, function (noteName) {
-      noteName = noteName.name;
-      if (noteName.match(/^Untitled Note [0-9]*$/)) {
-        var lastCount = noteName.substr(14) * 1;
-        if (newCount <= lastCount) {
-          newCount = lastCount + 1;
+    vm.newNoteName = function () {
+      var newCount = 1;
+      angular.forEach(vm.notes.list, function (noteName) {
+        noteName = noteName.name;
+        if (noteName.match(/^Untitled Note [0-9]*$/)) {
+          var lastCount = noteName.substr(14) * 1;
+          if (newCount <= lastCount) {
+            newCount = lastCount + 1;
+          }
         }
-      }
-    });
-    return 'Untitled Note ' + newCount;
-  };
-
-});
+      });
+      return 'Untitled Note ' + newCount;
+    };
+  });

@@ -24,9 +24,19 @@ limitations under the License.
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="noteName">Note Name</label> <input
+            <label for="noteName">Note Name</label>
+            <input
               placeholder="Note name" type="text" class="form-control"
-              id="noteName" ng-model="note.notename" ng-enter="notenamectrl.handleNameEnter()">
+              id="noteName" ng-model="note.notename">
+          </div>
+        </div>
+        <div class="modal-body" ng-show="!notenamectrl.clone">
+          <div class="form-group">
+            <label for="noteCategory">Note Category</label>
+            <select placeholder="Note Category" type="text" class="form-control"
+            id="noteCategory" ng-model="note.category" ng-options="item.code as item.name for item in categories track by item.code">
+              <option>-Please Select-</option>
+            </select>
           </div>
         </div>
         <div class="modal-footer">

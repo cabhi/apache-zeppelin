@@ -81,7 +81,18 @@
                     templateUrl: "app/search/result-list.html",
                     controller: "SearchResultCtrl"
                 }).otherwise({
-                    redirectTo: "/notebook/" + menuData[0].notebooks[0]
+                    template: '',
+                    controller: ["$rootScope", "$location", function ($rootScope, $location) {
+                      if ($rootScope.firstNoteId) {
+                        $location.path('/notebook/' + $rootScope.firstNoteId);
+                      } else {
+                        $rootScope.$watch('firstNoteId', function (newNoteId, prevNoteId) {
+                          if (!prevNoteId && newNoteId) {
+                            $location.path('/notebook/' + newNoteId);
+                          }
+                        });
+                      }
+                    }]
                 });
 
             ngToastProvider.configure({
