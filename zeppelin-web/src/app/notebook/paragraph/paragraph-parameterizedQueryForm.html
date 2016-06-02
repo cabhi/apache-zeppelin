@@ -11,11 +11,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<form id="{{paragraph.id}}_form" role="form" ng-show="!paragraph.config.tableHide" class=" paragraphForm form-horizontal row" ng-init="openedDate={}">
-  <div class="form-group col-sm-6 col-md-6 col-lg-4" ng-repeat="formulaire in paragraph.settings.forms" ng-Init="loadForm(formulaire, paragraph.settings.params)">
+<form id="{{paragraph.id}}_form" role="form" ng-show="!paragraph.config.tableHide" class=" paragraphForm form-horizontal row">
+  <div class="form-group col-sm-6 col-md-6 col-lg-4" ng-repeat="formulaire in paragraph.settings.forms" ng-Init="loadForm(formulaire, paragraph.settings.params)" ng-if="formulaire.name != 'FilterTab'">
     <label class="control-label input-sm" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }">{{formulaire.name}}</label>
     <div>
-      <span ng-if="formulaire.name.indexOf('Date') == -1 && formulaire.name.indexOf('Filter') == -1">
       <input class="form-control input-sm" ng-if="!paragraph.settings.forms[formulaire.name].options" ng-enter="runParagraph(getEditorValue())"
         ng-model="paragraph.settings.params[formulaire.name]" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' }"
         name="{{formulaire.name}}" />
@@ -33,12 +32,16 @@ limitations under the License.
                  ng-click="toggleCheckbox(formulaire, option, false)"/>{{option.displayName||option.value}}
         </label>
       </div>
-      </span>
       <input class="form-control" placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' } "
         name="{{formulaire.name}}" ng-if="formulaire.name.indexOf('Date') > -1" ng-model="paragraph.settings.params[formulaire.name]"
         datetimepicker options="{format: 'MM/DD/YYYY hh:mm:ss A'}"
       />
-      <filter-strip ng-if="formulaire.name.indexOf('Filter') > -1" columns="columns" filters="paragraph.settings.params[formulaire.name]" operators='["=", "!=", "<", ">", "<=", ">=", "contains", "starts with", "ends with"]' onFilterChange="runParagraph(getEditorValue())"></filter-strip>
     </div>
   </div>
 </form>
+<filter-strip ng-show="!paragraph.config.tableHide" ng-if="paragraph.settings.forms['FilterTab']"
+              columns="columns"
+              filters="paragraph.settings.params[paragraph.settings.forms['FilterTab'].name]"
+              operators='["=", "!=", "<", ">", "<=", ">=", "contains", "starts with"]'
+              on-filter-change="scheduleParagraphToRun()">
+</filter-strip>

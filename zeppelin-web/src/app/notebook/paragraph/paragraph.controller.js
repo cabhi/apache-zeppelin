@@ -605,6 +605,12 @@ angular.module('zeppelinWebApp')
       $scope.dirtyText = undefined;
     };
 
+    $scope.scheduleParagraphToRun = function () {
+      $timeout(function () {
+        $scope.runParagraph($scope.getEditorValue());
+      });
+    };
+
     $scope.nextPage = function () {
       if (pageOffset === $scope.data.length) {
         return;
