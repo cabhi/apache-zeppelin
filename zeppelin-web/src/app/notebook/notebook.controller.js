@@ -358,7 +358,8 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
     /** Update the note name */
     $scope.sendNewName = function () {
       if ($scope._note.noteName) {
-        var name = noteCategory ? ('/' + noteCategory + '/' + $scope._note.noteName) : $scope._note.noteName;
+        var cleanedName = $scope._note.noteName.replace(/\//g,'');
+        var name = noteCategory ? ('/' + noteCategory + '/' + cleanedName) : cleanedName;
         $scope.note.name = name;
         websocketMsgSrv.updateNotebook($scope.note.id, $scope.note.name, $scope.note.config);
       }
