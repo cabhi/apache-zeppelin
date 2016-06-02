@@ -2,7 +2,10 @@
 
 angular.module('zeppelinWebApp')
     .provider('datetimepicker', function () {
-        var default_options = {};
+        var default_options = {
+          useCurrent: false,
+          format: 'MM/DD/YYYY hh:mm:ss A'
+        };
 
         this.setOptions = function (options) {
             default_options = options;
