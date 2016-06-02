@@ -11,42 +11,45 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-  <div id="noteNameModal" class="modal fade" role="dialog" modalvisible previsiblecallback="notenamectrl.preVisible"
-    targetinput="noteName" tabindex='-1'>
-    <div class="modal-dialog">
+<div id="noteNameModal" class="modal fade" role="dialog" modalvisible previsiblecallback="notenamectrl.preVisible"
+     targetinput="noteName" tabindex='-1'>
+  <div class="modal-dialog">
 
-      <!-- Modal content-->
-      <div class="modal-content" id="NotenameCtrl">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title" ng-show="!notenamectrl.clone">Create new note</h4>
-          <h4 class="modal-title" ng-show="notenamectrl.clone">Clone note</h4>
-        </div>
-        <div class="modal-body">
+    <!-- Modal content-->
+    <div class="modal-content" id="NotenameCtrl">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" ng-show="!notenamectrl.clone">Create new note</h4>
+        <h4 class="modal-title" ng-show="notenamectrl.clone">Clone note</h4>
+      </div>
+      <div class="modal-body">
+        <form name="form" novalidate>
           <div class="form-group">
             <label for="noteName">Note Name</label>
             <input
-              placeholder="Note name" type="text" class="form-control"
-              id="noteName" ng-model="note.notename">
+              placeholder="Note name" type="text" class="form-control" name="noteName"
+              id="noteName" ng-model="note.notename" ng-pattern="/^[a-zA-Z0-9._ ]+$/">
+            <div style="color:red;" ng-show="form.noteName.$touched && form.noteName.$error.pattern">Note Name should be alphanumeric</div>
           </div>
-        </div>
-        <div class="modal-body" ng-show="!notenamectrl.clone">
-          <div class="form-group">
+          <div class="form-group" ng-show="!notenamectrl.clone">
             <label for="noteCategory">Note Category</label>
             <select placeholder="Note Category" type="text" class="form-control"
-            id="noteCategory" ng-model="note.category" ng-options="item.code as item.name for item in categories track by item.code">
+                    id="noteCategory" ng-model="note.category" name="noteCategory"
+                    ng-options="item.code as item.name for item in categories track by item.code" required="">
               <option>-Please Select-</option>
             </select>
+            <div style="color:red;" ng-show="form.noteCategory.$touched && form.noteCategory.$error.required">Note category is required</div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="createNoteButton"
-                  class="btn btn-default"
-                  data-dismiss="modal" ng-click="notenamectrl.createNote()">
-            <span ng-show="!notenamectrl.clone">Create Note</span>
-            <span ng-show="notenamectrl.clone">Clone Note</span>
-          </button>
-        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="createNoteButton"
+                class="btn btn-default"
+                data-dismiss="modal" ng-click="notenamectrl.createNote()" ng-disabled="form.$invalid">
+          <span ng-show="!notenamectrl.clone">Create Note</span>
+          <span ng-show="notenamectrl.clone">Clone Note</span>
+        </button>
       </div>
     </div>
   </div>
+</div>
