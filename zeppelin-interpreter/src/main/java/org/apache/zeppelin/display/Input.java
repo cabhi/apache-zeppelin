@@ -18,14 +18,17 @@
 package org.apache.zeppelin.display;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.LogFactory;
 
 import com.google.gson.internal.StringMap;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -134,7 +137,11 @@ public class Input implements Serializable {
     this.hidden = hidden;
   }
 
-  @Override
+  public Input() {
+	// TODO Auto-generated constructor stub
+}
+
+@Override
   public boolean equals(Object o) {
     return name.equals(((Input) o).getName());
   }
@@ -350,8 +357,18 @@ public class Input implements Serializable {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
   	return sdf.format(date);
   	}
+  public static void loadFilesAndVlauesInitialy(String fileName, Map<String,FileLoadCheck>initialCheckMap) throws IOException{
+		List<String> properitiesFileValues=null; 
+		properitiesFileValues=getPropValues(fileName);
+       	FileLoadCheck fileLoadCheck= new Input().new FileLoadCheck();
+       	
+       	fileLoadCheck.setLastmodifieddate(getFormatedDate(new Date()));
+    	fileLoadCheck.setPropertyFileValues(properitiesFileValues);
+    	initialCheckMap.put(fileName, fileLoadCheck);
+  }
   public static String getSimpleQuery(Map<String, Object> params, String script) throws IOException {
     String replaced = resolveDependentParams(params, script);
+    Map<String,FileLoadCheck>initialCheckMap= new HashMap<>();
     
     Matcher match = VAR_PTN.matcher(replaced);
     while (match.find()) {
@@ -364,23 +381,17 @@ public class Input implements Serializable {
       }
       String expanded;      
       if (input.name.contains("FilterTab")) {
-    	  String fileName=getFileName(script);
-    		List<String> properitiesFileValues=null; 		
-    	    Map<String,Object>initialCheckMap= new HashMap<>();
-    	    /*if(initialCheckMap.get(fileName)==null){
-    	       	properitiesFileValues=getPropValues(fileName);
-    	    	initialCheckMap.put(fileName, getFormatedDate(new Date()));
-    	    	initialCheckMap.put("values", properitiesFileValues);
+    	  String fileName=getFileName(script); 
+    	    if(initialCheckMap.get(fileName)==null){
+    	    	loadFilesAndVlauesInitialy(fileName,initialCheckMap);
     	    }else{
-    	    	String lastModifiedDate=(String)initialCheckMap.get(fileName);
+    	    	String lastModifiedDate=initialCheckMap.get(fileName).getLastmodifieddate();
     	    	String currentDate=getFormatedDate(new Date());	
     	    	if(lastModifiedDate.compareTo(currentDate)!=0){
-    	    		properitiesFileValues=getPropValues(fileName);
-    	        	initialCheckMap.put("values", properitiesFileValues);
-    	        	initialCheckMap.put(fileName,currentDate);
+    	    		loadFilesAndVlauesInitialy(fileName,initialCheckMap);
     	        	}
-    	    }*/
-        expanded = getFilterTabQuery(value,(List<String>)initialCheckMap.get("values"));
+    	    }
+        expanded = getFilterTabQuery(value,initialCheckMap.get(fileName).getPropertyFileValues());
       } else if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
         String delimiter = input.argument;
         if (delimiter == null) {
@@ -419,10 +430,13 @@ public class Input implements Serializable {
 	  InputStream inputStream=null;
 	  List<String> valuesList=  new ArrayList<String>();
 		try {
+		  String finalPath="/zeppelin-0.6.0-incubating-SNAPSHOT/conf/elasticsearch/_templates/";
 			Properties prop = new Properties();
-			String path = String.format("%s/%s", System.getProperty("user.dir"), "elasticsearch/_templates/"+propertyFileName+".properties");
-			path=path.replace("zeppelin-server", "conf");
-			 inputStream =new FileInputStream(path);
+			
+			//String url=Input.class.getResource("/").toURI().getPath();
+			//String path=url.replace("zeppelin-server/target/test-classes/", "conf/elasticsearch/_templates/");
+			
+			inputStream =new FileInputStream(finalPath+propertyFileName+".properties");
 			if (inputStream != null) {
 				prop.load(inputStream);
 				 Enumeration<Object> em = prop.keys();
@@ -449,10 +463,10 @@ public class Input implements Serializable {
       String operand = value.get("operand"); 
       switch (operator) {
           case "=": 
-        	  /*if(rawFields.contains(field)){
+        	  if(rawFields.contains(field)){
             query.append("{\"term\":").append("{").append(field).append(".raw:")
               .append(operand.toLowerCase()).append("}}");
-        	  }else*/{
+        	  }else{
         		  query.append("{\"term\":").append("{").append(field).append(":")
                   .append(operand.toLowerCase()).append("}}");
         	  }
@@ -494,6 +508,27 @@ public class Input implements Serializable {
     } 
     return query.toString();
   }
+  
+  /*Adding a class for file load check*/
+  class FileLoadCheck{
+	  String lastmodifieddate;
+	  List<String> propertyFileValues= new ArrayList<>();
+	public String getLastmodifieddate() {
+		return lastmodifieddate;
+	}
+	public void setLastmodifieddate(String lastmodifieddate) {
+		this.lastmodifieddate = lastmodifieddate;
+	}
+	public List<String> getPropertyFileValues() {
+		return propertyFileValues;
+	}
+	public void setPropertyFileValues(List<String> propertyFileValues) {
+		this.propertyFileValues = propertyFileValues;
+	}
+	  
+  }
+
+  
   public static boolean isValidWord(String inputString) {
 	    return inputString.matches("[A-Za-z]*");
 	}
@@ -502,7 +537,8 @@ public class Input implements Serializable {
     return str.split(";(?=([^\"']*\"[^\"']*\")*[^\"']*$)");
 
   }
-
+  
+ 
   /*
    * public static String [] splitPipe(String str){ //return
    * str.split("\\|(?=([^\"']*\"[^\"']*\")*[^\"']*$)"); return
