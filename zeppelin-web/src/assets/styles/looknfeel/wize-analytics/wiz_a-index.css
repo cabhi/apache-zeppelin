@@ -5,5 +5,6 @@ Domain: Wize
 @import url("wiz_a-default.css");
 
 /*component styles loading*/
+@import url("components/wiz_a-sidebar.css");
 @import url("components/wiz_a-select-and-sort.css");
 @import url("components/wiz_a-filter-strip.css");

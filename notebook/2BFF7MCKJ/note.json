@@ -532,28 +532,9 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "All Apps",
+  "name": "/api_analytics/API Analytics",
   "id": "2BFF7MCKJ",
-  "angularObjects": {
-    "2BHT3NF2Y": [],
-    "2BK8TGTRZ": [],
-    "2BKNMAUU8": [],
-    "2BJ16MSWM": [],
-    "2BJYHVCZB": [],
-    "2BG3YGH11": [],
-    "2BG5XMYRE": [],
-    "2BG563A8D": [],
-    "2BHGTPDA7": [],
-    "2BJXAUFDY": [],
-    "2BGC4A8WZ": [],
-    "2BJWZREV6": [],
-    "2BK5Q5SPB": [],
-    "2BKM4BU6F": [],
-    "2BH441GBZ": [],
-    "2BHA564CY": [],
-    "2BGXWXKFZ": [],
-    "2BJUGENHE": []
-  },
+  "angularObjects": {},
   "config": {
     "looknfeel": "report"
   },

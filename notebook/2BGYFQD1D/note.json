@@ -260,28 +260,9 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "Ad-hoc Analytics",
+  "name": "/ad_hoc_analytics/Ad-hoc Analytics",
   "id": "2BGYFQD1D",
-  "angularObjects": {
-    "2BN78YR1C": [],
-    "2BJ51S7Q9": [],
-    "2BJ91GY7C": [],
-    "2BKAM8C4B": [],
-    "2BK39PHVF": [],
-    "2BK76TXVJ": [],
-    "2BMFPYAD7": [],
-    "2BN3ENHY6": [],
-    "2BHM2NN8S": [],
-    "2BHSF7YSY": [],
-    "2BJXSDDH8": [],
-    "2BKA8ZZEN": [],
-    "2BHQK2YSC": [],
-    "2BKA23CU3": [],
-    "2BMSH5FXZ": [],
-    "2BJ5ZSHFJ": [],
-    "2BK3KPJ48": [],
-    "2BN26ZETB": []
-  },
+  "angularObjects": {},
   "config": {
     "looknfeel": "default"
   },
