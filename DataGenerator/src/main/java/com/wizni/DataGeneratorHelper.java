@@ -206,7 +206,7 @@ public class DataGeneratorHelper {
 	int responseTime = responseTimes[generateRandom(responseTimes.length)];
 	
 	Calendar calendar = Calendar.getInstance(); 
-	SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	String endTimestamp = isoFormat.format(calendar.getTime());
 	
 	Calendar startCalendar = Calendar.getInstance();
