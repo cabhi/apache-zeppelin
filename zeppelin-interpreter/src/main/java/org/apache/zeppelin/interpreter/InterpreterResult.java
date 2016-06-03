@@ -41,7 +41,6 @@ public class InterpreterResult implements Serializable {
    */
   public static enum Type {
     TEXT,
-    JSON,
     HTML,
     ANGULAR,
     TABLE,
