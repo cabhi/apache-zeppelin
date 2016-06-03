@@ -207,7 +207,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       if (fromLine.length != 2) {
         return processHelp(InterpreterResult.Code.ERROR, "Right format is : from <value>");
       }
-      currentResultFrom = Integer.parseInt(fromLine[1]);
+      currentResultFrom = (int) Double.parseDouble(fromLine[1]);
       items = StringUtils.split(lines[1].trim(), " ", 3);
       
       //remove 'from' line from cmd
