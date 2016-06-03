@@ -169,14 +169,14 @@ public class ElasticsearchInterpreter extends Interpreter {
   
   @Override
   public InterpreterResult interpret(String cmd, InterpreterContext interpreterContext) {
-    logger.info("Run Elasticsearch command '" + cmd + "'");
+      logger.info("Run Elasticsearch command: '" + cmd + "'");
     
     if (StringUtils.isEmpty(cmd) || StringUtils.isEmpty(cmd.trim())) {
       return new InterpreterResult(InterpreterResult.Code.SUCCESS);
     }
     
     cmd = enhanceCommand(cmd);
-    logger.info("Run Enhanced Elasticsearch command '" + cmd + "'");
+    logger.info("Run Enhanced Elasticsearch command: '" + cmd + "'");
 
     int currentResultSize = resultSize;
     int currentResultFrom = resultFrom;
@@ -214,6 +214,8 @@ public class ElasticsearchInterpreter extends Interpreter {
       lines[0] = null;
       cmd = Joiner.on("\n").skipNulls().join(lines);
     }
+    logger.info("Command after from clause resolution: '" + cmd + "'");
+    
 
     if ("size".equalsIgnoreCase(items[0])) {
       // In this case, the line with size must be followed by a search,
@@ -683,7 +685,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     if (hits == null || hits.length == 0) {
       return new InterpreterResult(
         InterpreterResult.Code.SUCCESS,
-        InterpreterResult.Type.TEXT,
+        InterpreterResult.Type.JSON,
         "");
     }        
     if (hits[0].getSourceAsString() == null) {
@@ -715,7 +717,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     
     return new InterpreterResult(
       InterpreterResult.Code.SUCCESS,
-      InterpreterResult.Type.TEXT,
+      InterpreterResult.Type.JSON,
       jsonResponse.toString());
   }
 

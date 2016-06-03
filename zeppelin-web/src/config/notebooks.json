@@ -5,13 +5,7 @@
     "name": "Log Viewer",
     "attributes": {
       "icon": "fa fa-file-text"
-    },
-    "children": [
-      {
-        "id": "2BFX9NR3Y",
-        "name": "All application logs"
-      }
-    ]
+    }
   },
   {
     "id": 2,
@@ -19,13 +13,7 @@
     "name": "API Analytics",
     "attributes": {
       "icon": "fa fa-pie-chart"
-    },
-    "children": [
-      {
-        "id": "2BFF7MCKJ",
-        "name": "All APIs"
-      }
-    ]
+    }
   },
   {
     "id": 3,
@@ -33,12 +21,6 @@
     "name": "Ad-hoc Analytics",
     "attributes": {
       "icon": "fa fa-bar-chart"
-    },
-    "children": [
-      {
-        "id": "2BGYFQD1D",
-        "name": "Ad hoc dashboard"
-      }
-    ]
+    }
   }
 ]
