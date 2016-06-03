@@ -40,7 +40,7 @@ demo_deploy:
   only:
   - 1.0.0
   script:
-  - curl -X POST -F token=${DEMO_DEPLOY_TOKEN} -F ref=${DEMO_DEPLOY_BRANCH} ${DEMO_TRIGGER_API}
+  - curl -X POST -F token=${TEST_DEPLOY_TOKEN} -F ref=${TEST_DEPLOY_BRANCH} ${DEMO_TRIGGER_API}
 
 notify:
   stage: notifications
