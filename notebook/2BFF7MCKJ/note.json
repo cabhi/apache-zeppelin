@@ -532,7 +532,7 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "api_analytics/API Analytics",
+  "name": "/api_analytics/API Analytics",
   "id": "2BFF7MCKJ",
   "angularObjects": {},
   "config": {

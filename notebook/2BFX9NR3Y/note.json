@@ -221,7 +221,7 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "log_viewer/Application logs",
+  "name": "/log_viewer/Application logs",
   "id": "2BFX9NR3Y",
   "angularObjects": {},
   "config": {

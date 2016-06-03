@@ -260,7 +260,7 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "ad_hoc_analytics/Ad-hoc Analytics",
+  "name": "/ad_hoc_analytics/Ad-hoc Analytics",
   "id": "2BGYFQD1D",
   "angularObjects": {},
   "config": {
