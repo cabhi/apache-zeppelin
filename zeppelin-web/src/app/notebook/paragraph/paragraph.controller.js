@@ -176,7 +176,6 @@ angular.module('zeppelinWebApp')
       var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (o) { return o.id != $scope.paragraph.id; });
       $scope.multiSelectConfig.colsList = _.map(paragraphs, colSelectList);
       $scope.multiSelectConfig.selectedCols = _.map($scope.paragraph.config.paramsDerivedFrom, setSelected);
-      $scope.paragraph.settings.params.from = pageOffset;
     };
 
     $scope.renderHtml = function () {
@@ -241,7 +240,6 @@ angular.module('zeppelinWebApp')
         } catch (err) {}
 
         if (data && data.rows && data.rows.length > 0) {
-          console.log('Rendered from ' + $scope.paragraph.settings.params.from);
           if ($scope.paragraph.settings.params.from > 0) {
             $scope.data = ($scope.data || []).concat(data.rows);
           } else {
@@ -598,7 +596,12 @@ angular.module('zeppelinWebApp')
 
     $scope.runParagraph = function (data, offset) {
       $scope.paragraph.config.derivedFrom = getDerivedFrom($scope.paragraph);
-      $scope.paragraph.settings.params.from = pageOffset = (offset || '0');
+      if (/@\{from.*?}/.test($scope.paragraph.text)) {
+        $scope.paragraph.settings.params.from = pageOffset = (offset || 0);
+      } else {
+        pageOffset = 0;
+        delete $scope.paragraph.settings.params.from;
+      }
       websocketMsgSrv.runParagraph($scope.paragraph.id, $scope.paragraph.title,
         data, $scope.paragraph.config, $scope.paragraph.settings.params);
       $scope.originalText = angular.copy(data);
@@ -612,11 +615,10 @@ angular.module('zeppelinWebApp')
     };
 
     $scope.nextPage = function () {
-      if (pageOffset === $scope.data.length) {
+      if (pageOffset === $scope.data.length || !/@\{from.*?}/.test($scope.paragraph.text)) {
         return;
       }
       pageOffset = $scope.data.length;
-      console.log('next page with offset ' + pageOffset);
       $scope.runParagraph($scope.getEditorValue(), pageOffset);
     };
 
