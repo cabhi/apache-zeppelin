@@ -221,28 +221,9 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "All Applications",
+  "name": "log_viewer/Application logs",
   "id": "2BFX9NR3Y",
-  "angularObjects": {
-    "2BM3RB5JK": [],
-    "2BJTWN4UK": [],
-    "2BN3ENYDU": [],
-    "2BPFPHSHF": [],
-    "2BP77G8ZT": [],
-    "2BMP6EN4K": [],
-    "2BMFCU62U": [],
-    "2BKX384CJ": [],
-    "2BJT4X1MS": [],
-    "2BNWQ939A": [],
-    "2BKXTVVXA": [],
-    "2BP6XUV2F": [],
-    "2BM1X1GZN": [],
-    "2BMUERSAC": [],
-    "2BNPXD8UK": [],
-    "2BMS55CT3": [],
-    "2BKXY1V3K": [],
-    "2BKSQSJ9K": []
-  },
+  "angularObjects": {},
   "config": {
     "looknfeel": "default"
   },
