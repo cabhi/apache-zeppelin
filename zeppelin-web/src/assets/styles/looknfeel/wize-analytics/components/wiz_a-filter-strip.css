@@ -46,16 +46,17 @@ Domain: Wize
     position: relative;
 }
 .wiz_a-filterTab-badge_holder {
-    border: 1px solid #e5e5e5;
+    border: 1px solid #ccc;
     height: 34px;
     width: 100%;
-    padding: 5px 36px 5px 10px;
+    padding: 6px 36px 5px 5px;
     color: #808080;
+    text-align: center;
 }
 
 .wiz_a-filterTab-badge_holder + button.btn{
     border-radius: 0;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #ccc;
     background-color: #f0f3f4;  
     position: absolute;
     right: 0;
@@ -68,9 +69,32 @@ Domain: Wize
 	color: #212121;
 	margin-top: 5px;
 }
+.wiz_a-filterTab-badge {
+    background-color: #f0f3f4;
+    padding: 1px 5px;
+    border-radius: 3px;
+    border: 1px solid #d6d6d6;
+    margin: 5px;
+    position: relative;
+}
+.wiz_a-filterTab-badge_close{  
+	top: -9px;
+	position: absolute;
+	border-radius: 50%;
+	padding: 1px 2px;
+	font-size: 18px;
+	line-height: 12px;
+	right: -6px;
+	background-color: #808080;
+	color: #fff;
+	border:none;
+    cursor: pointer;
+}
 .wiz_a-filterTab-container .well{
     padding: 10px;
     border-width: 1px 1px 1px;
+    border: 1px solid #ccc;
+    background-color: #f0f3f4;
     border-top: none;
     border-radius: 0;
     width:300px;
@@ -81,13 +105,14 @@ Domain: Wize
 .wiz_a-filterTab-container .well select.form-control,
 .wiz_a-filterTab-container .well input.form-control{
     border-radius: 0;
-    border-color: #e5e5e5;
+    border-color: #ccc;
 }
 .wiz_a-filterTab-container .well button.btn{
     margin-top:10px;
     margin-right: 10px;
     border-radius: 0;
 }
+
 
 /*Filter tab interaction ends*/
 
