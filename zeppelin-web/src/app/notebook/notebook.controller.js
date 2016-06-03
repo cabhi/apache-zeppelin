@@ -89,6 +89,22 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
 
     initNotebook();
 
+    $scope.getNoteName = function (note) {
+      if (!note) return;
+      if (note.name) {
+        return _.last(note.name.split('/'));
+      }
+      return 'Note ' + note.id;
+    };
+
+    var noteCategory;
+    function extractNoteCategory(note) {
+      if (note.name) {
+        noteCategory = note.name.split('/')[1];
+        $scope._note = {};
+        $scope._note.noteName = $scope.getNoteName(note);
+      }
+    }
 
     $scope.focusParagraphOnClick = function (clickEvent) {
       if (!$scope.note) {
@@ -341,7 +357,10 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
 
     /** Update the note name */
     $scope.sendNewName = function () {
-      if ($scope.note.name) {
+      if ($scope._note.noteName) {
+        var cleanedName = $scope._note.noteName.replace(/\//g,'');
+        var name = noteCategory ? ('/' + noteCategory + '/' + cleanedName) : cleanedName;
+        $scope.note.name = name;
         websocketMsgSrv.updateNotebook($scope.note.id, $scope.note.name, $scope.note.config);
       }
     };
@@ -354,6 +373,8 @@ angular.module('zeppelinWebApp').controller('NotebookCtrl',
         note = cleanParagraphExcept($scope.paragraphUrl, note);
         $rootScope.$broadcast('setIframe', $scope.asIframe);
       }
+
+      extractNoteCategory(note);
 
       if ($scope.note === null) {
         $scope.note = note;

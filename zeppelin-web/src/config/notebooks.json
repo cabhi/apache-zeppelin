@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "code": "log_viewer",
+    "name": "Log Viewer",
+    "attributes": {
+      "icon": "fa fa-file-text"
+    }
+  },
+  {
+    "id": 2,
+    "code": "api_analytics",
+    "name": "API Analytics",
+    "attributes": {
+      "icon": "fa fa-pie-chart"
+    }
+  },
+  {
+    "id": 3,
+    "code": "ad_hoc_analytics",
+    "name": "Ad-hoc Analytics",
+    "attributes": {
+      "icon": "fa fa-bar-chart"
+    }
+  }
+]

@@ -13,9 +13,9 @@ limitations under the License.
 -->
 <div class="noteAction" ng-show="note.id && !paragraphUrl">
   <h3>
-    <input type="text" pu-elastic-input class="form-control2" placeholder="{{note.name || 'Note ' + note.id}}" style="min-width: 200px; max-width: 600px;"
-           ng-show="showEditor" ng-model="note.name" ng-blur="sendNewName();showEditor = false;" ng-enter="sendNewName();showEditor = false;" ng-escape="note.name = oldName; showEditor = false" focus-if="showEditor" />
-    <p class="form-control-static2" ng-click="showEditor = true; oldName = note.name" ng-show="!showEditor">{{note.name || 'Note ' + note.id}}</p>
+    <input type="text" pu-elastic-input class="form-control2" placeholder="{{getNoteName(note)}}" style="min-width: 200px; max-width: 600px;"
+           ng-show="showEditor" ng-model="_note.noteName" ng-blur="sendNewName();showEditor = false;" ng-enter="sendNewName();showEditor = false;" ng-escape="note.name = oldName; showEditor = false" focus-if="showEditor" />
+    <p class="form-control-static2" ng-click="showEditor = true; oldName = note.name" ng-show="!showEditor">{{getNoteName(note)}}</p>
     <span class="labelBtn btn-group">
       <button type="button"
               class="btn btn-default btn-xs"
@@ -198,8 +198,8 @@ limitations under the License.
            </div>
            <div class="col-md-8">
              <input type="text" class="form-control" />
-           </div>   
-           </div>        
+           </div>
+           </div>
          </div>
          <div class="form-group">
            <div class="row">
@@ -223,7 +223,7 @@ limitations under the License.
          </div>
        </form>
       </div>
-      <div class="modal-footer">        
+      <div class="modal-footer">
         <button type="button" class="btn btn-success">Save changes</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>

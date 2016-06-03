@@ -1,26 +1,33 @@
-<div class="filter-control wiz_a-filterSearch_container">
-    <ul>
-        <li ng-repeat="filter in filters">
-            <span class="fil-col">{{filter.column}}</span>
-            <span class="fil-op">{{filter.operator}}</span>
-            <span class="fil-oprnd">{{filter.operand}}</span>
-            <button class="fil-rem btn btn-default" ng-click="removeFilter(filter)">X</span>
-        </li>
-        <li class="fil-add">
-            <button ng-hide="filterAdd" class="btn-fil-add btn btn-default" ng-click="filterAdd=true">Add Filter to view</button>
-            <div class="fil-new" ng-show="filterAdd">
-                <select name="col" id="col" ng-model="newCol" required="required" class="form-control">
-                    <option value="" ng-selected="{{''==newCol}}">Column</option>
-                    <option ng-repeat="column in columns" value="{{column}}" ng-selected="{{column==newCol}}">{{column}}</option>
-                </select>
-                <select name="op" id="op" ng-model="newOp" required="required" class="form-control">
-                    <option value="" ng-selected="{{''==newOp}}">Operator</option>
-                    <option ng-repeat="operator in operators" value="{{operator}}" ng-selected="{{operator==newOp}}">{{operator}}</option>
-                </select>
-                <input class="form-control" type="text" ng-model="newOprnd" placeholder="Value" required="required" />
-                <button class="btn btn-success" ng-disabled="!newCol.trim().length > 0 || !newOp.trim().length > 0 || !newOprnd.trim().length > 0" ng-click="saveFilter(newCol, newOp, newOprnd);newOprnd=newOp=newCol='';filterAdd=false;">Ok</button>
-                <button class="btn btn-default" ng-click="newOprnd=newOp=newCol='';filterAdd=false;">Cancel</button>
-            </div>
-        </li>
-    </ul>
+<div class="form-group">
+  <section class="wiz_a-filterTab-container">
+    <div class="wiz_a-filterTab-badge_holder" ng-click="toggleForm()">
+      <span ng-if="filters.length === 0">Add filter to view</span>
+      <span ng-repeat="filter in filters" class="wiz_a-filterTab-badge" ng-click="$event.stopPropagation()">
+        {{filter.column}} {{filter.operator}} {{filter.operand}}
+        <span class="wiz_a-filterTab-badge_close" ng-click="removeFilter(filter, $event)">&times;</span>
+      </span>
+    </div>
+    <button class="btn btn-default" type="button" ng-click="toggleForm()">
+      <span class="caret"></span>
+    </button>
+    <div class="collapse" ng-class="{'in' : acceptInput}">
+      <form class="well">
+        <div class="form-group">
+          <select class="form-control input-sm" ng-model="filter.column" ng-options="column for column in columns">
+            <option value="">-column-</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <select class="form-control input-sm" ng-model="filter.operator" ng-options="operator for operator in operators">
+            <option value="">-operator-</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input class="form-control input-sm" type="text" placeholder="value" ng-model="filter.operand"/>
+        </div>
+        <button class="btn btn-success" ng-click="saveFilter()" ng-disabled="isEmptyFilter()">Ok</button>
+        <button class="btn btn-default" ng-click="toggleForm()">Cancel</button>
+      </form>
+    </div>
+  </section>
 </div>

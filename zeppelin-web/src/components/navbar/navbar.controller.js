@@ -14,8 +14,8 @@
 
 'use strict';
 
-angular.module('zeppelinWebApp').controller('NavCtrl', function ($scope, $rootScope, $routeParams,
-  $location, notebookListDataFactory, websocketMsgSrv, arrayOrderingSrv) {
+angular.module('zeppelinWebApp')
+  .controller('NavCtrl', function ($scope, $rootScope, $routeParams, $http, $location, baseUrlSrv, notebookListDataFactory, websocketMsgSrv, arrayOrderingSrv) {
   /** Current list of notes (ids) */
 
   $scope.showLoginWindow = function () {
@@ -29,8 +29,6 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function ($scope, $rootSc
   vm.connected = websocketMsgSrv.isConnected();
   vm.websocketMsgSrv = websocketMsgSrv;
   vm.arrayOrderingSrv = arrayOrderingSrv;
-  vm.menuType = $rootScope.menuType ? $rootScope.menuType : getMenuType($routeParams.noteId);
-  $rootScope.menuType = vm.menuType;
   if ($rootScope.ticket) {
     $rootScope.fullUsername = $rootScope.ticket.principal;
     $rootScope.truncatedUsername = $rootScope.ticket.principal;
@@ -38,12 +36,10 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function ($scope, $rootSc
 
   var MAX_USERNAME_LENGTH = 16;
 
-  angular.element('#notebook-list').perfectScrollbar({ suppressScrollX: true });
+  angular.element('#notebook-list').perfectScrollbar({suppressScrollX: true});
 
   $scope.$on('setNoteMenu', function (event, notes) {
     notebookListDataFactory.setNotes(notes);
-    vm.notes.list = menuData;
-    vm.menuType = $rootScope.menuType ? $rootScope.menuType : getMenuType($routeParams.noteId);
   });
 
   $scope.$on('setConnectedStatus', function (event, param) {
@@ -75,6 +71,25 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function ($scope, $rootSc
     loadNotes();
   });
 
+  $scope.logout = function () {
+    $http.post(baseUrlSrv.getRestApiBase() + '/login/logout')
+      .success(function (data, status, headers, config) {
+        $rootScope.userName = '';
+        $rootScope.ticket.principal = '';
+        $rootScope.ticket.ticket = '';
+        $rootScope.ticket.roles = '';
+        BootstrapDialog.show({
+          message: 'Logout Success'
+        });
+        setTimeout(function () {
+          window.location = '#';
+          window.location.reload();
+        }, 1000);
+      }).error(function (data, status, headers, config) {
+      console.log('Error %o %o', status, data.message);
+    });
+  };
+
   $scope.search = function () {
     $location.url(/search/ + $scope.searchTerm);
   };
@@ -92,28 +107,5 @@ angular.module('zeppelinWebApp').controller('NavCtrl', function ($scope, $rootSc
 
   vm.loadNotes();
   $scope.checkUsername();
-  $scope.$on("menuChanged", function (e, menuType) {
-    vm.menuType = menuType;
-    $rootScope.menuType = menuType;
-    $location.url('/notebook/' + newNoteId(menuType, $routeParams.noteId));
-  });
-  function newNoteId(menuType, current) {
-    for (var i = 0; i < menuData.length; i++) {
-      for (var j = 0; j < menuData[i].notebooks.length; j++) {
-        if (menuData[i].notebooks[j] == current) {
-          return menuData[i].notebooks[menuType];
-        }
-      }
-    }
-  }
-  function getMenuType(current) {
-    for (var i = 0; i < menuData.length; i++) {
-      for (var j = 0; j < menuData[i].notebooks.length; j++) {
-        if (menuData[i].notebooks[j] == current) {
-          return j;
-        }
-      }
-    }
-    return 0;
-  }
+
 });
