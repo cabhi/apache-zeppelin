@@ -19,7 +19,7 @@ angular.module("zeppelinWebApp")
     }, function (notes) {
       if (notes && notes.length > 0) {
         extractAndConvert(notes);
-        var firstNote = $scope.nodes[0] && $scope.nodes[0].children[0];
+        var firstNote = $scope.nodes[0] && $scope.nodes[0].children && $scope.nodes[0].children[0];
         if (firstNote) {
           $rootScope.firstNoteId = firstNote.id;
         }
@@ -27,7 +27,7 @@ angular.module("zeppelinWebApp")
     });
 
     $scope.setFirstLeafActive = function (node) {
-      var firstLeafNode = node.children[0];
+      var firstLeafNode = node.children && node.children[0];
       if (firstLeafNode) {
         $location.path('/notebook/' + firstLeafNode.id);
       }
