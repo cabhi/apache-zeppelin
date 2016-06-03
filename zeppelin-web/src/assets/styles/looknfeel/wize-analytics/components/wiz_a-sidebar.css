@@ -1,0 +1,171 @@
+/*Module Name: Wize analytics sidebar
+Description: Works for Wize Analytics sidebar module
+Domain: Wize
+*/
+
+/*logo start*/
+.logo-wrapper{
+	background-color:#e85b5d ;
+	color: #fff;
+	padding: 13px 19px; 
+	margin-bottom: 0px;
+}
+
+.logo-wrapper h5{
+	background-image: url('/assets/images/wize-analytics_images/wize-logo@1x.png');
+	background-repeat: no-repeat;
+	width: 76px;
+	margin: 0px;
+	height: 24px;
+	text-indent: -99999em;
+
+
+}
+
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2/1),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
+
+    .logo-wrapper h5{
+        background-image: url('/assets/images/wize-analytics_images/wize-logo@1x.png');
+        background-size:76px 24px;
+    }
+
+}
+
+
+.logo-wrapper h5 sup{
+	font-size: 10px;
+}
+/*logo ends*/
+
+/*aside control start*/
+.aside-nav{
+	position: fixed;
+	top: 0px;
+	width: 190px;
+	height: 100%;
+	background-color: #2D323E;
+	left: 0;
+	z-index: 999;
+	transition: all 0.5s;
+	-moz-transition: all 0.5s; 
+	-webkit-transition: all 0.5s; 
+	-o-transition: all 0.5s;
+	white-space: nowrap;
+}
+
+.navigation li a{
+	display: block;
+	padding: 6px 15px;
+	color: #BEC0C3;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.navigation li a span{
+	background-color: #21252D;
+	display: inline-block;
+	margin-right: 15px;
+	height: 26px;
+	width: 26px;
+	text-align: center;
+	padding: 3px;
+}
+
+
+
+.toggle-menu{
+	text-align: right;
+}
+
+
+.navigation li.active a{
+	color: #fff;
+}
+
+.navigation li.active a span{
+	background-color: #E85B5D;
+}
+
+
+
+ 
+ .aside-nav + #main{
+ 	margin-left: 190px;
+ 	transition: all 0.5s;
+	-moz-transition: all 0.5s; 
+	-webkit-transition: all 0.5s; 
+	-o-transition: all 0.5s;
+	padding: 0 10px;
+ }
+
+
+
+.aside-nav.collapsed{
+	width: 56px;
+	overflow: hidden;
+}
+
+
+.aside-nav.collapsed .toggle-menu, .aside-nav.collapsed .logo-wrapper{
+	text-align: center;
+}
+
+.aside-nav.collapsed .logo-wrapper h5 span{
+	display: none;
+}
+
+
+ .aside-nav.collapsed + #main{
+ 	margin-left: 56px;
+ }
+ 
+ /*aside control ends*/
+ 
+ /*navbar start*/
+.navbar-default.displayNavBar2{
+	background-color: #fff;
+	border-radius: 0px;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	margin: 0 -10px;
+}
+.navbar-default.displayNavBar2 .navbar-collapse{
+	padding-left: 0;
+	padding-right: 0;
+}
+.navbar-default.displayNavBar2 .navbar-nav>li>a{
+color:#212121;
+}
+.navbar-default.displayNavBar2 .navbar-nav>li>a:hover{
+color:#212121;
+}
+.navbar-default.displayNavBar2 .navbar-nav>.open>a, .navbar-default.displayNavBar2 .navbar-nav>.open>a:focus, .navbar-default.displayNavBar2 .navbar-nav>.open>a:hover{
+color:#212121;
+background-color: #f5f5f5;
+/*background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(217,31,33,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(217,31,33,1) 100%);
+background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(217,31,33,1) 100%); 
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#d91f21',GradientType=0 );*/
+}
+.navbar-default.displayNavBar2 .navbar-nav>li>.dropdown-menu {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.navbar-default.displayNavBar2 .navbar-nav>li>.dropdown-menu .form-control{
+border-radius:0px;
+}
+.server-status{
+	padding-right: 2px;
+}
+
+/*navbar ends*/
