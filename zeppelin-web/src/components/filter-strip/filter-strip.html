@@ -2,9 +2,9 @@
   <section class="wiz_a-filterTab-container">
     <div class="wiz_a-filterTab-badge_holder" ng-click="toggleForm()">
       <span ng-if="filters.length === 0">Add filter to view</span>
-      <span ng-repeat="filter in filters">
+      <span ng-repeat="filter in filters" class="wiz_a-filterTab-badge" ng-click="$event.stopPropagation()">
         {{filter.column}} {{filter.operator}} {{filter.operand}}
-        <i class="fa fa-close" ng-click="removeFilter(filter, $event)"></i>
+        <span class="wiz_a-filterTab-badge_close" ng-click="removeFilter(filter, $event)">&times;</span>
       </span>
     </div>
     <button class="btn btn-default" type="button" ng-click="toggleForm()">
