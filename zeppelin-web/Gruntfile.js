@@ -342,7 +342,8 @@ module.exports = function (grunt) {
             'assets/styles/**/*',
             'assets/images/**/*',
             'WEB-INF/*',
-            'config/*'
+            'config/*',
+            'login-app/**/*'
           ]
         }, {
           // copy fonts

@@ -1,0 +1,198 @@
+<!--
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--login-->
+<style type="text/css">
+
+  @font-face {
+    font-family: 'ProximaNova';
+    src: url('assets/styles/looknfeel/wize-analytics/fonts/proximanova-regular-webfont.woff') format('woff');
+  }
+  @font-face {
+    font-family: 'ProximaNova-Light';
+    src: url('assets/styles/looknfeel/wize-analytics/fonts/proximanova-light-webfont.woff') format('woff');
+  }
+  @font-face {
+    font-family: 'ProximaNova-Bold';
+    src: url('assets/styles/looknfeel/wize-analytics/fonts/proximanova-bold-webfont.woff') format('woff');
+  }
+  body{
+    overflow-x:hidden;
+    overflow-y:hidden;
+  }
+  .wiz_a-login-container {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #fff;
+    font-family: 'ProximaNova';
+    font-size: 12px;
+
+  }
+
+
+  @-webkit-keyframes animatedBackground {
+    from { background-position: 0 0; }
+    to { background-position: 100% 0 ; }
+  }
+
+  .wiz_a-login-container .body{
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -40px;
+    bottom: -40px;
+    width: auto;
+    height: auto;
+    background-image: url('assets/images/wize-analytics_images/bg.jpg');
+    -webkit-animation: animatedBackground 130s linear infinite;
+    background-size: cover;
+    /*-webkit-filter: blur(5px);*/
+    z-index: 0;
+  }
+
+  .wiz_a-login-container .grad{
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -40px;
+    bottom: -40px;
+    width: auto;
+    height: auto;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65)));
+    z-index: 1;
+    opacity: 0.7;
+  }
+
+  .wiz_a-login-container .header{
+    position: absolute;
+    top: calc(50% - 35px);
+    left: calc(50% - 255px);
+    z-index: 2;
+  }
+
+  .wiz_a-login-container .header div{
+    float: left;
+    color: #fff;
+    font-family: "ProximaNova-Light";
+    font-size: 35px;
+    font-weight: 200;
+  }
+
+  .wiz_a-login-container .header div span{
+    color:#E85B5D;
+    font-family: "ProximaNova";
+  }
+
+  .wiz_a-login-container .login{
+    position: absolute;
+    top: calc(50% - 75px);
+    left: calc(50% - 50px);
+    height: 150px;
+    width: 350px;
+    padding: 10px;
+    z-index: 2;
+  }
+
+  .wiz_a-login-container .login input[type=text]{
+    width: 300px;
+    height: 35px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 0;
+    color: #fff;
+    font-family: 'ProximaNova';
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px;
+  }
+
+  .wiz_a-login-container .login input[type=password]{
+    width: 300px;
+    height: 35px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 0;
+    color: #fff;
+    font-family: 'ProximaNova';
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px;
+    margin-top: 10px;
+  }
+
+  .wiz_a-login-container .login input[type=button]{
+    width: 300px;
+    height: 35px;
+    background: #f9f9f9;
+    border: 1px solid #fff;
+    cursor: pointer;
+    border-radius: 0;
+    color: #E85B5D;
+    font-family: 'ProximaNova';
+    font-size: 16px;
+    font-weight: 400;
+    padding: 6px;
+    margin-top: 15px;
+  }
+
+  .wiz_a-login-container .login input[type=button]:hover{
+    opacity: 0.8;
+  }
+
+  .wiz_a-login-container .login input[type=button]:active{
+    opacity: 0.6;
+  }
+
+  .wiz_a-login-container .login input[type=text]:focus{
+    outline: none;
+    border: 1px solid rgba(255,255,255,0.9);
+  }
+
+  .wiz_a-login-container .login input[type=password]:focus{
+    outline: none;
+    border: 1px solid rgba(255,255,255,0.9);
+  }
+
+  .wiz_a-login-container .login input[type=button]:focus{
+    outline: none;
+  }
+
+  .wiz_a-login-container input::-webkit-input-placeholder{
+    color: rgba(255,255,255,0.6);
+  }
+
+  .wiz_a-login-container input::-moz-input-placeholder{
+    color: rgba(255,255,255,0.6);
+  }
+</style>
+<section class="wiz_a-login-container">
+  <div class="body"></div>
+  <div class="grad"></div>
+  <div class="header">
+    <div>Please<span>Login</span></div>
+  </div>
+  <br>
+  <div class="login">
+    <input type="text" placeholder="username" name="user" id="userName"
+           ng-keypress="loginParams.errorText = ''"
+           ng-model="loginParams.userName"><br>
+    <input type="password" placeholder="password" name="password" id="password"
+           ng-enter="login()"
+           ng-keypress="loginParams.errorText = ''"
+           ng-model="loginParams.password"><br>
+    <input type="button" value="Login" ng-click="login()">
+  </div>
+</section>
+
