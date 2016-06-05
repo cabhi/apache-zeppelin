@@ -35,7 +35,30 @@ import com.google.gson.stream.JsonToken;
  */
 public class JsonFieldParser {
     
-  static Set<String> parseJson(String json) throws IOException {
+  
+    static Set<String> getAllFields(String json) throws IOException {
+	Set<String> fields = parseJson(json);
+	Set<String> finalFields = new HashSet<String>();
+	for(String field: fields){
+	    if(!field.contains(".raw"))
+		finalFields.add(field);
+	}
+	
+	return finalFields;
+    }
+    
+    static Set<String> getFieldsWithRaw(String json) throws IOException {
+	Set<String> fields = parseJson(json);
+	Set<String> finalFields = new HashSet<String>();
+	for(String field: fields){
+	    if(field.contains(".raw"))
+		finalFields.add(field.replaceAll(".fields.raw", ""));
+	}
+	
+	return finalFields;
+    }
+    
+    static Set<String> parseJson(String json) throws IOException {
     Set<String> fields = new HashSet<String>();
     JsonReader reader = new JsonReader(new StringReader(json));
     reader.setLenient(true);
@@ -101,9 +124,6 @@ public class JsonFieldParser {
     int lastIndex = path.lastIndexOf('.');
     path = path.substring(0, lastIndex);
     
-    //remove fields.raw
-    path = path.replaceAll(".fields.raw", "");
-    
     return path;
   }
 
@@ -116,12 +136,11 @@ public class JsonFieldParser {
     
     
   public static void main(String[] args) throws IOException {
-//    String json = "{\"metadata\": {\"timestamp\": [\"val1\",\"val2\"], \"level\": \"val2\", "
-//      + "\"serviceName\": \"val3\", \"region\": \"val4\", "
-//      + "\"zone\": \"val5\", \"userId\": \"val6\" }}";
-    Scanner scanner = new Scanner(new File("/tmp/sample.json"));
+    Scanner scanner = new Scanner(new File("/tmp/sample1.json"));
     String json = scanner.nextLine();
-    //System.out.println(parseJson(json));
+    System.out.println(parseJson(json));
+    System.out.println(getAllFields(json));
+    System.out.println(getFieldsWithRaw(json));
     
     Class klass = JsonReader.class;
     URL location = klass.getResource('/' + klass.getName().replace('.', '/') + ".class");
