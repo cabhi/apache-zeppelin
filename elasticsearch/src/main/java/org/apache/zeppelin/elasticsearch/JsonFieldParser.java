@@ -17,9 +17,13 @@
 
 package org.apache.zeppelin.elasticsearch;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -55,18 +59,18 @@ public class JsonFieldParser {
             break;
           case STRING:
             String s = reader.nextString();
-            //fields.add(getPath(reader.getPath()));
-            //print(reader.getPath(), quote(s));
+            fields.add(getPath(reader.getPath()));
+//            print(reader.getPath(), quote(s));
             break;
           case NUMBER:
             String n = reader.nextString();
-            //fields.add(getPath(reader.getPath()));
-            //print(reader.getPath(), n);
+            fields.add(getPath(reader.getPath()));
+//            print(reader.getPath(), n);
             break;
           case BOOLEAN:
             boolean b = reader.nextBoolean();
-            //fields.add(getPath(reader.getPath()));
-            //print(reader.getPath(), b);
+            fields.add(getPath(reader.getPath()));
+//            print(reader.getPath(), b);
             break;
           case NULL:
             reader.nextNull();
@@ -87,6 +91,19 @@ public class JsonFieldParser {
   static String getPath(String path) {
     path = path.substring(2);
     path = PATTERN.matcher(path).replaceAll("");
+    path = path.replaceAll("properties.","");
+    
+    //remove type name
+    int index = path.indexOf('.');
+    path = path.substring(index + 1);
+    
+    //remove field property, to get field name
+    int lastIndex = path.lastIndexOf('.');
+    path = path.substring(0, lastIndex);
+    
+    //remove fields.raw
+    path = path.replaceAll(".fields.raw", "");
+    
     return path;
   }
 
@@ -99,10 +116,16 @@ public class JsonFieldParser {
     
     
   public static void main(String[] args) throws IOException {
-    String json = "{\"metadata\": {\"timestamp\": [\"val1\",\"val2\"], \"level\": \"val2\", "
-      + "\"serviceName\": \"val3\", \"region\": \"val4\", "
-      + "\"zone\": \"val5\", \"userId\": \"val6\" }}";
-    System.out.println(parseJson(json));
+//    String json = "{\"metadata\": {\"timestamp\": [\"val1\",\"val2\"], \"level\": \"val2\", "
+//      + "\"serviceName\": \"val3\", \"region\": \"val4\", "
+//      + "\"zone\": \"val5\", \"userId\": \"val6\" }}";
+    Scanner scanner = new Scanner(new File("/tmp/sample.json"));
+    String json = scanner.nextLine();
+    //System.out.println(parseJson(json));
+    
+    Class klass = JsonReader.class;
+    URL location = klass.getResource('/' + klass.getName().replace('.', '/') + ".class");
+    System.out.println(location);
   }
 
 }

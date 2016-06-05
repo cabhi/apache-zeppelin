@@ -31,6 +31,9 @@ import org.apache.zeppelin.interpreter.Interpreter;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterPropertyBuilder;
 import org.apache.zeppelin.interpreter.InterpreterResult;
+import org.elasticsearch.action.ActionFuture;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequest;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -38,7 +41,10 @@ import org.elasticsearch.action.search.SearchAction;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.cluster.metadata.MappingMetaData;
+import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentHelper;
@@ -259,6 +265,9 @@ public class ElasticsearchInterpreter extends Interpreter {
       }
       else if ("delete".equalsIgnoreCase(method)) {
         return processDelete(urlItems);
+      }
+      else if ("getFields".equalsIgnoreCase(method)) {
+        return processGetFields(urlItems);
       }
 
       return processHelp(InterpreterResult.Code.ERROR, "Unknown command");
@@ -531,6 +540,54 @@ public class ElasticsearchInterpreter extends Interpreter {
     }
         
     return new InterpreterResult(InterpreterResult.Code.ERROR, "Document not found");
+  }
+  
+  /**
+   * Processes a "getFields" request.
+   * 
+   * @param urlItems index, type
+   * @return fields of the given index and type
+ * @throws ExecutionException 
+ * @throws InterruptedException 
+ * @throws IOException 
+   */
+  private InterpreterResult processGetFields(String[] urlItems) throws InterruptedException, ExecutionException, IOException {
+
+    if (urlItems.length != 2 
+        || StringUtils.isEmpty(urlItems[0]) 
+        || StringUtils.isEmpty(urlItems[1])) {
+      return new InterpreterResult(InterpreterResult.Code.ERROR,
+                                   "Bad URL (it should be /index/type)");
+    }
+    
+    IndicesAdminClient indicesAdminClient = client.admin().indices();
+    
+    GetMappingsRequest request = new GetMappingsRequest();
+    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(urlItems[0]));
+    
+    GetMappingsResponse mappingResponse = responseFuture.get();
+    
+    ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>> mappings = mappingResponse.getMappings();
+    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(urlItems[0]);
+    MappingMetaData metaData = indexMappings.get(urlItems[1]);
+    
+    StringBuilder response = new StringBuilder().append("{\"fields\":[");
+    String metadataJson = metaData.source().string();
+    logger.info("Metadata Json: " + metadataJson);
+    
+    //parse fields from metadata
+    Set<String> fields = JsonFieldParser.parseJson(metadataJson);
+    String prefix = "";
+    
+    //add fields to the response
+    for(String field: fields) {
+	response.append(prefix).append("\"").append(field).append("\"");
+	prefix=",";
+    }
+    
+    response.append("]}");
+    logger.info("Returning Fields: " + response);
+    return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TEXT, response.toString());
   }
     
   private SearchResponse searchData(String[] urlItems, String query, int size, int from) {

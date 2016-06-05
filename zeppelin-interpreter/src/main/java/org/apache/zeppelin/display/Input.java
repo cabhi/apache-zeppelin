@@ -20,8 +20,6 @@ package org.apache.zeppelin.display;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.internal.StringMap;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -456,8 +454,8 @@ public class Input implements Serializable {
   /*Preparing query for FilterTab*/
   public static String getFilterTabQuery(Object filterTabValue,List<String> rawFields) {
     StringBuffer query = new StringBuffer();
-    List<StringMap<String>> values = (List<StringMap<String>>) filterTabValue;
-    for (StringMap<String> value: values) {
+    List<Map<String, String>> values = (List<Map<String, String>>) filterTabValue;
+    for (Map<String, String> value: values) {
       String field = value.get("column");
       String operator = value.get("operator");
       String operand = value.get("operand"); 
