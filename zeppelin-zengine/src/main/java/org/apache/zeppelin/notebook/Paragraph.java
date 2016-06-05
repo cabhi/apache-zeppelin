@@ -44,7 +44,6 @@ import com.google.common.annotations.VisibleForTesting;
  */
 public class Paragraph extends Job implements Serializable, Cloneable {
   private static final long serialVersionUID = -6328572073497992016L;
-
   private transient NoteInterpreterLoader replLoader;
   private transient Note note;
 
@@ -258,6 +257,7 @@ public class Paragraph extends Job implements Serializable, Cloneable {
     logger().debug("RUN : " + script);
     try {
       InterpreterContext context = getInterpreterContext();
+      context.getConfig().put(Input.FILTER_TAB_KEY, settings.getParams().get(Input.FILTER_TAB_KEY));
       InterpreterContext.set(context);
       InterpreterResult ret = repl.interpret(script, context);
 

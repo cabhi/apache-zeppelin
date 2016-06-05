@@ -50,7 +50,9 @@ import javax.imageio.stream.FileImageInputStream;
  * Input type.
  */
 public class Input implements Serializable {
-  /**
+   public static final String FILTER_TAB_KEY = "FilterTab";
+  
+   /**
    * Parameters option.
    */
   public static class ParamOption {
@@ -350,23 +352,9 @@ public class Input implements Serializable {
       
     return replaced;
   }
-  /*Formatting the date and returning the required format*/
-  public static String getFormatedDate(Date date){
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-  	return sdf.format(date);
-  	}
-  public static void loadFilesAndVlauesInitialy(String fileName, Map<String,FileLoadCheck>initialCheckMap) throws IOException{
-		List<String> properitiesFileValues=null; 
-		properitiesFileValues=getPropValues(fileName);
-       	FileLoadCheck fileLoadCheck= new Input().new FileLoadCheck();
-       	
-       	fileLoadCheck.setLastmodifieddate(getFormatedDate(new Date()));
-    	fileLoadCheck.setPropertyFileValues(properitiesFileValues);
-    	initialCheckMap.put(fileName, fileLoadCheck);
-  }
+
   public static String getSimpleQuery(Map<String, Object> params, String script) throws IOException {
     String replaced = resolveDependentParams(params, script);
-    Map<String,FileLoadCheck>initialCheckMap= new HashMap<>();
     
     Matcher match = VAR_PTN.matcher(replaced);
     while (match.find()) {
@@ -378,18 +366,8 @@ public class Input implements Serializable {
         value = input.defaultValue;
       }
       String expanded;      
-      if (input.name.contains("FilterTab")) {
-    	  String fileName=getFileName(script); 
-    	    if(initialCheckMap.get(fileName)==null){
-    	    	loadFilesAndVlauesInitialy(fileName,initialCheckMap);
-    	    }else{
-    	    	String lastModifiedDate=initialCheckMap.get(fileName).getLastmodifieddate();
-    	    	String currentDate=getFormatedDate(new Date());	
-    	    	if(lastModifiedDate.compareTo(currentDate)!=0){
-    	    		loadFilesAndVlauesInitialy(fileName,initialCheckMap);
-    	        	}
-    	    }
-        expanded = getFilterTabQuery(value,initialCheckMap.get(fileName).getPropertyFileValues());
+      if (input.name.contains(FILTER_TAB_KEY)) {
+        expanded = FILTER_TAB_KEY;
       } else if (value instanceof Object[] || value instanceof Collection) {  // multi-selection
         String delimiter = input.argument;
         if (delimiter == null) {
@@ -423,114 +401,7 @@ public class Input implements Serializable {
 	  String[] strArray=str.split("/");
 	  return strArray[1];
   }
-  /*loading properties file  and reading the key and adding to list*/
-  public static List<String> getPropValues(String propertyFileName) throws IOException {
-	  InputStream inputStream=null;
-	  List<String> valuesList=  new ArrayList<String>();
-		try {
-		  String finalPath="/zeppelin-0.6.0-incubating-SNAPSHOT/conf/elasticsearch/_templates/";
-			Properties prop = new Properties();
-			
-			//String url=Input.class.getResource("/").toURI().getPath();
-			//String path=url.replace("zeppelin-server/target/test-classes/", "conf/elasticsearch/_templates/");
-			
-			inputStream =new FileInputStream(finalPath+propertyFileName+".properties");
-			if (inputStream != null) {
-				prop.load(inputStream);
-				 Enumeration<Object> em = prop.keys();
-				 while(em.hasMoreElements()){
-					 String key = (String)em.nextElement();
-					 valuesList.add(key); 
-				 }
-			} 
-			
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		} finally {
-			inputStream.close();
-		}
-		return valuesList;
-	}
-  /*Preparing query for FilterTab*/
-  public static String getFilterTabQuery(Object filterTabValue,List<String> rawFields) {
-    StringBuffer query = new StringBuffer();
-    List<Map<String, String>> values = (List<Map<String, String>>) filterTabValue;
-    for (Map<String, String> value: values) {
-      String field = value.get("column");
-      String operator = value.get("operator");
-      String operand = value.get("operand"); 
-      switch (operator) {
-          case "=": 
-        	  if(rawFields.contains(field)){
-            query.append("{\"term\":").append("{").append(field).append(".raw:")
-              .append(operand.toLowerCase()).append("}}");
-        	  }else{
-        		  query.append("{\"term\":").append("{").append(field).append(":")
-                  .append(operand.toLowerCase()).append("}}");
-        	  }
-            break;
-          case "!=": 
-            query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
-              .append("{").append(field).append(":").append(operand).append("}}}}");
-            break;
-          case "<": 
-            query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"lt\":").append(operand).append("}}}");
-            break;
-          case "<=": 
-            query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"lte\":").append(operand).append("}}}");
-            break;
-          case ">": 
-            query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"gt\":").append(operand).append("}}}");
-            break;
-          case ">=": 
-            query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"gte\":").append(operand).append("}}}");
-            break;
-          case "contains": 
-        	  if(isValidWord(operand)){
-        		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
-                  .append(operand).append("*}}"); 
-        	  }else{
-            query.append("{\"match_phrase\":").append("{").append(field).append(":")
-              .append(operand).append("}}");
-        	  }
-            break; 
-          case "starts with":
-            query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
-              .append(operand).append("\"}}");
-      }
-      query.append(",");
-    } 
-    return query.toString();
-  }
   
-  /*Adding a class for file load check*/
-  class FileLoadCheck{
-	  String lastmodifieddate;
-	  List<String> propertyFileValues= new ArrayList<>();
-	public String getLastmodifieddate() {
-		return lastmodifieddate;
-	}
-	public void setLastmodifieddate(String lastmodifieddate) {
-		this.lastmodifieddate = lastmodifieddate;
-	}
-	public List<String> getPropertyFileValues() {
-		return propertyFileValues;
-	}
-	public void setPropertyFileValues(List<String> propertyFileValues) {
-		this.propertyFileValues = propertyFileValues;
-	}
-	  
-  }
-
-  
-  public static boolean isValidWord(String inputString) {
-	    return inputString.matches("[A-Za-z]*");
-	}
-
   public static String[] split(String str) {
     return str.split(";(?=([^\"']*\"[^\"']*\")*[^\"']*$)");
 
