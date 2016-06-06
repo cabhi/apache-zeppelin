@@ -217,7 +217,8 @@ angular.module('zeppelinWebApp')
     $scope.renderText = function () {
       var retryRenderer = function () {
         var data,
-            firstItem;
+          relatedParagraph,
+          columnFields;
 
         // var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
         // if (textEl.length) {
@@ -245,8 +246,13 @@ angular.module('zeppelinWebApp')
           } else {
             $scope.data = data.rows;
           }
-          firstItem = $scope.data[0] || {};
-          $scope.columns = utils.getFlatObjectGraph(firstItem);
+          relatedParagraph = getRelatedParagraphForFields($scope.parentNote, $scope.paragraph);
+          try {
+            columnFields = JSON.parse(relatedParagraph.result.msg).fields;
+          } catch (err) {
+            columnFields = utils.getFlatObjectGraph($scope.data[0] || {});
+          }
+          $scope.columns = columnFields;
           $scope.logViewFields = mergeLogFieldPref($scope.paragraph.settings.params.preferences);
         }
       };
@@ -2477,5 +2483,24 @@ angular.module('zeppelinWebApp')
 
     function isDerived(para, id) {
       return _.lastIndexOf(para.config.paramsDerivedFrom, id) > -1;
+    }
+
+    function getRelatedParagraphForFields(notebook, resultParagraph) {
+      var searchQuery = resultParagraph.text,
+        searchQueryTokens = /(search)\s*(\/[^\s]+)/.exec(searchQuery),
+        searchPath,
+        relatedParagraph;;
+      if (searchQueryTokens && searchQueryTokens.length === 3) {
+        searchPath = searchQueryTokens[2];
+        _.each(notebook.paragraphs, function (paragraph) {
+          var query = paragraph.text,
+            queryTokens = /(getFields)\s*(\/[^\s]+)/.exec(query);
+          if (queryTokens && queryTokens.length === 3 && queryTokens[2] === searchPath) {
+            relatedParagraph = paragraph;
+            return false;
+          }
+        });
+      }
+      return relatedParagraph;
     }
   });
