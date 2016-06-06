@@ -5,7 +5,7 @@
   <ul class="list-unstyled">
     <li class="toggle-menu"><a><i class="fa fa-arrows-h" aria-hidden="true"></i></a></li>
     <li class="parentNavLnk" ng-repeat="node in nodes" ng-class="{'active': isRouteActive(node)}">
-      <a data-target="#navItemCollapse{{$index}}" aria-expanded="false" aria-controls="navItemCollapse">
+      <a href="#navItemCollapse{{$index}}" data-toggle="collapse" aria-expanded="false" aria-controls="navItemCollapse">
         <span><i class="{{node.attributes.icon}}" aria-hidden="true"></i></span>
         {{node.name}}
       </a>
