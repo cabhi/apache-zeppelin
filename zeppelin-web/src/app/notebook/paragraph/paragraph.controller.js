@@ -259,14 +259,24 @@ angular.module('zeppelinWebApp')
       $timeout(retryRenderer);
     };
 
-    $scope.getLogSummary = function (row) {
-      var summaryParts = _.map(extractLogFieldPref($scope.logViewFields), function (field) {
-        var value = utils.getPath(row, field);
+    $scope.getSummaryParts = function (row) {
+      return _.map(extractLogFieldPref($scope.logViewFields), function (field) {
+        var value = utils.getPath(row, field) || '-';
         return DataTypes.format(_.last(field.split('.')), value);
       });
-      var availableWidth = angular.element('#p' + $scope.paragraph.id + '_resize').width(),
-        padding = availableWidth / summaryParts.length - 20;
-      return $sce.trustAsHtml('<span style="display: inline-block; width: ' + padding +'px;">' + summaryParts.join('</span><span style="display: inline-block; width: ' + padding +'px; text-align: right;">') + '</span>');
+    };
+
+    $scope.getLogSummary = function (row) {
+      var summaryParts = $scope.getSummaryParts(row);
+      return $sce.trustAsHtml(summaryParts.join('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'));
+      // var availableWidth = angular.element('#p' + $scope.paragraph.id + '_resize').width(),
+      //   padding = availableWidth / summaryParts.length - 20;
+      // return $sce.trustAsHtml('<span style="display: inline-block; width: ' + padding +'px;">' + summaryParts.join('</span><span style="display: inline-block; width: ' + padding +'px; text-align: right;">') + '</span>');
+    };
+
+    $scope.getSummaryTooltip = function (row) {
+      var summaryParts = $scope.getSummaryParts(row);
+      return summaryParts.join('\n');
     };
 
     $scope.updatePref = function (newPref) {

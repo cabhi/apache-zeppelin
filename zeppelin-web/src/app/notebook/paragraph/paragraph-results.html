@@ -27,9 +27,12 @@ limitations under the License.
                infinite-scroll-disabled="isRunning() || !data || data.length === 0" style="display: block;">
       <accordion-group ng-repeat="log in data track by $index" ng-init="log.open=false" is-open="log.open">
         <accordion-heading>
-          <i class="pull-left glyphicon"
-             ng-class="{'glyphicon-chevron-down': log.open, 'glyphicon-chevron-left': !log.open}"></i>
-          <span ng-bind-html="getLogSummary(log)"></span>
+          <div style="display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+            <i class="pull-left glyphicon"
+               ng-class="{'glyphicon-chevron-down': log.open, 'glyphicon-chevron-left': !log.open}"></i>
+            <span ng-bind-html="getLogSummary(log)"
+                  title="{{getSummaryTooltip(log)}}"></span>
+          </div>
         </accordion-heading>
         <div class="result" ng-if="log.open">
           <json-explorer data='log'></json-explorer>
