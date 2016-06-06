@@ -274,6 +274,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       return processHelp(InterpreterResult.Code.ERROR, "Unknown command");
     }
     catch (Exception e) {
+      logger.error("Error in processing query: " + e);
       return new InterpreterResult(InterpreterResult.Code.ERROR, "Error : " + e.getMessage());
     }
   }
