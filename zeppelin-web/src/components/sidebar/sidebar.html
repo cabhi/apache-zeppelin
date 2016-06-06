@@ -1,15 +1,15 @@
 <div class="logo-wrapper">
   <h5>Wize</h5>
 </div>
-<nav class="navigation" ng-controller="sidebarCtrl">
+<nav class="wiz_a-sidebar-nav" ng-controller="sidebarCtrl">
   <ul class="list-unstyled">
     <li class="toggle-menu"><a><i class="fa fa-arrows-h" aria-hidden="true"></i></a></li>
-    <li ng-repeat="node in nodes" ng-class="{'active': isRouteActive(node)}">
-      <a ng-click="setFirstLeafActive(node)">
+    <li class="parentNavLnk" ng-repeat="node in nodes" ng-class="{'active': isRouteActive(node)}">
+      <a data-target="#navItemCollapse{{$index}}" aria-expanded="false" aria-controls="navItemCollapse">
         <span><i class="{{node.attributes.icon}}" aria-hidden="true"></i></span>
         {{node.name}}
       </a>
-      <ul ng-if="node.children.length > 0">
+      <ul id="navItemCollapse{{$index}}" class="list-unstyled collapse" ng-if="node.children.length > 0">
         <li ng-repeat="leaf in node.children" ng-class="{'active': isRouteActive(leaf)}" class="nav-node">
           <a ng-href="#/notebook/{{leaf.id}}">
             <span><i class="{{leaf.attributes.icon}}" aria-hidden="true"></i></span>
