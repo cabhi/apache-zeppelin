@@ -883,9 +883,17 @@ public class ElasticsearchInterpreter extends Interpreter {
   
   /*Preparing query for FilterTab*/
   public static String getFilterTabQuery(Object filterTabValue,Set<String> rawFields) {
+	  logger.info("Entering getFilterTabQuery method with filter tab value: "+filterTabValue);
+	  if(filterTabValue==null){
+		  filterTabValue="";
+		  return filterTabValue.toString();
+	  }
+	  
+	  logger.info("++++++FilterTab vlaue in starting of getFilterTabQuery ++++++++  "+filterTabValue);
     StringBuffer query = new StringBuffer();
     List<Map<String, String>> values = (List<Map<String, String>>) filterTabValue;
     for (Map<String, String> value: values) {
+    	 logger.info("++++++FilterTab vlaue in starting of getFilterTabQuery  foreach loop ++++++++  "+value);
       String field = value.get("column");
       String operator = value.get("operator");
       String operand = value.get("operand"); 

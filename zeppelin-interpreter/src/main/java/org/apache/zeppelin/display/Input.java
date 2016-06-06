@@ -361,7 +361,11 @@ public class Input implements Serializable {
       Input input = getInputForm(match);
       Object value;
       if (params.containsKey(input.name)) {
+    	  if(input.name.equalsIgnoreCase("Date")){
+    		  value = "\""+params.get(input.name)+"\"";
+    	  }else{
         value = params.get(input.name);
+    	  }
       } else {
         value = input.defaultValue;
       }
