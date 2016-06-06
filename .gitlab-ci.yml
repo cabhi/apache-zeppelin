@@ -18,6 +18,7 @@ make_snapshot:
    name: "zeppelin_${CI_BUILD_REF_NAME}"
    paths:
    - zeppelin-distribution/target/zeppelin*.tar.gz
+   - DataGenerator/target/data-generator-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 make_docker:
   stage: make_docker
