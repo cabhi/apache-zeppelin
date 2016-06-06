@@ -27,10 +27,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.zeppelin.display.Input;
 import org.apache.zeppelin.interpreter.Interpreter;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterPropertyBuilder;
 import org.apache.zeppelin.interpreter.InterpreterResult;
+import org.elasticsearch.action.ActionFuture;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsRequest;
+import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -38,7 +42,10 @@ import org.elasticsearch.action.search.SearchAction;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.cluster.metadata.MappingMetaData;
+import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentHelper;
@@ -174,7 +181,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     if (StringUtils.isEmpty(cmd) || StringUtils.isEmpty(cmd.trim())) {
       return new InterpreterResult(InterpreterResult.Code.SUCCESS);
     }
-    
+    cmd = expandedCommand(cmd, interpreterContext.getConfig().get(Input.FILTER_TAB_KEY));
     cmd = enhanceCommand(cmd);
     logger.info("Run Enhanced Elasticsearch command '" + cmd + "'");
 
@@ -207,7 +214,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       if (fromLine.length != 2) {
         return processHelp(InterpreterResult.Code.ERROR, "Right format is : from <value>");
       }
-      currentResultFrom = Integer.parseInt(fromLine[1]);
+      currentResultFrom = (int) Double.parseDouble(fromLine[1]);
       items = StringUtils.split(lines[1].trim(), " ", 3);
       
       //remove 'from' line from cmd
@@ -259,6 +266,9 @@ public class ElasticsearchInterpreter extends Interpreter {
       }
       else if ("delete".equalsIgnoreCase(method)) {
         return processDelete(urlItems);
+      }
+      else if ("getFields".equalsIgnoreCase(method)) {
+        return processGetFields(urlItems);
       }
 
       return processHelp(InterpreterResult.Code.ERROR, "Unknown command");
@@ -532,6 +542,91 @@ public class ElasticsearchInterpreter extends Interpreter {
         
     return new InterpreterResult(InterpreterResult.Code.ERROR, "Document not found");
   }
+  
+  /**
+   * Processes a "getFields" request.
+   * 
+   * @param urlItems index, type
+   * @return fields of the given index and type
+ * @throws ExecutionException 
+ * @throws InterruptedException 
+ * @throws IOException 
+   */
+  private InterpreterResult processGetFields(String[] urlItems) throws InterruptedException, ExecutionException, IOException {
+
+    if (urlItems.length != 2 
+        || StringUtils.isEmpty(urlItems[0]) 
+        || StringUtils.isEmpty(urlItems[1])) {
+      return new InterpreterResult(InterpreterResult.Code.ERROR,
+                                   "Bad URL (it should be /index/type)");
+    }
+    
+    IndicesAdminClient indicesAdminClient = client.admin().indices();
+    
+    GetMappingsRequest request = new GetMappingsRequest();
+    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(urlItems[0]));
+    
+    GetMappingsResponse mappingResponse = responseFuture.get();
+    
+    ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>> mappings = mappingResponse.getMappings();
+    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(urlItems[0]);
+    MappingMetaData metaData = indexMappings.get(urlItems[1]);
+    
+    StringBuilder response = new StringBuilder().append("{\"fields\":[");
+    String metadataJson = metaData.source().string();
+    logger.info("Metadata Json: " + metadataJson);
+    
+    //parse fields from metadata
+    Set<String> fields = JsonFieldParser.getAllFields(metadataJson);
+    String prefix = "";
+    
+    //add fields to the response
+    for(String field: fields) {
+	response.append(prefix).append("\"").append(field).append("\"");
+	prefix=",";
+    }
+    
+    response.append("]}");
+    logger.info("Returning Fields: " + response);
+    return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TEXT, response.toString());
+  }
+  
+  /**
+   * Processes a "getFields" request.
+   * 
+   * @param urlItems index, type
+   * @return fields of the given index and type
+ * @throws ExecutionException 
+ * @throws InterruptedException 
+ * @throws IOException 
+   */
+  private Set<String> processGetFieldsWithRaw(String cmd) throws InterruptedException, ExecutionException, IOException {
+    final String[] lines = StringUtils.split(cmd.trim(), "\n", 3);
+    String searchLine = null;
+    for(String line: lines){
+      if(line.trim().startsWith("search"))
+        searchLine = line;
+    }
+    
+    String url = StringUtils.split(searchLine.trim(), " ", 3)[1];
+    String[] urlItems = StringUtils.split(url.trim(), "/", 3);
+    IndicesAdminClient indicesAdminClient = client.admin().indices();
+    
+    GetMappingsRequest request = new GetMappingsRequest();
+    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(urlItems[0]));
+    
+    GetMappingsResponse mappingResponse = responseFuture.get();
+    
+    ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>> mappings = mappingResponse.getMappings();
+    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(urlItems[0]);
+    MappingMetaData metaData = indexMappings.get(urlItems[1]);
+    
+    StringBuilder response = new StringBuilder().append("{\"fields\":[");
+    String metadataJson = metaData.source().string();
+    logger.info("Metadata Json: " + metadataJson);
+    
+    return JsonFieldParser.getFieldsWithRaw(metadataJson);
+  }
     
   private SearchResponse searchData(String[] urlItems, String query, int size, int from) {
 
@@ -774,6 +869,76 @@ public class ElasticsearchInterpreter extends Interpreter {
   private static final Pattern EMPTY_3 = Pattern.
     compile("\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*");
    
+  
+  private String expandedCommand(String cmd, Object params) {
+      String expanded;
+    try {
+	expanded = getFilterTabQuery(params, processGetFieldsWithRaw(cmd));
+    } catch (Exception e) {
+	return cmd;
+    }
+      return cmd.replaceFirst(Input.FILTER_TAB_KEY, expanded);
+  }
+  
+  /*Preparing query for FilterTab*/
+  public static String getFilterTabQuery(Object filterTabValue,Set<String> rawFields) {
+    StringBuffer query = new StringBuffer();
+    List<Map<String, String>> values = (List<Map<String, String>>) filterTabValue;
+    for (Map<String, String> value: values) {
+      String field = value.get("column");
+      String operator = value.get("operator");
+      String operand = value.get("operand"); 
+      switch (operator) {
+          case "=": 
+        	  if(rawFields.contains(field)){
+            query.append("{\"term\":").append("{").append(field).append(".raw:")
+              .append(operand.toLowerCase()).append("}}");
+        	  }else{
+        		  query.append("{\"term\":").append("{").append(field).append(":")
+                  .append(operand.toLowerCase()).append("}}");
+        	  }
+            break;
+          case "!=": 
+            query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
+              .append("{").append(field).append(":").append(operand).append("}}}}");
+            break;
+          case "<": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"lt\":").append(operand).append("}}}");
+            break;
+          case "<=": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"lte\":").append(operand).append("}}}");
+            break;
+          case ">": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"gt\":").append(operand).append("}}}");
+            break;
+          case ">=": 
+            query.append("{\"range\":").append("{").append(field).append(":")
+              .append("{\"gte\":").append(operand).append("}}}");
+            break;
+          case "contains": 
+        	  if(isValidWord(operand)){
+        		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
+                  .append(operand).append("*}}"); 
+        	  }else{
+            query.append("{\"match_phrase\":").append("{").append(field).append(":")
+              .append(operand).append("}}");
+        	  }
+            break; 
+          case "starts with":
+            query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
+              .append(operand).append("\"}}");
+      }
+      query.append(",");
+    } 
+    return query.toString();
+  }
+  
+  public static boolean isValidWord(String inputString) {
+    return inputString.matches("[A-Za-z]*");
+  }
   
   private static String enhanceCommand(String cmd){
     

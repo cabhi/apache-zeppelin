@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.zeppelin.conf.ZeppelinConfiguration;
@@ -980,10 +979,10 @@ public class NotebookServer extends WebSocketServlet implements
       .get("params");
     
     //add depedency params
-    List<StringMap<Object>> dependencyList = (List<StringMap<Object>>) config.get("derivedFrom");
-    for (StringMap<Object> dependency: dependencyList) {
-      StringMap<Object> settings = (StringMap<Object>) dependency.get("settings");
-      StringMap<Object> dependencyParams = (StringMap<Object>) settings.get("params");
+    List<Map<String, Object>> dependencyList = (List<Map<String, Object>>) config.get("derivedFrom");
+    for (Map<String, Object> dependency: dependencyList) {
+      Map<String, Object> settings = (Map<String, Object>) dependency.get("settings");
+      Map<String, Object> dependencyParams = (Map<String, Object>) settings.get("params");
       
       for (Entry<String, Object> dependencyParam: dependencyParams.entrySet()) {
         params.put(dependencyParam.getKey(), dependencyParam.getValue());
@@ -991,7 +990,7 @@ public class NotebookServer extends WebSocketServlet implements
     }
     
     //add drill down params
-    StringMap<Object> drillDownParams = (StringMap<Object>) config.get("drillDown");
+    Map<String, Object> drillDownParams = (Map<String, Object>) config.get("drillDown");
     if(drillDownParams != null) {
         for (Entry<String, Object> drillDownParam: drillDownParams.entrySet()) {
           params.put(drillDownParam.getKey(), drillDownParam.getValue());

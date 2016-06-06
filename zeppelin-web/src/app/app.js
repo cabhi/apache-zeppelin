@@ -104,6 +104,9 @@
         .run(function ($rootScope, $window, $interval, $q, $http) {
             $('#pageLoader').show();
             $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
+              if (!$rootScope.ticket) {
+                window.location.href = 'login.html';
+              }
                 $('#pageLoader').show();
                 console.log("Started");
             });
