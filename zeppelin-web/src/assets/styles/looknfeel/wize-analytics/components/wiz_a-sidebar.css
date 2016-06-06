@@ -69,7 +69,7 @@ only screen and (min-resolution: 2dppx) {
 .wiz_a-sidebar-nav li a:hover{
     color: #fff;
 }
-.wiz_a-sidebar-nav li.parentNavLnk > a > span{
+.wiz_a-sidebar-nav li.parentNavLnk > a > span:first-child{
 	background-color: #21252D;
 	display: inline-block;
 	margin-right: 15px;
@@ -102,7 +102,7 @@ only screen and (min-resolution: 2dppx) {
 	color: #fff;
 }
 
-.wiz_a-sidebar-nav li.parentNavLnk.active > a > span{
+.wiz_a-sidebar-nav li.parentNavLnk.active > a > span:first-child{
 	background-color: #E85B5D;
 }
 
