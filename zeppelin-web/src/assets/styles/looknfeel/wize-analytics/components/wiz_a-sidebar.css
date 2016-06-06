@@ -78,9 +78,22 @@ only screen and (min-resolution: 2dppx) {
 	text-align: center;
 	padding: 3px;
 }
-
+.wiz_a-sidebar-nav li.parentNavLnk > a > span.fa-angle-down{
+	font-size: 18px;
+    float: right;
+    transition: all .2s;
+    -moz-transition: all .2s;
+    -webkit-transition: all .2s;
+    -o-transition: all .2s;
+    margin: 4px -5px 0 0;
+}
+.wiz_a-sidebar-nav li.parentNavLnk > a.collapsed > span.fa-angle-down{
+	webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
 .wiz_a-sidebar-nav li.parentNavLnk > ul{
     background-color: #21252d;
+	font-size: 13px;
     padding: 10px 0;
     margin: 5px 0;
     -webkit-transition: all .2s;
