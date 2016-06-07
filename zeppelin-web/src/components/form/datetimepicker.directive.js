@@ -21,6 +21,19 @@ angular.module('zeppelinWebApp')
   })
   .directive('datetimepicker', ['$timeout', 'datetimepicker', function ($timeout, datetimepicker) {
     var default_options = datetimepicker.getOptions();
+
+    var parsePatterns = function (value) {
+      var tokens = /(now)(?:((?:-|\+)[0-9]+)([dhms]))*/.exec(value) || [],
+        m;
+      if (tokens[1] === 'now') {
+        m = moment();
+      }
+      if (tokens[2] && tokens[3]) {
+        m.add(+tokens[2], tokens[3]);
+      }
+      return (m && m.toDate()) || value;
+    };
+
     return {
       require: '?ngModel',
       restrict: 'A',
@@ -44,7 +57,7 @@ angular.module('zeppelinWebApp')
         }, initialize);
 
         function initialize(value) {
-          ngModelCtrl.$setViewValue(value);
+          ngModelCtrl.$setViewValue(parsePatterns(value));
           $element.datetimepicker(options);
 
           if (ngModelCtrl) {
