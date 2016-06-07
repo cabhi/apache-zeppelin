@@ -1,92 +1,31 @@
 {
   "paragraphs": [
     {
-      "title": "Request Frequency",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs {\n    \"aggs\" : {\n        \"methods_over_time\" : {\n            \"date_histogram\" : {\n                \"field\" : \"date\",\n                \"interval\" : \"day\",\n                \"format\" : \"yyyy-MM-dd\"\n            }\n        }\n    }\n}",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "title": "Filter Parameters",
+      "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003dLog Level,*(Log Level)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+      },
+      "dateUpdated": "Jun 8, 2016 12:47:39 AM",
       "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "lineChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "key",
-              "index": 0.0,
-              "aggr": "sum"
-            }
-          ],
-          "values": [
-            {
-              "name": "count",
-              "index": 1.0,
-              "aggr": "sum"
-            }
-          ],
-          "groups": [],
-          "scatter": {
-            "xAxis": {
-              "name": "key",
-              "index": 0.0,
-              "aggr": "sum"
-            }
-          },
-          "lineWithFocus": false
-        },
-        "enabled": true,
-        "editorMode": "ace/mode/scala",
-        "title": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1459798805116_-592448939",
-      "id": "20160405-011005_1027261913",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 5, 2016 1:10:05 AM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Response Time Histogram",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs {\n    \"aggs\" : {\n        \"response_ranges\" : {\n            \"range\" : {\n                \"field\" : \"responseTime\",\n                \"ranges\" : [\n                    { \"to\" : 10 },\n                    { \"from\" : 10, \"to\" : 30 },\n                    { \"from\" : 30, \"to\" : 50 },\n                    { \"from\" : 50, \"to\" : 100 },\n                    { \"from\" : 100 }\n                ]\n            }\n        }\n    }\n}",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:57 PM",
-      "config": {
-        "colWidth": 6.0,
+        "colWidth": 12.0,
         "graph": {
           "mode": "multiBarChart",
           "height": 300.0,
-          "optionOpen": true,
+          "optionOpen": false,
           "keys": [
             {
-              "name": "key",
+              "name": "HttpRequest.requestMethod",
               "index": 0.0,
-              "aggr": "sum",
-              "$$hashKey": "object:1990"
+              "aggr": "sum"
             }
           ],
-          "values": [
-            {
-              "name": "count",
-              "index": 1.0,
-              "aggr": "sum",
-              "$$hashKey": "object:1999"
-            }
-          ],
+          "values": [],
           "groups": [],
           "scatter": {
             "xAxis": {
-              "name": "key",
+              "name": "HttpRequest.requestMethod",
               "index": 0.0,
               "aggr": "sum"
             }
@@ -94,412 +33,1566 @@
         },
         "enabled": true,
         "editorMode": "ace/mode/scala",
-        "title": true
+        "derivedFrom": [],
+        "tableHide": true,
+        "editorHide": true,
+        "title": true,
+        "paramsDerivedFrom": [],
+        "showForm": true
       },
       "settings": {
-        "params": {},
+        "params": {
+          "Level": "info",
+          "Log Level": "error",
+          "Date": "2016-06-08T08:49:00.000Z"
+        },
+        "forms": {
+          "Log Level": {
+            "name": "Log Level",
+            "defaultValue": "Log Level",
+            "options": [
+              {
+                "value": "*",
+                "displayName": "Log Level"
+              },
+              {
+                "value": "trace",
+                "displayName": "TRACE"
+              },
+              {
+                "value": "info",
+                "displayName": "INFO"
+              },
+              {
+                "value": "error",
+                "displayName": "ERROR"
+              },
+              {
+                "value": "fatal",
+                "displayName": "FATAL"
+              }
+            ],
+            "hidden": false
+          },
+          "Date": {
+            "name": "Date",
+            "defaultValue": "now",
+            "hidden": false
+          }
+        }
+      },
+      "jobName": "paragraph_1465311640078_-34994517",
+      "id": "20160607-203040_436894222",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "HttpRequest.requestMethod\nPOST\nGET\nPOST\nGET\nOPTIONS\n"
+      },
+      "dateCreated": "Jun 7, 2016 8:30:40 PM",
+      "dateStarted": "Jun 8, 2016 12:47:39 AM",
+      "dateFinished": "Jun 8, 2016 12:47:39 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "HTTP Method Distribution",
+      "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":@{Date\u003dnow}}}}\n    ]}\n}",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+      },
+      "dateUpdated": "Jun 8, 2016 12:47:39 AM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "pieChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "HttpRequest.requestMethod",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "HttpRequest.requestMethod",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "HttpRequest.requestMethod",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "title": true,
+        "derivedFrom": [
+          {
+            "title": "Filter Parameters",
+            "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003dLog Level,*(Log Level)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+            "authenticationInfo": {
+              "user": "admin",
+              "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+            },
+            "dateUpdated": "Jun 8, 2016 12:47:39 AM",
+            "config": {
+              "colWidth": 12.0,
+              "graph": {
+                "mode": "multiBarChart",
+                "height": 300.0,
+                "optionOpen": false,
+                "keys": [
+                  {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                ],
+                "values": [],
+                "groups": [],
+                "scatter": {
+                  "xAxis": {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                }
+              },
+              "enabled": true,
+              "editorMode": "ace/mode/scala",
+              "derivedFrom": [],
+              "tableHide": true,
+              "editorHide": true,
+              "title": true,
+              "paramsDerivedFrom": [],
+              "showForm": true
+            },
+            "settings": {
+              "params": {
+                "Level": "info",
+                "Log Level": "error",
+                "Date": "2016-06-08T08:49:00.000Z"
+              },
+              "forms": {
+                "Log Level": {
+                  "name": "Log Level",
+                  "defaultValue": "Log Level",
+                  "options": [
+                    {
+                      "value": "*",
+                      "displayName": "Log Level",
+                      "$$hashKey": "object:6176"
+                    },
+                    {
+                      "value": "trace",
+                      "displayName": "TRACE",
+                      "$$hashKey": "object:6177"
+                    },
+                    {
+                      "value": "info",
+                      "displayName": "INFO",
+                      "$$hashKey": "object:6178"
+                    },
+                    {
+                      "value": "error",
+                      "displayName": "ERROR",
+                      "$$hashKey": "object:6179"
+                    },
+                    {
+                      "value": "fatal",
+                      "displayName": "FATAL",
+                      "$$hashKey": "object:6180"
+                    }
+                  ],
+                  "hidden": false
+                },
+                "Date": {
+                  "name": "Date",
+                  "defaultValue": "now",
+                  "hidden": false
+                }
+              }
+            },
+            "jobName": "paragraph_1465311640078_-34994517",
+            "id": "20160607-203040_436894222",
+            "result": {
+              "code": "SUCCESS",
+              "type": "TABLE",
+              "msg": "HttpRequest.requestMethod\nGET\nPOST\nGET\nPOST\nDELETE\n",
+              "comment": "",
+              "msgTable": [
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ]
+              ],
+              "columnNames": [
+                {
+                  "name": "HttpRequest.requestMethod",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "rows": [
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "DELETE"
+                ]
+              ]
+            },
+            "dateCreated": "Jun 7, 2016 8:30:40 PM",
+            "dateStarted": "Jun 8, 2016 12:47:35 AM",
+            "dateFinished": "Jun 8, 2016 12:47:35 AM",
+            "status": "PENDING",
+            "progressUpdateIntervalMs": 500.0,
+            "$$hashKey": "object:5472",
+            "focus": true
+          }
+        ],
+        "editorHide": true,
+        "paramsDerivedFrom": [
+          "20160607-203040_436894222"
+        ],
+        "drillDown": {}
+      },
+      "settings": {
+        "params": {
+          "Date": "2016-06-08T08:49:00.000Z",
+          "Records": "100",
+          "Level": "info",
+          "Log Level": "error"
+        },
         "forms": {}
       },
       "jobName": "paragraph_1459798961255_1671611159",
       "id": "20160405-011241_1203271093",
       "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "HttpRequest.requestMethod\nPOST\nGET\nPOST\nGET\nOPTIONS\nGET\nPOST\nGET\nGET\nGET\nGET\nPOST\nDELETE\nPOST\nPOST\nOPTIONS\nGET\nOPTIONS\nDELETE\nGET\nGET\nOPTIONS\nGET\nGET\nPOST\nOPTIONS\nGET\nPOST\nDELETE\nGET\nPOST\nGET\nGET\nGET\nGET\nPOST\nOPTIONS\nGET\nGET\nGET\nPOST\nPOST\nDELETE\nOPTIONS\nPOST\nOPTIONS\nGET\nPOST\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nDELETE\nDELETE\nOPTIONS\nGET\nGET\nDELETE\nGET\nOPTIONS\nGET\nGET\nGET\nPOST\nPOST\nOPTIONS\nGET\nGET\nDELETE\nOPTIONS\nDELETE\nGET\nPOST\nDELETE\nOPTIONS\nPOST\nGET\nGET\nOPTIONS\nPOST\nGET\nGET\nPOST\nGET\nGET\nGET\nGET\nGET\nPOST\nGET\nPOST\nGET\nPOST\nDELETE\nOPTIONS\nGET\nOPTIONS\nGET\n"
       },
       "dateCreated": "Apr 5, 2016 1:12:41 AM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
+      "dateStarted": "Jun 8, 2016 12:47:39 AM",
+      "dateFinished": "Jun 8, 2016 12:47:39 AM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "title": "Application Distribution",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:57 PM",
+      "title": "Average Response Time",
+      "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ \n{\"fields\":[\"httpResponse.responseTime\",\"httpRequest.requestMethod\", \"httpResponse.status\", \"httpResponse.responseSize\"],\n    \"filter\": { \"and\" : [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\n            \"term\":{ \"httpRequest.requestMethod\": @{HttpRequest.requestMethod\u003dget}}\n        },\n        {\n            \"range\" : {\"metadata.timestamp\": {\"lte\": @{Date\u003dnow}}}\n        }\n    ]}\n}",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+      },
+      "dateUpdated": "Jun 8, 2016 12:47:39 AM",
       "config": {
         "colWidth": 6.0,
         "graph": {
           "mode": "multiBarChart",
           "height": 300.0,
-          "optionOpen": true,
+          "optionOpen": false,
           "keys": [
             {
-              "name": "AppId",
+              "name": "HttpRequest.requestMethod",
               "index": 0.0,
               "aggr": "sum"
             }
           ],
           "values": [
             {
-              "name": "AppId",
-              "index": 0.0,
-              "aggr": "sum"
-            }
-          ],
-          "groups": [],
-          "scatter": {}
-        },
-        "enabled": true,
-        "editorMode": "ace/mode/scala",
-        "title": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1459799640141_-334090314",
-      "id": "20160405-012400_1916184740",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 5, 2016 1:24:00 AM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "HTTP Method Distribution",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:57 PM",
-      "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "pieChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "HttpMethod",
-              "index": 3.0,
-              "aggr": "sum",
-              "$$hashKey": "object:734"
-            }
-          ],
-          "values": [
-            {
-              "name": "HttpMethod",
-              "index": 3.0,
-              "aggr": "sum",
-              "$$hashKey": "object:743"
-            }
-          ],
-          "groups": [],
-          "scatter": {}
-        },
-        "enabled": true,
-        "editorMode": "ace/mode/scala",
-        "title": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1459678473760_225135505",
-      "id": "20160403-154433_567528633",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 3, 2016 3:44:33 PM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "HTTP Status Code Distribution",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:57 PM",
-      "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "pieChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "StatusCode",
-              "index": 9.0,
-              "aggr": "sum",
-              "$$hashKey": "object:2120"
-            }
-          ],
-          "values": [
-            {
-              "name": "ReqId",
-              "index": 5.0,
-              "aggr": "sum",
-              "$$hashKey": "object:2129"
-            }
-          ],
-          "groups": [],
-          "scatter": {
-            "xAxis": {
-              "name": "AppId",
-              "index": 0.0,
-              "aggr": "sum"
-            },
-            "yAxis": {
-              "name": "Date",
-              "index": 1.0,
-              "aggr": "sum"
-            }
-          }
-        },
-        "enabled": true,
-        "editorMode": "ace/mode/scala",
-        "title": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1461073076653_603440246",
-      "id": "20160419-190756_272742117",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 19, 2016 7:07:56 PM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Log Distribution",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:57 PM",
-      "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "pieChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "LogLevel",
-              "index": 4.0,
-              "aggr": "sum",
-              "$$hashKey": "object:872"
-            }
-          ],
-          "values": [
-            {
-              "name": "LogLevel",
-              "index": 4.0,
-              "aggr": "sum",
-              "$$hashKey": "object:881"
-            }
-          ],
-          "groups": [],
-          "scatter": {}
-        },
-        "enabled": true,
-        "title": true,
-        "editorMode": "ace/mode/scala"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1459798632435_-966838622",
-      "id": "20160405-010712_219036097",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 5, 2016 1:07:12 AM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Log Distribution Over Time",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs {\n  \"aggs\" : {\n    \"messages\" : {\n      \"filters\" : {\n        \"filters\" : {\n          \"error\" :   { \"term\" : { \"logLevel\" : \"error\"   }},\n          \"info\" : { \"term\" : { \"logLevel\" : \"info\" }}\n        }\n      },\n     \"aggs\" : {\n        \"messages_over_time\" : {\n            \"date_histogram\" : {\n                \"field\" : \"date\",\n                \"interval\" : \"day\",\n                \"format\" : \"yyyy-MM-dd\"\n            }\n        }\n    }\n    }\n  }\n}",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:58 PM",
-      "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "lineChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "key2",
-              "index": 1.0,
-              "aggr": "sum",
-              "$$hashKey": "object:905"
-            }
-          ],
-          "values": [
-            {
-              "name": "count",
+              "name": "HttpResponse.responseTime",
               "index": 2.0,
-              "aggr": "sum",
-              "$$hashKey": "object:917"
+              "aggr": "avg"
             }
           ],
           "groups": [
             {
-              "name": "key1",
-              "index": 0.0,
-              "aggr": "sum",
-              "$$hashKey": "object:911"
+              "name": "HttpResponse.status",
+              "index": 3.0,
+              "aggr": "sum"
             }
           ],
           "scatter": {
             "xAxis": {
-              "name": "key1",
+              "name": "HttpRequest.requestMethod",
               "index": 0.0,
-              "aggr": "sum"
-            },
-            "yAxis": {
-              "name": "key2",
-              "index": 1.0,
               "aggr": "sum"
             }
           }
         },
         "enabled": true,
-        "editorMode": "ace/mode/scala",
-        "title": true
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1461140820198_-475697882",
-      "id": "20160420-135700_554433208",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 20, 2016 1:57:00 PM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Error Distribution",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:58 PM",
-      "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "pieChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "Error",
-              "index": 2.0,
-              "aggr": "sum",
-              "$$hashKey": "object:977"
-            }
-          ],
-          "values": [
-            {
-              "name": "Error",
-              "index": 2.0,
-              "aggr": "sum",
-              "$$hashKey": "object:986"
-            }
-          ],
-          "groups": [],
-          "scatter": {}
-        },
-        "enabled": true,
+        "editorMode": "ace/mode/sql",
+        "derivedFrom": [
+          {
+            "title": "Filter Parameters",
+            "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003dLog Level,*(Log Level)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+            "authenticationInfo": {
+              "user": "admin",
+              "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+            },
+            "dateUpdated": "Jun 8, 2016 12:47:39 AM",
+            "config": {
+              "colWidth": 12.0,
+              "graph": {
+                "mode": "multiBarChart",
+                "height": 300.0,
+                "optionOpen": false,
+                "keys": [
+                  {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                ],
+                "values": [],
+                "groups": [],
+                "scatter": {
+                  "xAxis": {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                }
+              },
+              "enabled": true,
+              "editorMode": "ace/mode/scala",
+              "derivedFrom": [],
+              "tableHide": true,
+              "editorHide": true,
+              "title": true,
+              "paramsDerivedFrom": [],
+              "showForm": true
+            },
+            "settings": {
+              "params": {
+                "Level": "info",
+                "Log Level": "error",
+                "Date": "2016-06-08T08:49:00.000Z"
+              },
+              "forms": {
+                "Log Level": {
+                  "name": "Log Level",
+                  "defaultValue": "Log Level",
+                  "options": [
+                    {
+                      "value": "*",
+                      "displayName": "Log Level",
+                      "$$hashKey": "object:6176"
+                    },
+                    {
+                      "value": "trace",
+                      "displayName": "TRACE",
+                      "$$hashKey": "object:6177"
+                    },
+                    {
+                      "value": "info",
+                      "displayName": "INFO",
+                      "$$hashKey": "object:6178"
+                    },
+                    {
+                      "value": "error",
+                      "displayName": "ERROR",
+                      "$$hashKey": "object:6179"
+                    },
+                    {
+                      "value": "fatal",
+                      "displayName": "FATAL",
+                      "$$hashKey": "object:6180"
+                    }
+                  ],
+                  "hidden": false
+                },
+                "Date": {
+                  "name": "Date",
+                  "defaultValue": "now",
+                  "hidden": false
+                }
+              }
+            },
+            "jobName": "paragraph_1465311640078_-34994517",
+            "id": "20160607-203040_436894222",
+            "result": {
+              "code": "SUCCESS",
+              "type": "TABLE",
+              "msg": "HttpRequest.requestMethod\nGET\nPOST\nGET\nPOST\nDELETE\n",
+              "comment": "",
+              "msgTable": [
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ]
+              ],
+              "columnNames": [
+                {
+                  "name": "HttpRequest.requestMethod",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "rows": [
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "DELETE"
+                ]
+              ]
+            },
+            "dateCreated": "Jun 7, 2016 8:30:40 PM",
+            "dateStarted": "Jun 8, 2016 12:47:35 AM",
+            "dateFinished": "Jun 8, 2016 12:47:35 AM",
+            "status": "PENDING",
+            "progressUpdateIntervalMs": 500.0,
+            "$$hashKey": "object:5472",
+            "focus": true
+          },
+          {
+            "title": "HTTP Method Distribution",
+            "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":@{Date\u003dnow}}}}\n    ]}\n}",
+            "authenticationInfo": {
+              "user": "admin",
+              "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+            },
+            "dateUpdated": "Jun 8, 2016 12:47:35 AM",
+            "config": {
+              "colWidth": 6.0,
+              "graph": {
+                "mode": "pieChart",
+                "height": 300.0,
+                "optionOpen": false,
+                "keys": [
+                  {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                ],
+                "values": [
+                  {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                ],
+                "groups": [],
+                "scatter": {
+                  "xAxis": {
+                    "name": "HttpRequest.requestMethod",
+                    "index": 0.0,
+                    "aggr": "sum"
+                  }
+                }
+              },
+              "enabled": true,
+              "editorMode": "ace/mode/scala",
+              "title": true,
+              "derivedFrom": [
+                {
+                  "title": "Filter Parameters",
+                  "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003dLog Level,*(Log Level)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+                  "authenticationInfo": {
+                    "user": "admin",
+                    "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+                  },
+                  "dateUpdated": "Jun 8, 2016 12:47:39 AM",
+                  "config": {
+                    "colWidth": 12.0,
+                    "graph": {
+                      "mode": "multiBarChart",
+                      "height": 300.0,
+                      "optionOpen": false,
+                      "keys": [
+                        {
+                          "name": "HttpRequest.requestMethod",
+                          "index": 0.0,
+                          "aggr": "sum"
+                        }
+                      ],
+                      "values": [],
+                      "groups": [],
+                      "scatter": {
+                        "xAxis": {
+                          "name": "HttpRequest.requestMethod",
+                          "index": 0.0,
+                          "aggr": "sum"
+                        }
+                      }
+                    },
+                    "enabled": true,
+                    "editorMode": "ace/mode/scala",
+                    "derivedFrom": [],
+                    "tableHide": true,
+                    "editorHide": true,
+                    "title": true,
+                    "paramsDerivedFrom": [],
+                    "showForm": true
+                  },
+                  "settings": {
+                    "params": {
+                      "Level": "info",
+                      "Log Level": "error",
+                      "Date": "2016-06-08T08:49:00.000Z"
+                    },
+                    "forms": {
+                      "Log Level": {
+                        "name": "Log Level",
+                        "defaultValue": "Log Level",
+                        "options": [
+                          {
+                            "value": "*",
+                            "displayName": "Log Level",
+                            "$$hashKey": "object:6176"
+                          },
+                          {
+                            "value": "trace",
+                            "displayName": "TRACE",
+                            "$$hashKey": "object:6177"
+                          },
+                          {
+                            "value": "info",
+                            "displayName": "INFO",
+                            "$$hashKey": "object:6178"
+                          },
+                          {
+                            "value": "error",
+                            "displayName": "ERROR",
+                            "$$hashKey": "object:6179"
+                          },
+                          {
+                            "value": "fatal",
+                            "displayName": "FATAL",
+                            "$$hashKey": "object:6180"
+                          }
+                        ],
+                        "hidden": false
+                      },
+                      "Date": {
+                        "name": "Date",
+                        "defaultValue": "now",
+                        "hidden": false
+                      }
+                    }
+                  },
+                  "jobName": "paragraph_1465311640078_-34994517",
+                  "id": "20160607-203040_436894222",
+                  "result": {
+                    "code": "SUCCESS",
+                    "type": "TABLE",
+                    "msg": "HttpRequest.requestMethod\nGET\nPOST\nGET\nPOST\nDELETE\n",
+                    "comment": "",
+                    "msgTable": [
+                      [
+                        {
+                          "value": "GET"
+                        }
+                      ],
+                      [
+                        {
+                          "value": "POST"
+                        }
+                      ],
+                      [
+                        {
+                          "value": "GET"
+                        }
+                      ],
+                      [
+                        {
+                          "value": "POST"
+                        }
+                      ],
+                      [
+                        {
+                          "value": "DELETE"
+                        }
+                      ]
+                    ],
+                    "columnNames": [
+                      {
+                        "name": "HttpRequest.requestMethod",
+                        "index": 0.0,
+                        "aggr": "sum"
+                      }
+                    ],
+                    "rows": [
+                      [
+                        "GET"
+                      ],
+                      [
+                        "POST"
+                      ],
+                      [
+                        "GET"
+                      ],
+                      [
+                        "POST"
+                      ],
+                      [
+                        "DELETE"
+                      ]
+                    ]
+                  },
+                  "dateCreated": "Jun 7, 2016 8:30:40 PM",
+                  "dateStarted": "Jun 8, 2016 12:47:35 AM",
+                  "dateFinished": "Jun 8, 2016 12:47:35 AM",
+                  "status": "PENDING",
+                  "progressUpdateIntervalMs": 500.0,
+                  "$$hashKey": "object:5472",
+                  "focus": true
+                }
+              ],
+              "editorHide": true,
+              "paramsDerivedFrom": [
+                "20160607-203040_436894222"
+              ],
+              "drillDown": {}
+            },
+            "settings": {
+              "params": {
+                "Date": "2016-06-08T08:49:00.000Z",
+                "Records": "100",
+                "Level": "info",
+                "Log Level": "info"
+              },
+              "forms": {}
+            },
+            "jobName": "paragraph_1459798961255_1671611159",
+            "id": "20160405-011241_1203271093",
+            "result": {
+              "code": "SUCCESS",
+              "type": "TABLE",
+              "msg": "HttpRequest.requestMethod\nGET\nPOST\nGET\nPOST\nDELETE\nGET\nOPTIONS\nPOST\nOPTIONS\nPOST\nGET\nPOST\nPOST\nGET\nGET\nDELETE\nDELETE\nGET\nDELETE\nGET\nGET\nDELETE\nPOST\nGET\nPOST\nGET\nDELETE\nDELETE\nGET\nDELETE\nGET\nGET\nGET\nGET\nGET\nDELETE\nPOST\nDELETE\nOPTIONS\nPOST\nPOST\nPOST\nGET\nGET\nPOST\nGET\nOPTIONS\nOPTIONS\nPOST\nGET\nGET\nGET\nPOST\nPOST\nOPTIONS\nGET\nPOST\nDELETE\nGET\nGET\nGET\nGET\nPOST\nOPTIONS\nPOST\nGET\nGET\nPOST\nGET\nGET\nGET\nDELETE\nGET\nPOST\nOPTIONS\nPOST\nDELETE\nGET\nGET\nGET\nDELETE\nOPTIONS\nGET\nPOST\nOPTIONS\nOPTIONS\nDELETE\nGET\nDELETE\nPOST\nGET\nOPTIONS\nGET\nGET\nDELETE\nPOST\nGET\nGET\nPOST\nPOST\n",
+              "comment": "",
+              "msgTable": [
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ]
+              ],
+              "columnNames": [
+                {
+                  "name": "HttpRequest.requestMethod",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "rows": [
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ]
+              ]
+            },
+            "dateCreated": "Apr 5, 2016 1:12:41 AM",
+            "dateStarted": "Jun 8, 2016 12:47:35 AM",
+            "dateFinished": "Jun 8, 2016 12:47:36 AM",
+            "status": "FINISHED",
+            "progressUpdateIntervalMs": 500.0,
+            "$$hashKey": "object:5473"
+          }
+        ],
         "title": true,
-        "editorMode": "ace/mode/scala"
+        "paramsDerivedFrom": [
+          "20160405-011241_1203271093",
+          "20160607-203040_436894222"
+        ],
+        "drillDown": {},
+        "editorHide": true,
+        "tableHide": false
       },
       "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "jobName": "paragraph_1461080024720_638690702",
-      "id": "20160419-210344_2059783892",
-      "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
-      },
-      "dateCreated": "Apr 19, 2016 9:03:44 PM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "title": "Users Access Distribution",
-      "text": "%elasticsearch\nsize 500\nsearch /demo2/logs",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:58 PM",
-      "config": {
-        "colWidth": 6.0,
-        "graph": {
-          "mode": "lineChart",
-          "height": 300.0,
-          "optionOpen": true,
-          "keys": [
-            {
-              "name": "UserId",
-              "index": 11.0,
-              "aggr": "sum"
-            }
-          ],
-          "values": [
-            {
-              "name": "UserId",
-              "index": 11.0,
-              "aggr": "sum"
-            }
-          ],
-          "groups": [],
-          "scatter": {}
+        "params": {
+          "Record": "50",
+          "Date": "2016-06-08T08:49:00.000Z",
+          "Records": "100",
+          "HttpRequest.requestMethod": "POST",
+          "Level": "info",
+          "Log Level": "info"
         },
-        "enabled": true,
-        "editorMode": "ace/mode/scala",
-        "tableHide": false,
-        "title": true
-      },
-      "settings": {
-        "params": {},
         "forms": {}
       },
-      "jobName": "paragraph_1461106161351_-863016539",
-      "id": "20160420-041921_1231014268",
+      "jobName": "paragraph_1465298618770_-1922834400",
+      "id": "20160607-165338_99537621",
       "result": {
-        "code": "ERROR",
-        "type": "TEXT",
-        "msg": "Error : [demo2] IndexNotFoundException[no such index]"
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "HttpRequest.requestMethod\tHttpResponse.responseSize\tHttpResponse.responseTime\tHttpResponse.status\nPOST\t107\t198\t401\nPOST\t101\t8\t400\nPOST\t1982\t94\t200\nPOST\t118\t47\t201\nPOST\t234\t104\t201\nPOST\t172\t22\t200\nPOST\t104\t85\t401\nPOST\t101\t48\t401\nPOST\t172\t25\t400\nPOST\t104\t13\t200\nPOST\t206\t107\t200\nPOST\t101\t118\t200\nPOST\t118\t77\t400\nPOST\t206\t39\t401\nPOST\t1567\t68\t401\nPOST\t1567\t12\t201\nPOST\t234\t33\t400\nPOST\t145\t89\t200\nPOST\t234\t44\t200\nPOST\t234\t85\t401\nPOST\t107\t38\t400\nPOST\t234\t83\t400\nPOST\t1982\t44\t201\nPOST\t198\t89\t201\nPOST\t198\t206\t200\nPOST\t1982\t61\t400\nPOST\t234\t59\t201\nPOST\t101\t94\t400\nPOST\t101\t27\t201\nPOST\t145\t98\t400\nPOST\t871\t206\t200\nPOST\t871\t104\t201\nPOST\t1567\t16\t400\nPOST\t198\t145\t401\nPOST\t234\t14\t200\nPOST\t206\t27\t401\nPOST\t118\t49\t200\nPOST\t871\t172\t201\nPOST\t1415\t18\t400\nPOST\t172\t27\t201\nPOST\t104\t18\t400\nPOST\t1567\t234\t400\nPOST\t1982\t234\t201\nPOST\t101\t172\t201\nPOST\t145\t5\t200\nPOST\t145\t83\t400\nPOST\t101\t22\t200\nPOST\t145\t50\t201\nPOST\t145\t77\t200\nPOST\t172\t18\t200\nPOST\t101\t75\t401\nPOST\t234\t94\t400\nPOST\t198\t79\t401\nPOST\t234\t51\t201\nPOST\t104\t61\t400\nPOST\t1415\t4\t401\nPOST\t107\t94\t201\nPOST\t206\t18\t400\nPOST\t172\t77\t400\nPOST\t234\t27\t200\nPOST\t107\t51\t201\nPOST\t172\t89\t201\nPOST\t1567\t38\t200\nPOST\t234\t85\t200\nPOST\t118\t79\t400\nPOST\t104\t1\t401\nPOST\t172\t3\t400\nPOST\t206\t6\t201\nPOST\t234\t3\t200\nPOST\t145\t35\t200\nPOST\t1415\t12\t200\nPOST\t101\t48\t400\nPOST\t145\t18\t401\nPOST\t1415\t75\t201\nPOST\t1982\t50\t401\nPOST\t871\t75\t401\nPOST\t145\t172\t400\nPOST\t145\t39\t201\nPOST\t104\t198\t401\nPOST\t118\t206\t200\nPOST\t118\t6\t401\nPOST\t871\t39\t400\nPOST\t118\t172\t401\nPOST\t871\t70\t201\nPOST\t172\t48\t401\nPOST\t871\t48\t200\nPOST\t234\t12\t400\nPOST\t107\t46\t401\nPOST\t198\t27\t200\nPOST\t206\t35\t200\nPOST\t234\t12\t201\nPOST\t118\t145\t400\nPOST\t104\t94\t400\nPOST\t198\t68\t400\nPOST\t1567\t6\t400\nPOST\t118\t47\t201\nPOST\t1982\t118\t400\nPOST\t101\t48\t401\nPOST\t145\t38\t401\nPOST\t234\t77\t201\n"
       },
-      "dateCreated": "Apr 20, 2016 4:19:21 AM",
-      "dateStarted": "May 9, 2016 4:06:52 PM",
-      "dateFinished": "May 9, 2016 4:06:52 PM",
-      "status": "ABORT",
+      "dateCreated": "Jun 7, 2016 4:53:38 PM",
+      "dateStarted": "Jun 8, 2016 12:47:39 AM",
+      "dateFinished": "Jun 8, 2016 12:47:39 AM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "",
-      "authenticationInfo": {},
-      "dateUpdated": "May 9, 2016 4:06:58 PM",
+      "text": "import org.elasticsearch.spark._\n\nimport com.stratio.datasource._\nimport com.stratio.datasource.mongodb._\nimport com.stratio.datasource.mongodb.schema._\nimport com.stratio.datasource.mongodb.writer._\nimport com.stratio.datasource.mongodb.config._\nimport com.stratio.datasource.mongodb.config.MongodbConfig._\nimport com.stratio.datasource.util.Config._\n\n\nval logs \u003d sqlContext.read.format(\"es\").load(\"/test1/type1/\")\nlogs.registerTempTable(\"logs\")",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+      },
+      "dateUpdated": "Jun 8, 2016 12:23:32 AM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -512,7 +1605,10 @@
           "scatter": {}
         },
         "enabled": true,
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/scala",
+        "editorHide": true,
+        "derivedFrom": [],
+        "tableHide": true
       },
       "settings": {
         "params": {},
@@ -523,18 +1619,141 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": ""
+        "msg": "import org.elasticsearch.spark._\nimport com.stratio.datasource._\nimport com.stratio.datasource.mongodb._\nimport com.stratio.datasource.mongodb.schema._\nimport com.stratio.datasource.mongodb.writer._\nimport com.stratio.datasource.mongodb.config._\nimport com.stratio.datasource.mongodb.config.MongodbConfig._\nimport com.stratio.datasource.util.Config._\nlogs: org.apache.spark.sql.DataFrame \u003d [appInfo: struct\u003cappId:string,endTime:timestamp,error:string,httpVersion:string,instanceId:string,ip:string,lines:struct\u003clevel:string,logMessage:string,sourceLocation:struct\u003cfile:string,line:string\u003e,time:timestamp\u003e,method:string,moduleId:string,nickname:string,resource:string,sourceReferences:struct\u003crepository:string,revisionId:string\u003e,startTime:timestamp,urlMapEntry:string,versionId:string\u003e, full_log: string, httpRequest: struct\u003cremoteIp:string,requestMethod:string,requestSize:bigint,requestUrl:string,userAgent:string\u003e, httpResponse: struct\u003cresponse:string,responseSize:bigint,responseTime:bigint,status:bigint\u003e, log: string, metadata: struct\u003clevel:string,region:string,serviceName:string,timestamp:timestamp,userId:string,zone:string\u003e, requestId: str..."
       },
       "dateCreated": "Apr 21, 2016 3:38:31 PM",
-      "dateStarted": "May 9, 2016 4:06:53 PM",
-      "dateFinished": "May 9, 2016 4:06:53 PM",
-      "status": "ABORT",
+      "dateStarted": "Jun 8, 2016 12:23:32 AM",
+      "dateFinished": "Jun 8, 2016 12:23:42 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Average response time for different endpoints",
+      "text": "%sql\nselect httpRequest.userAgent, httpRequest.requestUrl, httpRequest.requestMethod, httpResponse.status, httpResponse.responseSize, httpResponse.responseTime from logs ",
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "f907c8de-d205-48fb-8669-a00bbef979f4"
+      },
+      "dateUpdated": "Jun 8, 2016 12:25:39 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "requestUrl",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "responseTime",
+              "index": 5.0,
+              "aggr": "avg"
+            }
+          ],
+          "groups": [
+            {
+              "name": "status",
+              "index": 3.0,
+              "aggr": "sum"
+            }
+          ],
+          "scatter": {
+            "xAxis": {
+              "name": "userAgent",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql",
+        "derivedFrom": [],
+        "editorHide": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1465308157445_-593245437",
+      "id": "20160607-193237_392316961",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "userAgent\trequestUrl\trequestMethod\tstatus\tresponseSize\tresponseTime\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t500\t101\t118\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t401\t118\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t200\t543\t49\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t201\t101\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t200\t172\t145\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t401\t107\t198\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t206\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t201\t172\t12\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t200\t543\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t201\t145\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tOPTIONS\t200\t198\t6\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tDELETE\t400\t145\t8\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t400\t107\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t500\t101\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t400\t206\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t101\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tDELETE\t201\t871\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t500\t871\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t401\t145\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t201\t172\t85\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t401\t871\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t234\t83\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t172\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t401\t198\t46\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t500\t172\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t500\t1567\t104\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t500\t118\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tDELETE\t201\t101\t4\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t500\t145\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t401\t172\t98\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t871\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t500\t1982\t3\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t201\t871\t12\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t871\t59\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t401\t871\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t201\t145\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t201\t118\t104\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t500\t107\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tOPTIONS\t201\t1567\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tPOST\t500\t543\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t401\t1415\t145\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t1415\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t201\t234\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t1415\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t200\t1415\t145\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tDELETE\t500\t871\t85\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t401\t172\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tPOST\t200\t206\t38\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tOPTIONS\t201\t198\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t200\t145\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t200\t1982\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t500\t1567\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tOPTIONS\t401\t118\t35\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tDELETE\t201\t206\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t500\t1982\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t400\t871\t68\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t200\t234\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tOPTIONS\t200\t101\t172\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t201\t234\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t201\t118\t47\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t201\t118\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t201\t234\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t500\t107\t79\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t200\t172\t22\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t1982\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t198\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tOPTIONS\t500\t145\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t500\t118\t172\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t400\t1415\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t145\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t107\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t543\t51\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t206\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t201\t543\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t500\t543\t206\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tDELETE\t200\t1567\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tOPTIONS\t500\t1415\t101\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t401\t107\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t201\t145\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tDELETE\t400\t1415\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t400\t118\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tDELETE\t401\t107\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t201\t871\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t400\t198\t16\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t500\t1415\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t201\t198\t15\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t500\t198\t5\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t198\t15\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t400\t543\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t200\t871\t33\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t500\t206\t198\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tOPTIONS\t500\t118\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t200\t107\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tDELETE\t200\t1567\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t200\t1415\t83\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t145\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t500\t118\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t401\t101\t12\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t500\t206\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t401\t107\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t400\t871\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t201\t871\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t500\t543\t94\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t201\t118\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t400\t871\t22\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t201\t104\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t401\t104\t85\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t201\t107\t198\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t500\t543\t198\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t400\t145\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t400\t1567\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t200\t145\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t500\t543\t15\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tDELETE\t200\t234\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t1415\t33\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t201\t107\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t500\t234\t35\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t400\t145\t49\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t401\t101\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t200\t234\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t201\t871\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t104\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t1415\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t118\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t400\t104\t145\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t107\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tDELETE\t200\t234\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tDELETE\t400\t198\t57\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t871\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t200\t1415\t98\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t200\t234\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t400\t234\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t543\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t400\t543\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t400\t1982\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t200\t1982\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t201\t107\t83\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t500\t871\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t201\t871\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t500\t543\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t500\t107\t6\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t400\t1567\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t401\t1982\t118\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tDELETE\t400\t107\t12\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t200\t107\t68\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t201\t145\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t201\t101\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t500\t1567\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t500\t172\t107\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t234\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t201\t145\t172\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t200\t1567\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t200\t206\t206\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t201\t543\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t401\t145\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t500\t1982\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t201\t172\t1\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t201\t1567\t61\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t500\t206\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t107\t101\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t500\t198\t98\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tDELETE\t401\t104\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t400\t871\t16\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t400\t172\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tDELETE\t500\t1415\t85\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t200\t871\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tOPTIONS\t401\t101\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t198\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t201\t145\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t401\t107\t13\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tOPTIONS\t500\t1567\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t400\t172\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t500\t1982\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t500\t198\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t871\t234\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tDELETE\t401\t1982\t35\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t200\t104\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t871\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t200\t206\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tOPTIONS\t200\t145\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t401\t543\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t200\t101\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t200\t118\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t200\t1982\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t201\t1982\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tOPTIONS\t201\t206\t107\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t201\t107\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t200\t1567\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t871\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t200\t198\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t401\t1982\t50\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t871\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t500\t101\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t1415\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t400\t118\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t401\t1415\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t400\t198\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t200\t101\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t200\t198\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t500\t1982\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t401\t172\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t401\t206\t47\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t401\t172\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t206\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t201\t145\t61\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t401\t206\t39\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t401\t101\t2\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t500\t104\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t400\t107\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tDELETE\t500\t234\t4\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tOPTIONS\t201\t1567\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t200\t107\t50\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t118\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t500\t871\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t500\t107\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t201\t104\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t401\t234\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t500\t1415\t33\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t234\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tDELETE\t500\t172\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t198\t47\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t201\t107\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t107\t198\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tDELETE\t500\t543\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t201\t172\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t401\t1567\t68\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t201\t1567\t12\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t201\t1415\t75\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t201\t101\t172\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tOPTIONS\t500\t543\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t543\t5\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t543\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tOPTIONS\t400\t107\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tOPTIONS\t400\t101\t3\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t401\t543\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t198\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tDELETE\t500\t206\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t201\t871\t4\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t500\t1415\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tOPTIONS\t500\t145\t8\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tDELETE\t200\t871\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t500\t172\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t500\t234\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tOPTIONS\t201\t543\t3\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t500\t101\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t500\t118\t198\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t201\t1567\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t401\t1415\t85\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t200\t104\t198\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t400\t107\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t400\t1415\t3\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t1982\t3\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t401\t543\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t400\t101\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t400\t107\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tDELETE\t200\t234\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t500\t172\t98\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tOPTIONS\t500\t101\t51\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t400\t234\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t401\t206\t51\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t401\t1415\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tOPTIONS\t400\t198\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t201\t198\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t200\t1567\t104\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t200\t543\t22\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t200\t198\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t1567\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t1982\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tOPTIONS\t401\t101\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t206\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t401\t172\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t201\t172\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t201\t172\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t500\t1567\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t201\t118\t33\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t200\t1982\t198\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t1982\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t500\t1567\t1\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t198\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t401\t1567\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t401\t104\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t401\t1415\t206\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t400\t1415\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t201\t172\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t201\t206\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tOPTIONS\t201\t118\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tOPTIONS\t500\t234\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t200\t145\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tOPTIONS\t200\t118\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tDELETE\t500\t1982\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t200\t234\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t401\t104\t2\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t201\t871\t2\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t500\t543\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t401\t234\t85\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tOPTIONS\t200\t1415\t47\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t1982\t94\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t172\t22\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t201\t234\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t500\t107\t25\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t401\t198\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t400\t543\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t401\t234\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t101\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tDELETE\t500\t145\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t500\t1567\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t200\t198\t49\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t200\t104\t3\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t500\t198\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t500\t107\t50\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t400\t104\t104\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t401\t1567\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t201\t234\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t201\t871\t27\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t543\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t201\t118\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t201\t206\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t400\t107\t38\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tOPTIONS\t401\t104\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t401\t871\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t198\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t400\t1415\t145\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t400\t198\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t500\t1415\t35\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t500\t101\t2\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t400\t234\t83\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tDELETE\t401\t118\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t401\t118\t85\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t543\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t200\t107\t22\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t500\t1415\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t201\t172\t12\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t118\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t400\t206\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t101\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t200\t1982\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t500\t543\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t200\t101\t38\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tDELETE\t400\t101\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t201\t1982\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t201\t198\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t500\t107\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t500\t1982\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t401\t118\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tOPTIONS\t401\t234\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t200\t1415\t3\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t500\t234\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t500\t206\t25\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t198\t68\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t401\t206\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t500\t172\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t400\t198\t172\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t201\t198\t49\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t400\t1567\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t201\t198\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t543\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t201\t1982\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t200\t107\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t400\t101\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tOPTIONS\t401\t101\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t200\t234\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tDELETE\t201\t871\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t200\t234\t51\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t401\t206\t22\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t500\t234\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t400\t543\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t400\t1415\t107\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tDELETE\t200\t101\t89\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t400\t1567\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t500\t1567\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t201\t198\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tOPTIONS\t201\t1415\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t500\t1567\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t401\t543\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t400\t145\t39\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t401\t145\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t500\t543\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t400\t234\t101\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t200\t871\t3\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t1982\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t401\t206\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t871\t33\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t400\t1415\t46\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t201\t871\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t871\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t400\t543\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t401\t172\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tDELETE\t401\t1982\t35\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tDELETE\t400\t206\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t200\t198\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t500\t107\t4\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t201\t101\t89\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t400\t1415\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t201\t104\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t400\t1415\t5\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t401\t172\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t400\t101\t51\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t200\t1567\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t400\t1982\t61\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t201\t172\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t201\t101\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tDELETE\t201\t1982\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tDELETE\t401\t145\t57\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t201\t234\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tOPTIONS\t401\t101\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t201\t101\t234\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t200\t198\t48\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tDELETE\t500\t206\t5\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tOPTIONS\t400\t871\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t200\t104\t47\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t101\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tOPTIONS\t500\t104\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t500\t172\t35\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t145\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t500\t104\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t500\t101\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t500\t1567\t51\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t500\t543\t25\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t172\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t200\t234\t16\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t500\t104\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tOPTIONS\t401\t543\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t400\t101\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t400\t1567\t98\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t401\t118\t68\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t500\t234\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t201\t1567\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t400\t118\t50\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t500\t198\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t400\t234\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t1982\t85\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t400\t1567\t172\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t200\t118\t77\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t1982\t2\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t101\t27\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tOPTIONS\t201\t543\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t401\t234\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t400\t871\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t400\t1415\t98\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t500\t1567\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tDELETE\t500\t234\t59\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t145\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t201\t543\t79\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t400\t1982\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t400\t1567\t107\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t500\t145\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t400\t145\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t500\t206\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t201\t1415\t145\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t500\t1982\t44\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t401\t107\t27\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t101\t118\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tDELETE\t400\t543\t39\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t400\t234\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t1982\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t201\t172\t44\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t871\t206\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t201\t107\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t1415\t8\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t201\t172\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t400\t1567\t12\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t871\t104\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t401\t206\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t101\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t200\t1982\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t500\t118\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t201\t107\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t200\t543\t35\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t871\t33\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tPOST\t201\t234\t47\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t1415\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t500\t206\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t400\t198\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t201\t101\t85\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t200\t104\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t401\t172\t35\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t500\t172\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t500\t107\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t206\t51\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t401\t206\t75\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t200\t107\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t500\t104\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t500\t543\t5\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t401\t543\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t107\t198\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t400\t1415\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t401\t172\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t200\t234\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t107\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t500\t101\t46\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t118\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t201\t1982\t59\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t1415\t94\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t234\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t1567\t16\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t400\t1982\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tDELETE\t200\t145\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t1567\t118\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t201\t107\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t200\t1567\t51\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tDELETE\t500\t104\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t401\t871\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tOPTIONS\t400\t543\t27\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t500\t172\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t401\t234\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t400\t206\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t400\t107\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t401\t1567\t3\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t500\t234\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t400\t101\t6\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t118\t49\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t201\t118\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t400\t234\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t401\t118\t98\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tDELETE\t200\t145\t101\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t200\t206\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t145\t12\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t401\t198\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tOPTIONS\t500\t118\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t401\t1415\t75\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t200\t206\t206\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tOPTIONS\t201\t145\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t400\t1982\t27\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t145\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t400\t107\t5\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t201\t107\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tOPTIONS\t200\t145\t38\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t400\t145\t35\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tOPTIONS\t400\t145\t198\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tOPTIONS\t201\t1982\t5\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t500\t118\t8\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t500\t871\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t104\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t145\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t500\t198\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tOPTIONS\t201\t145\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t200\t206\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t200\t543\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t201\t234\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t400\t1415\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t200\t198\t12\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tOPTIONS\t200\t206\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tDELETE\t201\t1567\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t401\t104\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t401\t206\t85\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t401\t1567\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t500\t104\t68\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t200\t206\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t145\t39\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t201\t871\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tOPTIONS\t500\t104\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t871\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t400\t107\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t118\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t401\t1415\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t500\t234\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t201\t198\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tDELETE\t200\t198\t1\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tOPTIONS\t500\t1415\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t200\t118\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t401\t1567\t13\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t401\t234\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t200\t234\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t500\t107\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t201\t234\t8\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t200\t1982\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t201\t118\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t500\t1415\t101\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t201\t1567\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t201\t1415\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t400\t234\t104\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t201\t145\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t201\t101\t6\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tDELETE\t200\t871\t3\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t200\t543\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t201\t1415\t98\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t500\t871\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t104\t1\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t401\t543\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t201\t206\t79\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t200\t145\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t201\t1982\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t500\t871\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tDELETE\t201\t234\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t107\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t104\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t201\t198\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t500\t198\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t401\t206\t27\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t200\t118\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t145\t118\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tOPTIONS\t400\t172\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t1567\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t401\t871\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tOPTIONS\t200\t206\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t198\t89\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t200\t118\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tDELETE\t200\t145\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t201\t543\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t201\t871\t172\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t401\t172\t2\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tPOST\t500\t206\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t1567\t118\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t107\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t200\t107\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t500\t118\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tOPTIONS\t201\t172\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t401\t206\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t172\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t400\t104\t22\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t145\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t400\t104\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t500\t1567\t1\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tDELETE\t500\t172\t145\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tOPTIONS\t201\t101\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t400\t234\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t198\t22\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t543\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t201\t172\t27\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t400\t1415\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t500\t1982\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t201\t172\t27\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t401\t145\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tDELETE\t401\t1415\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t400\t234\t6\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t500\t198\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t400\t101\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t401\t234\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t401\t1982\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t401\t107\t172\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tOPTIONS\t200\t543\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t401\t104\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t400\t206\t14\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t500\t198\t33\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tOPTIONS\t201\t206\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tOPTIONS\t400\t107\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t201\t145\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tDELETE\t401\t172\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tDELETE\t401\t145\t49\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t234\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t401\t206\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t500\t101\t12\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t500\t1415\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t500\t543\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t401\t543\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tDELETE\t401\t543\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t201\t543\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t500\t871\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t400\t206\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t400\t234\t118\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t201\t1982\t198\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t500\t104\t33\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t145\t50\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t201\t198\t68\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t400\t206\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t1567\t51\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t200\t543\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tDELETE\t400\t1567\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t500\t234\t77\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t401\t107\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t234\t14\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t200\t198\t13\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t500\t198\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t401\t172\t12\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t201\t172\t47\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t200\t543\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t400\t234\t5\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t200\t543\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t500\t101\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t201\t234\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t200\t234\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t400\t104\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t400\t871\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t201\t107\t35\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t201\t101\t49\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t400\t543\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t400\t543\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t500\t871\t70\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t401\t1415\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t206\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t104\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t401\t1567\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t400\t234\t145\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t107\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t201\t234\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t401\t871\t61\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t200\t871\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t201\t172\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t201\t1567\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t401\t107\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t200\t198\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t500\t145\t48\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tOPTIONS\t201\t198\t1\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tDELETE\t401\t145\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t500\t1567\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tDELETE\t400\t234\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t234\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t200\t198\t101\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t401\t1982\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t400\t206\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t400\t1567\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t401\t101\t4\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t201\t198\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tOPTIONS\t201\t172\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t401\t172\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t200\t206\t234\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t201\t101\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t400\t871\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t401\t206\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t201\t206\t51\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t118\t46\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t871\t234\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t400\t198\t50\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t200\t172\t172\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t871\t79\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t201\t1982\t234\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t201\t101\t68\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t500\t172\t172\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t400\t107\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t1982\t101\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t401\t1982\t68\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t200\t101\t51\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t401\t206\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t201\t145\t61\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t543\t27\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t201\t101\t172\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t206\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t500\t234\t49\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t118\t57\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t401\t198\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t1415\t206\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t401\t118\t47\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tDELETE\t401\t543\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t500\t1982\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tDELETE\t201\t107\t85\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t200\t145\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tPOST\t400\t1567\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t1415\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t401\t145\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t200\t234\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t172\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tDELETE\t500\t198\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tDELETE\t201\t1982\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t401\t1415\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t400\t1982\t107\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tDELETE\t400\t1567\t33\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t200\t101\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t500\t1567\t50\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t400\t118\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t201\t234\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tPOST\t500\t1415\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t201\t104\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t200\t1982\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t201\t107\t104\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t201\t145\t4\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t200\t198\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t500\t145\t38\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t401\t101\t2\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t401\t198\t145\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t200\t145\t5\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t871\t6\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t201\t1415\t145\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tDELETE\t200\t206\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t200\t234\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t500\t104\t38\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t500\t234\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tPOST\t400\t1982\t59\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tOPTIONS\t200\t234\t16\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t401\t145\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t145\t51\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t400\t206\t61\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tPOST\t401\t206\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tPOST\t200\t104\t57\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tDELETE\t400\t1415\t44\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t201\t118\t1\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t400\t145\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t201\t1982\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tOPTIONS\t401\t234\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t401\t104\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t401\t871\t2\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t200\t145\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t201\t172\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t201\t198\t3\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tOPTIONS\t201\t206\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t200\t101\t22\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t200\t234\t47\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t201\t145\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t201\t543\t13\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t401\t198\t89\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t401\t1982\t2\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tOPTIONS\t500\t104\t70\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t200\t1982\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t500\t172\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t500\t172\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t200\t1415\t13\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t172\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t500\t198\t94\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t201\t206\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t201\t1982\t5\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t400\t101\t4\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t201\t118\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t201\t543\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tDELETE\t400\t198\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t400\t871\t48\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tOPTIONS\t400\t1567\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tOPTIONS\t400\t172\t12\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t400\t145\t57\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t400\t1415\t89\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t871\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t500\t172\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tDELETE\t401\t1982\t83\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t401\t107\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t201\t145\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tGET\t401\t145\t4\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t107\t89\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t401\t234\t3\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t500\t145\t59\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tDELETE\t400\t104\t83\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t400\t234\t83\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t201\t145\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t201\t101\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tDELETE\t400\t101\t8\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t401\t107\t101\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tDELETE\t401\t172\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tDELETE\t401\t145\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t145\t77\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t500\t1415\t118\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t401\t118\t49\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t200\t172\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tPOST\t200\t543\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tOPTIONS\t201\t1415\t61\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t401\t107\t39\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t206\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t198\t15\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t1982\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t401\t1567\t98\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t401\t1982\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t200\t234\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tOPTIONS\t400\t206\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tDELETE\t401\t145\t47\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t200\t172\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t500\t172\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t400\t1982\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tOPTIONS\t500\t1567\t33\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t401\t198\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t104\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t500\t118\t107\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tPOST\t500\t172\t38\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t500\t1567\t6\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t500\t172\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tPOST\t200\t104\t15\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t104\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t401\t198\t118\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t401\t198\t145\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t200\t198\t75\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t107\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t500\t543\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tDELETE\t201\t107\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tPOST\t401\t101\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t500\t206\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tOPTIONS\t201\t172\t118\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t401\t104\t198\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t200\t198\t39\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t500\t1567\t50\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tDELETE\t201\t118\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t500\t1567\t234\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t201\t198\t57\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t400\t101\t14\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t401\t118\t79\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tOPTIONS\t201\t198\t98\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tOPTIONS\t500\t1982\t85\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t400\t104\t18\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t198\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t500\t1415\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t400\t1982\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t400\t871\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t201\t871\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t201\t145\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tDELETE\t500\t107\t33\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tOPTIONS\t200\t234\t47\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t201\t101\t145\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t401\t107\t46\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tPOST\t400\t101\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t1415\t22\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t200\t234\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t201\t118\t35\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tDELETE\t200\t198\t59\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t400\t234\t94\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t543\t89\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tDELETE\t500\t145\t33\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t500\t543\t104\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t400\t118\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t500\t198\t35\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t400\t104\t1\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t200\t1982\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t401\t198\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t400\t1567\t13\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t1982\t46\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tGET\t200\t104\t38\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t400\t234\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t200\t198\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t400\t543\t79\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t201\t1415\t101\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/portfolio\tPOST\t401\t198\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t201\t206\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t500\t172\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tOPTIONS\t201\t101\t77\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t500\t234\t16\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t500\t145\t198\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tGET\t200\t101\t16\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t401\t101\t79\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tDELETE\t401\t1982\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tGET\t201\t1567\t98\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t401\t172\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t101\t15\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tPOST\t400\t543\t1\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t500\t206\t2\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t200\t172\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t201\t206\t51\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tGET\t201\t234\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t200\t234\t25\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t401\t206\t25\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t400\t1982\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t400\t1415\t172\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tOPTIONS\t500\t104\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t104\t85\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t401\t543\t13\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t500\t1567\t2\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t201\t145\t48\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t198\t49\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t401\t1982\t27\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/feedback\tGET\t201\t206\t198\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t400\t206\t39\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tOPTIONS\t400\t104\t57\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t500\t1567\t206\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t401\t104\t44\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/portfolio\tGET\t400\t107\t18\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tDELETE\t400\t104\t25\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t401\t1415\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t500\t1567\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t401\t1982\t94\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tOPTIONS\t400\t145\t49\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tOPTIONS\t200\t871\t68\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t201\t1415\t39\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tPOST\t201\t234\t51\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t400\t172\t48\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t201\t543\t25\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tGET\t401\t1982\t94\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tGET\t200\t145\t48\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tPOST\t400\t104\t61\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t400\t118\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t400\t101\t2\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t401\t1415\t4\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t500\t206\t85\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t401\t1567\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t871\t57\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/techproject\tOPTIONS\t400\t1982\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tGET\t400\t1567\t27\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/ace_devicedetails\tDELETE\t400\t871\t16\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tPOST\t400\t1982\t48\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tPOST\t200\t107\t59\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t201\t145\t44\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tDELETE\t401\t1415\t1\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t401\t1415\t68\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tOPTIONS\t500\t145\t8\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/survey\tPOST\t201\t107\t94\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/techproject\tGET\t201\t145\t89\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t400\t172\t83\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tDELETE\t200\t234\t39\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t401\t145\t44\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t400\t172\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t400\t101\t98\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/application\tPOST\t400\t206\t18\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tDELETE\t401\t104\t46\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tPOST\t200\t1982\t5\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tPOST\t400\t172\t77\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tOPTIONS\t200\t1567\t49\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t401\t172\t39\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/feedback\tGET\t401\t198\t25\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t200\t104\t6\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/strategictheme\tPOST\t200\t543\t1\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/ace_devicedetails\tGET\t401\t234\t98\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t400\t107\t85\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tPOST\t500\t1415\t8\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t401\t1415\t27\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/portfolio\tGET\t201\t1415\t118\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/strategictheme\tDELETE\t401\t234\t35\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t401\t118\t206\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/foundationalservice\tGET\t500\t1415\t44\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/application\tGET\t500\t543\t5\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/survey\tGET\t500\t1567\t16\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/application\tGET\t400\t234\t75\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/techproject\tGET\t200\t145\t70\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tGET\t201\t543\t50\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/appmap/feedback\tGET\t500\t871\t107\nMozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko\t/tapps/foundationalservice\tPOST\t200\t234\t27\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/tapps/foundationalservice\tGET\t200\t104\t38\nMozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36\t/appmap/survey\tGET\t500\t1982\t51\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/tapps/strategictheme\tOPTIONS\t201\t107\t61\nMozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)\t/appmap/ace_devicedetails\tGET\t200\t871\t33\n\n\u003cfont color\u003dred\u003eResults are limited by 1000.\u003c/font\u003e"
+      },
+      "dateCreated": "Jun 7, 2016 7:32:37 PM",
+      "dateStarted": "Jun 8, 2016 12:23:43 AM",
+      "dateFinished": "Jun 8, 2016 12:23:47 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "authenticationInfo": {
+        "user": "admin",
+        "ticket": "cecfc8e7-5d3b-402a-a665-3c7f2cc897f1"
+      },
+      "dateUpdated": "Jun 8, 2016 12:26:00 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "derivedFrom": [],
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1465308590223_1998095890",
+      "id": "20160607-193950_1570868841",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": ""
+      },
+      "dateCreated": "Jun 7, 2016 7:39:50 PM",
+      "dateStarted": "Jun 7, 2016 8:59:00 PM",
+      "dateFinished": "Jun 7, 2016 8:59:06 PM",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     }
   ],
   "name": "/api_analytics/API Analytics",
   "id": "2BFF7MCKJ",
-  "angularObjects": {},
+  "angularObjects": {
+    "2BM3RB5JK": [],
+    "2BJTWN4UK": [],
+    "2BN3ENYDU": [],
+    "2BPFPHSHF": [],
+    "2BP77G8ZT": [],
+    "2BMP6EN4K": [],
+    "2BMFCU62U": [],
+    "2BKX384CJ": [],
+    "2BJT4X1MS": [],
+    "2BNWQ939A": [],
+    "2BKXTVVXA": [],
+    "2BP6XUV2F": [],
+    "2BM1X1GZN": [],
+    "2BMUERSAC": [],
+    "2BNPXD8UK": [],
+    "2BMS55CT3": [],
+    "2BKXY1V3K": [],
+    "2BKSQSJ9K": []
+  },
   "config": {
     "looknfeel": "report"
   },
