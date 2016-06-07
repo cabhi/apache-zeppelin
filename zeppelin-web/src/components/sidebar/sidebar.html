@@ -2,10 +2,10 @@
   <h5>Wize</h5>
 </div>
 <nav class="wiz_a-sidebar-nav" ng-controller="sidebarCtrl">
-  <ul class="list-unstyled">
+  <ul class="panel-group list-unstyled" id="accordion" role="tablist" aria-multiselectable="true">
     <li class="toggle-menu"><a><i class="fa fa-arrows-h" aria-hidden="true"></i></a></li>
-    <li class="parentNavLnk" ng-repeat="node in nodes" ng-class="{'active': isRouteActive(node)}">
-      <a href="#navItemCollapse{{$index}}" class="collapsed" data-toggle="collapse" aria-expanded="false" aria-controls="navItemCollapse">
+    <li class="parentNavLnk panel" ng-repeat="node in nodes" ng-class="{'active': isRouteActive(node)}">
+      <a href="#navItemCollapse{{$index}}" class="collapsed" data-parent="#accordion" data-toggle="collapse" aria-expanded="false" aria-controls="navItemCollapse">
         <span><i class="{{node.attributes.icon}}" aria-hidden="true"></i></span>
         <span>{{node.name}}</span><span class="fa fa-angle-down"></span>
       </a>
