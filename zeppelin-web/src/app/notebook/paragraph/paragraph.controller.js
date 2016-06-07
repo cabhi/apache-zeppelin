@@ -626,6 +626,14 @@ angular.module('zeppelinWebApp')
       $scope.dirtyText = undefined;
     };
 
+    $scope.runParagraphs = function (data) {
+      $scope.runParagraph(data);
+      $rootScope.$broadcast("drillDown", {
+        paraId: $scope.paragraph.id,
+        params: {}
+      });
+    };
+
     $scope.scheduleParagraphToRun = function () {
       $timeout(function () {
         $scope.runParagraph($scope.getEditorValue());
