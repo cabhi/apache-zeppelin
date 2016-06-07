@@ -910,8 +910,13 @@ public class ElasticsearchInterpreter extends Interpreter {
         	  }
             break;
           case "!=": 
-            query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
-              .append("{").append(field).append(":").append("\"").append(operand).append("\"").append("}}}}");
+        	  if(rawFields.contains(field)){
+            query.append("{\"not\":").append("{\"filter\":").append("{\"term\":")
+              .append("{").append(field).append(".raw:").append("\"").append(operand).append("\"").append("}}}}");
+        	  }else{
+        		  query.append("{\"not\":").append("{\"filter\":").append("{\"term\":")
+                  .append("{").append(field).append(":").append("\"").append(operand).append("\"").append("}}}}");
+        	  }
             break;
           case "<": 
             query.append("{\"range\":").append("{").append(field).append(":")
