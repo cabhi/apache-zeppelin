@@ -173,9 +173,18 @@ angular.module('zeppelinWebApp')
       } else if ($scope.getResultType() === 'TEXT') {
         $scope.renderText();
       }
-      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (o) { return o.id != $scope.paragraph.id; });
+
+      var allParaIds = _.map(note.paragraphs, 'id');
+
+      $scope.paragraph.config.paramsDerivedFrom = _.filter($scope.paragraph.config.paramsDerivedFrom, function(paraId) {
+        return allParaIds.indexOf(paraId) !== -1;
+      });
+
+      var paragraphs = _.filter(note.paragraphs, function (o) { return o.id != $scope.paragraph.id; });
       $scope.multiSelectConfig.colsList = _.map(paragraphs, colSelectList);
       $scope.multiSelectConfig.selectedCols = _.map($scope.paragraph.config.paramsDerivedFrom, setSelected);
+
+      $scope.paragraph.config.showForm = _.keys($scope.paragraph.settings.forms).length > 0;
     };
 
     $scope.renderHtml = function () {
@@ -628,10 +637,11 @@ angular.module('zeppelinWebApp')
 
     $scope.runParagraphs = function (data) {
       $scope.runParagraph(data);
-      $rootScope.$broadcast("drillDown", {
-        paraId: $scope.paragraph.id,
-        params: {}
-      });
+      $timeout(function () {
+        $rootScope.$broadcast("drillDown", {
+          paraId: $scope.paragraph.id
+        });
+      }, 200)
     };
 
     $scope.scheduleParagraphToRun = function () {
@@ -1273,10 +1283,9 @@ angular.module('zeppelinWebApp')
     });
 
     $scope.$on('drillDown', function (event, args) {
-      console.dir(args);
       var isDerived = $scope.isDerived($scope.paragraph, args.paraId);
       if (isDerived) {
-        $scope.paragraph.config.drillDown = args.params;
+        $scope.paragraph.config.drillDown = args.params || $scope.paragraph.config.drillDown;
         $scope.runParagraph($scope.getEditorValue());
       }
     });
@@ -1641,16 +1650,12 @@ angular.module('zeppelinWebApp')
           }
         } catch (ignoreErr) {
         }
-        console.log(type);
-        console.dir($scope.chart[type]);
         if ($scope.chart[type].multibar) {
           $scope.chart[type].multibar.dispatch.on('elementClick', function (e) {
             console.log(e);
-            console.log($scope.paragraph.config.graph.keys);
             var params = {};
             params[$scope.paragraph.config.graph.keys[0].name] = e.point.x;
             params[$scope.paragraph.config.graph.groups[0].name] = e.series.key;
-            console.dir(params);
             var args = {};
             args.paraId = $scope.paragraph.id;
             args.params = params;
@@ -1659,10 +1664,8 @@ angular.module('zeppelinWebApp')
         }
         else if($scope.chart[type].stacked){
           $scope.chart[type].stacked.dispatch.on("areaClick", function (e) {
-            console.dir(e);
             var params = {};
             params[$scope.paragraph.config.graph.groups[0].name] = e.series;
-            console.dir(params);
             var args = {};
             args.paraId = $scope.paragraph.id;
             args.params = params;
@@ -1679,7 +1682,6 @@ angular.module('zeppelinWebApp')
             console.log(e);
              var params = {};
             params[$scope.paragraph.config.graph.keys[0].name] = e.label;
-            console.dir(params);
             var args = {};
             args.paraId = $scope.paragraph.id;
             args.params = params;
@@ -2055,7 +2057,6 @@ angular.module('zeppelinWebApp')
       var colNameIndex = {};
       var colIdx = 0;
       var rowIndexValue = {};
-      console.log(keys, groups, values);
       for (var k in rows) {
         traverse(sKey, schema[sKey], k, rows[k], function (rowName, rowValue, colName, value) {
           //console.log("RowName=%o, row=%o, col=%o, value=%o", rowName, rowValue, colName, value);
@@ -2495,10 +2496,9 @@ angular.module('zeppelinWebApp')
     }
 
     function getDerivedFrom(para) {
-      var paragraphs = _.filter($scope.$parent.$parent.note.paragraphs, function (n) {
+      return _.filter($scope.parentNote.paragraphs, function (n) {
         return isDerived(para, n.id);
       });
-      return paragraphs;
     }
 
     function isDerived(para, id) {
