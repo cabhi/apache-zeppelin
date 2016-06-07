@@ -35,17 +35,20 @@ limitations under the License.
         </div>
       </div>
       <input class="form-control" placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' } "
-        name="{{formulaire.name}}" ng-if="formulaire.name === 'Date'" ng-model="paragraph.settings.params[formulaire.name]"
-        datetimepicker options="{}"
-             ng-change="runParagraph(getEditorValue())"/>
+             name="{{formulaire.name}}" ng-if="formulaire.name === 'Date'" ng-model="paragraph.settings.params[formulaire.name]"
+             datetimepicker options="{}"
+             ng-change="runParagraph(getEditorValue())"
+             style="width: 115%;"/>
       <input class="form-control" placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' } "
              name="{{formulaire.name}}" ng-if="formulaire.name ==='FromDate' || formulaire.name ==='From Date'" ng-model="paragraph.settings.params[formulaire.name]"
              datetimepicker options="{}"
-              ng-change="runParagraph(getEditorValue())"/>
+             ng-change="runParagraph(getEditorValue())"
+             style="width: 115%;"/>
       <input class="form-control" placeholder={{formulaire.name}} type="text" ng-class="{'disable': paragraph.status == 'RUNNING' || paragraph.status == 'PENDING' } "
              name="{{formulaire.name}}" ng-if="formulaire.name === 'ToDate' || formulaire.name === 'To Date'" ng-model="paragraph.settings.params[formulaire.name]"
              datetimepicker options="{}"
-             ng-change="runParagraph(getEditorValue())"/>
+             ng-change="runParagraph(getEditorValue())"
+             style="width: 115%;"/>
     </div>
   </div>
 </form>
