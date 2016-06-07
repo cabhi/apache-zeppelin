@@ -346,7 +346,7 @@ public class Input implements Serializable {
       } else {
         value = input.defaultValue;
       }
-      replaced = match.replaceFirst(value.toString());
+      replaced = match.replaceFirst("\"" + value.toString().toLowerCase() + "\"");
       match = VAR_PTN.matcher(replaced);
     }
       
