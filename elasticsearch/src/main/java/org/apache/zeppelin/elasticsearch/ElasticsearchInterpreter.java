@@ -903,29 +903,29 @@ public class ElasticsearchInterpreter extends Interpreter {
             query.append("{\"term\":").append("{").append(field).append(".raw:")
               .append(operand.toLowerCase()).append("}}");
         	  }else{
-        		  query.append("{\"term\":").append("{").append(field).append(":")
-                  .append(operand.toLowerCase()).append("}}");
+        		  query.append("{\"term\":").append("{").append(field).append(":").append("\"")
+                  .append(operand.toLowerCase()).append("\"").append("}}");
         	  }
             break;
           case "!=": 
             query.append("{\"filter\":").append("{\"not\":").append("{\"term\":")
-              .append("{").append(field).append(":").append(operand).append("}}}}");
+              .append("{").append(field).append(":").append("\"").append(operand).append("\"").append("}}}}");
             break;
           case "<": 
             query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"lt\":").append(operand).append("}}}");
+              .append("{\"lt\":").append("\"").append(operand).append("\"").append("}}}");
             break;
           case "<=": 
             query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"lte\":").append(operand).append("}}}");
+              .append("{\"lte\":").append("\"").append(operand).append("\"").append("}}}");
             break;
           case ">": 
             query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"gt\":").append(operand).append("}}}");
+              .append("{\"gt\":").append("\"").append(operand).append("\"").append("}}}");
             break;
           case ">=": 
             query.append("{\"range\":").append("{").append(field).append(":")
-              .append("{\"gte\":").append(operand).append("}}}");
+              .append("{\"gte\":").append("\"").append(operand).append("\"").append("}}}");
             break;
           case "contains": 
         	  if(isValidWord(operand)){
