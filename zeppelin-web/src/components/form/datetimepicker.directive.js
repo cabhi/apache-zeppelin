@@ -31,8 +31,8 @@ angular.module('zeppelinWebApp')
         var passed_in_options = $scope.$eval($attrs.options);
         var options = jQuery.extend({}, default_options, passed_in_options);
 
-        $element.on('dp.change', function (e) {
-          if (ngModelCtrl) {
+        $element.on('dp.hide', function (e) {
+          if (ngModelCtrl && (+new Date(e.target.value) !== +new Date(ngModelCtrl.$viewValue))) {
             $timeout(function () {
               ngModelCtrl.$setViewValue(new Date(e.target.value));
             });
