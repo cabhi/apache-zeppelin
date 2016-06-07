@@ -738,6 +738,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       // First : get all the keys in order to build an ordered list of the
       // values for each hit
       //
+    logger.info("buildSearchHitsWithFieldsResponseMessage: Got {} hits", hits.length);
     final List<Map<String, SearchHitField>> flattenHits = new LinkedList<>();
     final Set<String> keys = new TreeSet<>();
     for (SearchHit hit : hits) {
@@ -777,6 +778,7 @@ public class ElasticsearchInterpreter extends Interpreter {
   
   private InterpreterResult buildSearchHitsResponseMessage(SearchHit[] hits) {
     if (hits == null || hits.length == 0) {
+      logger.info("buildSearchHitsResponseMessage: Got {} hits", hits.length);
       return new InterpreterResult(
         InterpreterResult.Code.SUCCESS,
         InterpreterResult.Type.TEXT,
