@@ -238,10 +238,12 @@ angular.module('zeppelinWebApp')
         // }
         try {
           data = JSON.parse($scope.paragraph.result.msg);
-        } catch (err) {}
+        } catch (err) {
+          data = {rows: []};
+        }
 
-        if (data && data.rows && data.rows.length > 0) {
-          if ($scope.paragraph.settings.params.from > 0) {
+        if (data && data.rows) {
+          if (data.rows.length > 0 && $scope.paragraph.settings.params.from > 0) {
             $scope.data = ($scope.data || []).concat(data.rows);
           } else {
             $scope.data = data.rows;
