@@ -2,12 +2,12 @@
   "paragraphs": [
     {
       "title": "Filter Parameters",
-      "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+      "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"gte\":${From Date\u003dnow-1d}, \"lte\": ${To Date\u003dnow}}}}\n    ]}\n}",
       "authenticationInfo": {
         "user": "admin",
-        "ticket": "cb771a93-76e1-4391-a14d-40b1bd1a91d0"
+        "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
       },
-      "dateUpdated": "Jun 8, 2016 5:25:51 PM",
+      "dateUpdated": "Jun 8, 2016 10:38:49 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -44,7 +44,9 @@
         "params": {
           "Level": "info",
           "Log Level": "*",
-          "Date": "2016-06-08T11:31:06.000Z"
+          "Date": "2016-06-08T11:31:06.000Z",
+          "From Date": "2016-06-06T16:57:45.000Z",
+          "To Date": "2016-06-10T16:57:45.000Z"
         },
         "forms": {
           "Log Level": {
@@ -74,8 +76,13 @@
             ],
             "hidden": false
           },
-          "Date": {
-            "name": "Date",
+          "From Date": {
+            "name": "From Date",
+            "defaultValue": "now-1d",
+            "hidden": false
+          },
+          "To Date": {
+            "name": "To Date",
             "defaultValue": "now",
             "hidden": false
           }
@@ -89,19 +96,19 @@
         "msg": ""
       },
       "dateCreated": "Jun 7, 2016 8:30:40 PM",
-      "dateStarted": "Jun 8, 2016 5:25:51 PM",
-      "dateFinished": "Jun 8, 2016 5:25:51 PM",
+      "dateStarted": "Jun 8, 2016 10:38:49 PM",
+      "dateFinished": "Jun 8, 2016 10:38:49 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "HTTP Method Distribution",
-      "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":@{Date\u003dnow}}}}\n    ]}\n}",
+      "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\"range\":{\"metadata.timestamp\":{\"gte\":@{From Date\u003dnow-1d}, \"lte\": @{To Date\u003dnow}}}}\n    ]}\n}",
       "authenticationInfo": {
         "user": "admin",
-        "ticket": "cb771a93-76e1-4391-a14d-40b1bd1a91d0"
+        "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
       },
-      "dateUpdated": "Jun 8, 2016 5:25:51 PM",
+      "dateUpdated": "Jun 8, 2016 10:38:49 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -137,12 +144,12 @@
         "derivedFrom": [
           {
             "title": "Filter Parameters",
-            "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+            "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"gte\":${From Date\u003dnow-1d}, \"lte\": ${To Date\u003dnow}}}}\n    ]}\n}",
             "authenticationInfo": {
               "user": "admin",
-              "ticket": "cb771a93-76e1-4391-a14d-40b1bd1a91d0"
+              "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
             },
-            "dateUpdated": "Jun 8, 2016 5:25:51 PM",
+            "dateUpdated": "Jun 8, 2016 10:38:49 PM",
             "config": {
               "colWidth": 12.0,
               "graph": {
@@ -179,7 +186,9 @@
               "params": {
                 "Level": "info",
                 "Log Level": "*",
-                "Date": "2016-06-08T11:31:06.000Z"
+                "Date": "2016-06-08T11:31:06.000Z",
+                "From Date": "2016-06-06T16:57:45.000Z",
+                "To Date": "2016-06-10T16:57:45.000Z"
               },
               "forms": {
                 "Log Level": {
@@ -189,33 +198,38 @@
                     {
                       "value": "*",
                       "displayName": "All",
-                      "$$hashKey": "object:4523"
+                      "$$hashKey": "object:7037"
                     },
                     {
                       "value": "trace",
                       "displayName": "TRACE",
-                      "$$hashKey": "object:4524"
+                      "$$hashKey": "object:7038"
                     },
                     {
                       "value": "info",
                       "displayName": "INFO",
-                      "$$hashKey": "object:4525"
+                      "$$hashKey": "object:7039"
                     },
                     {
                       "value": "error",
                       "displayName": "ERROR",
-                      "$$hashKey": "object:4526"
+                      "$$hashKey": "object:7040"
                     },
                     {
                       "value": "fatal",
                       "displayName": "FATAL",
-                      "$$hashKey": "object:4527"
+                      "$$hashKey": "object:7041"
                     }
                   ],
                   "hidden": false
                 },
-                "Date": {
-                  "name": "Date",
+                "From Date": {
+                  "name": "From Date",
+                  "defaultValue": "now-1d",
+                  "hidden": false
+                },
+                "To Date": {
+                  "name": "To Date",
                   "defaultValue": "now",
                   "hidden": false
                 }
@@ -229,11 +243,11 @@
               "msg": ""
             },
             "dateCreated": "Jun 7, 2016 8:30:40 PM",
-            "dateStarted": "Jun 8, 2016 5:25:51 PM",
-            "dateFinished": "Jun 8, 2016 5:25:51 PM",
+            "dateStarted": "Jun 8, 2016 10:38:49 PM",
+            "dateFinished": "Jun 8, 2016 10:38:49 PM",
             "status": "FINISHED",
             "progressUpdateIntervalMs": 500.0,
-            "$$hashKey": "object:3813",
+            "$$hashKey": "object:6026",
             "focus": true
           }
         ],
@@ -249,7 +263,9 @@
           "Date": "2016-06-08T11:31:06.000Z",
           "Records": "100",
           "Level": "info",
-          "Log Level": "*"
+          "Log Level": "*",
+          "From Date": "2016-06-06T16:57:45.000Z",
+          "To Date": "2016-06-10T16:57:45.000Z"
         },
         "forms": {}
       },
@@ -258,22 +274,22 @@
       "result": {
         "code": "SUCCESS",
         "type": "TABLE",
-        "msg": "HttpRequest.requestMethod\nPOST\nGET\nOPTIONS\nGET\nPOST\nPOST\nGET\nPOST\nPOST\nPOST\nOPTIONS\nDELETE\nGET\nGET\nGET\nPOST\nDELETE\nPOST\nGET\nGET\nPOST\nGET\nGET\nGET\nOPTIONS\nGET\nPOST\nDELETE\nGET\nGET\nGET\nGET\nGET\nGET\nGET\nPOST\nPOST\nGET\nOPTIONS\nPOST\nGET\nGET\nOPTIONS\nGET\nDELETE\nDELETE\nGET\nPOST\nOPTIONS\nPOST\nPOST\nPOST\nOPTIONS\nDELETE\nPOST\nDELETE\nGET\nOPTIONS\nOPTIONS\nPOST\nGET\nPOST\nOPTIONS\nPOST\nGET\nGET\nOPTIONS\nDELETE\nGET\nGET\nGET\nGET\nGET\nGET\nGET\nDELETE\nOPTIONS\nGET\nGET\nDELETE\nGET\nDELETE\nGET\nGET\nGET\nDELETE\nGET\nPOST\nGET\nGET\nPOST\nOPTIONS\nPOST\nDELETE\nGET\nGET\nGET\nPOST\nPOST\nGET\n"
+        "msg": "HttpRequest.requestMethod\nPOST\nGET\nGET\nGET\nGET\nDELETE\nPOST\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nGET\nPOST\nPOST\nPOST\nGET\nPOST\nGET\nGET\nPOST\nPOST\nGET\nGET\nGET\nGET\nPOST\nGET\nOPTIONS\nPOST\nGET\nGET\nGET\nGET\nGET\nDELETE\nPOST\nGET\nPOST\nOPTIONS\nGET\nGET\nPOST\nPOST\nPOST\nGET\nGET\nDELETE\nGET\nOPTIONS\nGET\nGET\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nGET\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nDELETE\nGET\nGET\nOPTIONS\nPOST\nGET\nGET\nGET\nPOST\nGET\nGET\nDELETE\nDELETE\nGET\nGET\nGET\nOPTIONS\nGET\nOPTIONS\nGET\nDELETE\nGET\nOPTIONS\nDELETE\nOPTIONS\nPOST\nGET\nPOST\nPOST\nGET\nPOST\nGET\nDELETE\nGET\n"
       },
       "dateCreated": "Apr 5, 2016 1:12:41 AM",
-      "dateStarted": "Jun 8, 2016 5:25:51 PM",
-      "dateFinished": "Jun 8, 2016 5:25:51 PM",
+      "dateStarted": "Jun 8, 2016 10:38:49 PM",
+      "dateFinished": "Jun 8, 2016 10:38:49 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Average Response Time (in milliseconds)",
-      "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ \n{\"fields\":[\"httpResponse.responseTime\",\"httpRequest.requestMethod\", \"httpResponse.status\", \"httpResponse.responseSize\"],\n    \"filter\": { \"and\" : [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\n            \"term\":{ \"httpRequest.requestMethod\": @{HttpRequest.requestMethod\u003dget}}\n        },\n        {\n            \"range\" : {\"metadata.timestamp\": {\"lte\": @{Date\u003dnow}}}\n        }\n    ]}\n}",
+      "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ \n{\"fields\":[\"httpResponse.responseTime\",\"httpRequest.requestMethod\", \"httpResponse.status\", \"httpResponse.responseSize\"],\n    \"filter\": { \"and\" : [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\n            \"term\":{ \"httpRequest.requestMethod\": @{HttpRequest.requestMethod\u003dget}}\n        },\n        {\"range\":{\"metadata.timestamp\":{\"gte\":@{From Date\u003dnow-1d}, \"lte\": @{To Date\u003dnow}}}}\n    ]}\n}",
       "authenticationInfo": {
         "user": "admin",
-        "ticket": "0235a10d-55a5-4514-b4b2-e9ad7f3424fd"
+        "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
       },
-      "dateUpdated": "Jun 8, 2016 5:52:51 PM",
+      "dateUpdated": "Jun 8, 2016 10:38:49 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -325,12 +341,12 @@
         "derivedFrom": [
           {
             "title": "Filter Parameters",
-            "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+            "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"gte\":${From Date\u003dnow-1d}, \"lte\": ${To Date\u003dnow}}}}\n    ]}\n}",
             "authenticationInfo": {
               "user": "admin",
-              "ticket": "cb771a93-76e1-4391-a14d-40b1bd1a91d0"
+              "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
             },
-            "dateUpdated": "Jun 8, 2016 5:25:51 PM",
+            "dateUpdated": "Jun 8, 2016 10:38:49 PM",
             "config": {
               "colWidth": 12.0,
               "graph": {
@@ -367,7 +383,9 @@
               "params": {
                 "Level": "info",
                 "Log Level": "*",
-                "Date": "2016-06-08T11:31:06.000Z"
+                "Date": "2016-06-08T11:31:06.000Z",
+                "From Date": "2016-06-06T16:57:45.000Z",
+                "To Date": "2016-06-10T16:57:45.000Z"
               },
               "forms": {
                 "Log Level": {
@@ -377,33 +395,38 @@
                     {
                       "value": "*",
                       "displayName": "All",
-                      "$$hashKey": "object:2251"
+                      "$$hashKey": "object:7037"
                     },
                     {
                       "value": "trace",
                       "displayName": "TRACE",
-                      "$$hashKey": "object:2252"
+                      "$$hashKey": "object:7038"
                     },
                     {
                       "value": "info",
                       "displayName": "INFO",
-                      "$$hashKey": "object:2253"
+                      "$$hashKey": "object:7039"
                     },
                     {
                       "value": "error",
                       "displayName": "ERROR",
-                      "$$hashKey": "object:2254"
+                      "$$hashKey": "object:7040"
                     },
                     {
                       "value": "fatal",
                       "displayName": "FATAL",
-                      "$$hashKey": "object:2255"
+                      "$$hashKey": "object:7041"
                     }
                   ],
                   "hidden": false
                 },
-                "Date": {
-                  "name": "Date",
+                "From Date": {
+                  "name": "From Date",
+                  "defaultValue": "now-1d",
+                  "hidden": false
+                },
+                "To Date": {
+                  "name": "To Date",
                   "defaultValue": "now",
                   "hidden": false
                 }
@@ -417,20 +440,21 @@
               "msg": ""
             },
             "dateCreated": "Jun 7, 2016 8:30:40 PM",
-            "dateStarted": "Jun 8, 2016 5:25:51 PM",
-            "dateFinished": "Jun 8, 2016 5:25:51 PM",
+            "dateStarted": "Jun 8, 2016 10:38:49 PM",
+            "dateFinished": "Jun 8, 2016 10:38:49 PM",
             "status": "FINISHED",
             "progressUpdateIntervalMs": 500.0,
-            "$$hashKey": "object:1956"
+            "$$hashKey": "object:6026",
+            "focus": true
           },
           {
             "title": "HTTP Method Distribution",
-            "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":@{Date\u003dnow}}}}\n    ]}\n}",
+            "text": "%elasticsearch\nsize 100\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"wildcard\": {\"metadata.level\": @{Log Level\u003d*}}},\n        {\"range\":{\"metadata.timestamp\":{\"gte\":@{From Date\u003dnow-1d}, \"lte\": @{To Date\u003dnow}}}}\n    ]}\n}",
             "authenticationInfo": {
               "user": "admin",
-              "ticket": "cb771a93-76e1-4391-a14d-40b1bd1a91d0"
+              "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
             },
-            "dateUpdated": "Jun 8, 2016 5:25:51 PM",
+            "dateUpdated": "Jun 8, 2016 10:38:49 PM",
             "config": {
               "colWidth": 6.0,
               "graph": {
@@ -466,12 +490,12 @@
               "derivedFrom": [
                 {
                   "title": "Filter Parameters",
-                  "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"lte\":${Date\u003dnow}}}}\n    ]}\n}",
+                  "text": "%elasticsearch\nsize 5\nsearch /test1/type1/ {\n    \"fields\": [\"httpRequest.requestMethod\"],\n    \"filter\": {\"and\": [\n        {\"term\":{\"metadata.level\": ${Log Level\u003d*,*(All)|trace(TRACE)|info(INFO)|error(ERROR)|fatal(FATAL)}}},\n        {\"range\":{\"metadata.timestamp\":{\"gte\":${From Date\u003dnow-1d}, \"lte\": ${To Date\u003dnow}}}}\n    ]}\n}",
                   "authenticationInfo": {
                     "user": "admin",
-                    "ticket": "cb771a93-76e1-4391-a14d-40b1bd1a91d0"
+                    "ticket": "1ce9892d-bc86-4e0d-b994-66de47dd6f1e"
                   },
-                  "dateUpdated": "Jun 8, 2016 5:25:51 PM",
+                  "dateUpdated": "Jun 8, 2016 10:38:49 PM",
                   "config": {
                     "colWidth": 12.0,
                     "graph": {
@@ -508,7 +532,9 @@
                     "params": {
                       "Level": "info",
                       "Log Level": "*",
-                      "Date": "2016-06-08T11:31:06.000Z"
+                      "Date": "2016-06-08T11:31:06.000Z",
+                      "From Date": "2016-06-06T16:57:45.000Z",
+                      "To Date": "2016-06-10T16:57:45.000Z"
                     },
                     "forms": {
                       "Log Level": {
@@ -518,33 +544,38 @@
                           {
                             "value": "*",
                             "displayName": "All",
-                            "$$hashKey": "object:4523"
+                            "$$hashKey": "object:7037"
                           },
                           {
                             "value": "trace",
                             "displayName": "TRACE",
-                            "$$hashKey": "object:4524"
+                            "$$hashKey": "object:7038"
                           },
                           {
                             "value": "info",
                             "displayName": "INFO",
-                            "$$hashKey": "object:4525"
+                            "$$hashKey": "object:7039"
                           },
                           {
                             "value": "error",
                             "displayName": "ERROR",
-                            "$$hashKey": "object:4526"
+                            "$$hashKey": "object:7040"
                           },
                           {
                             "value": "fatal",
                             "displayName": "FATAL",
-                            "$$hashKey": "object:4527"
+                            "$$hashKey": "object:7041"
                           }
                         ],
                         "hidden": false
                       },
-                      "Date": {
-                        "name": "Date",
+                      "From Date": {
+                        "name": "From Date",
+                        "defaultValue": "now-1d",
+                        "hidden": false
+                      },
+                      "To Date": {
+                        "name": "To Date",
                         "defaultValue": "now",
                         "hidden": false
                       }
@@ -558,11 +589,11 @@
                     "msg": ""
                   },
                   "dateCreated": "Jun 7, 2016 8:30:40 PM",
-                  "dateStarted": "Jun 8, 2016 5:25:51 PM",
-                  "dateFinished": "Jun 8, 2016 5:25:51 PM",
+                  "dateStarted": "Jun 8, 2016 10:38:49 PM",
+                  "dateFinished": "Jun 8, 2016 10:38:49 PM",
                   "status": "FINISHED",
                   "progressUpdateIntervalMs": 500.0,
-                  "$$hashKey": "object:3813",
+                  "$$hashKey": "object:6026",
                   "focus": true
                 }
               ],
@@ -578,7 +609,9 @@
                 "Date": "2016-06-08T11:31:06.000Z",
                 "Records": "100",
                 "Level": "info",
-                "Log Level": "*"
+                "Log Level": "*",
+                "From Date": "2016-06-06T16:57:45.000Z",
+                "To Date": "2016-06-10T16:57:45.000Z"
               },
               "forms": {}
             },
@@ -587,7 +620,7 @@
             "result": {
               "code": "SUCCESS",
               "type": "TABLE",
-              "msg": "HttpRequest.requestMethod\nPOST\nGET\nOPTIONS\nGET\nPOST\nPOST\nGET\nPOST\nPOST\nPOST\nOPTIONS\nDELETE\nGET\nGET\nGET\nPOST\nDELETE\nPOST\nGET\nGET\nPOST\nGET\nGET\nGET\nOPTIONS\nGET\nPOST\nDELETE\nGET\nGET\nGET\nGET\nGET\nGET\nGET\nPOST\nPOST\nGET\nOPTIONS\nPOST\nGET\nGET\nOPTIONS\nGET\nDELETE\nDELETE\nGET\nPOST\nOPTIONS\nPOST\nPOST\nPOST\nOPTIONS\nDELETE\nPOST\nDELETE\nGET\nOPTIONS\nOPTIONS\nPOST\nGET\nPOST\nOPTIONS\nPOST\nGET\nGET\nOPTIONS\nDELETE\nGET\nGET\nGET\nGET\nGET\nGET\nGET\nDELETE\nOPTIONS\nGET\nGET\nDELETE\nGET\nDELETE\nGET\nGET\nGET\nDELETE\nGET\nPOST\nGET\nGET\nPOST\nOPTIONS\nPOST\nDELETE\nGET\nGET\nGET\nPOST\nPOST\nGET\n",
+              "msg": "HttpRequest.requestMethod\nPOST\nGET\nGET\nGET\nGET\nDELETE\nPOST\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nGET\nPOST\nPOST\nPOST\nGET\nPOST\nGET\nGET\nPOST\nPOST\nGET\nGET\nGET\nGET\nPOST\nGET\nOPTIONS\nPOST\nGET\nGET\nGET\nGET\nGET\nDELETE\nPOST\nGET\nPOST\nOPTIONS\nGET\nGET\nPOST\nPOST\nPOST\nGET\nGET\nDELETE\nGET\nOPTIONS\nGET\nGET\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nGET\nGET\nGET\nDELETE\nPOST\nPOST\nGET\nDELETE\nGET\nGET\nOPTIONS\nPOST\nGET\nGET\nGET\nPOST\nGET\nGET\nDELETE\nDELETE\nGET\nGET\nGET\nOPTIONS\nGET\nOPTIONS\nGET\nDELETE\nGET\nOPTIONS\nDELETE\nOPTIONS\nPOST\nGET\nPOST\nPOST\nGET\nPOST\nGET\nDELETE\nGET\n",
               "comment": "",
               "msgTable": [
                 [
@@ -602,56 +635,6 @@
                 ],
                 [
                   {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
-                    "value": "DELETE"
-                  }
-                ],
-                [
-                  {
                     "value": "GET"
                   }
                 ],
@@ -663,11 +646,6 @@
                 [
                   {
                     "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
                   }
                 ],
                 [
@@ -692,67 +670,17 @@
                 ],
                 [
                   {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
                     "value": "DELETE"
                   }
                 ],
                 [
                   {
-                    "value": "GET"
+                    "value": "POST"
                   }
                 ],
                 [
                   {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
+                    "value": "POST"
                   }
                 ],
                 [
@@ -768,6 +696,66 @@
                 [
                   {
                     "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
                   }
                 ],
                 [
@@ -802,7 +790,12 @@
                 ],
                 [
                   {
-                    "value": "OPTIONS"
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
                   }
                 ],
                 [
@@ -813,76 +806,6 @@
                 [
                   {
                     "value": "DELETE"
-                  }
-                ],
-                [
-                  {
-                    "value": "DELETE"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
-                    "value": "DELETE"
-                  }
-                ],
-                [
-                  {
-                    "value": "POST"
-                  }
-                ],
-                [
-                  {
-                    "value": "DELETE"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
-                    "value": "OPTIONS"
                   }
                 ],
                 [
@@ -907,6 +830,26 @@
                 ],
                 [
                   {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
                     "value": "POST"
                   }
                 ],
@@ -922,52 +865,12 @@
                 ],
                 [
                   {
-                    "value": "OPTIONS"
-                  }
-                ],
-                [
-                  {
                     "value": "DELETE"
                   }
                 ],
                 [
                   {
                     "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "DELETE"
                   }
                 ],
                 [
@@ -987,26 +890,6 @@
                 ],
                 [
                   {
-                    "value": "DELETE"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
-                    "value": "DELETE"
-                  }
-                ],
-                [
-                  {
-                    "value": "GET"
-                  }
-                ],
-                [
-                  {
                     "value": "GET"
                   }
                 ],
@@ -1022,7 +905,7 @@
                 ],
                 [
                   {
-                    "value": "GET"
+                    "value": "POST"
                   }
                 ],
                 [
@@ -1042,7 +925,47 @@
                 ],
                 [
                   {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
                     "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
                   }
                 ],
                 [
@@ -1057,6 +980,41 @@
                 ],
                 [
                   {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
                     "value": "DELETE"
                   }
                 ],
@@ -1077,12 +1035,87 @@
                 ],
                 [
                   {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
+                  }
+                ],
+                [
+                  {
+                    "value": "OPTIONS"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
                     "value": "POST"
                   }
                 ],
                 [
                   {
                     "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "POST"
+                  }
+                ],
+                [
+                  {
+                    "value": "GET"
+                  }
+                ],
+                [
+                  {
+                    "value": "DELETE"
                   }
                 ],
                 [
@@ -1106,36 +1139,6 @@
                   "GET"
                 ],
                 [
-                  "OPTIONS"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "OPTIONS"
-                ],
-                [
-                  "DELETE"
-                ],
-                [
                   "GET"
                 ],
                 [
@@ -1143,9 +1146,6 @@
                 ],
                 [
                   "GET"
-                ],
-                [
-                  "POST"
                 ],
                 [
                   "DELETE"
@@ -1160,43 +1160,13 @@
                   "GET"
                 ],
                 [
-                  "POST"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "OPTIONS"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "POST"
-                ],
-                [
                   "DELETE"
                 ],
                 [
-                  "GET"
+                  "POST"
                 ],
                 [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
+                  "POST"
                 ],
                 [
                   "GET"
@@ -1206,6 +1176,42 @@
                 ],
                 [
                   "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
                 ],
                 [
                   "POST"
@@ -1226,55 +1232,16 @@
                   "GET"
                 ],
                 [
-                  "OPTIONS"
+                  "GET"
+                ],
+                [
+                  "GET"
                 ],
                 [
                   "GET"
                 ],
                 [
                   "DELETE"
-                ],
-                [
-                  "DELETE"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "OPTIONS"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "OPTIONS"
-                ],
-                [
-                  "DELETE"
-                ],
-                [
-                  "POST"
-                ],
-                [
-                  "DELETE"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "OPTIONS"
-                ],
-                [
-                  "OPTIONS"
                 ],
                 [
                   "POST"
@@ -1289,6 +1256,18 @@
                   "OPTIONS"
                 ],
                 [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
                   "POST"
                 ],
                 [
@@ -1298,34 +1277,10 @@
                   "GET"
                 ],
                 [
-                  "OPTIONS"
-                ],
-                [
                   "DELETE"
                 ],
                 [
                   "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "DELETE"
                 ],
                 [
                   "OPTIONS"
@@ -1337,18 +1292,6 @@
                   "GET"
                 ],
                 [
-                  "DELETE"
-                ],
-                [
-                  "GET"
-                ],
-                [
-                  "DELETE"
-                ],
-                [
-                  "GET"
-                ],
-                [
                   "GET"
                 ],
                 [
@@ -1358,7 +1301,7 @@
                   "DELETE"
                 ],
                 [
-                  "GET"
+                  "POST"
                 ],
                 [
                   "POST"
@@ -1370,7 +1313,31 @@
                   "GET"
                 ],
                 [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
                   "POST"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
                 ],
                 [
                   "OPTIONS"
@@ -1379,6 +1346,27 @@
                   "POST"
                 ],
                 [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
                   "DELETE"
                 ],
                 [
@@ -1391,10 +1379,55 @@
                   "GET"
                 ],
                 [
+                  "OPTIONS"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "DELETE"
+                ],
+                [
+                  "OPTIONS"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
                   "POST"
                 ],
                 [
                   "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "POST"
+                ],
+                [
+                  "GET"
+                ],
+                [
+                  "DELETE"
                 ],
                 [
                   "GET"
@@ -1402,11 +1435,11 @@
               ]
             },
             "dateCreated": "Apr 5, 2016 1:12:41 AM",
-            "dateStarted": "Jun 8, 2016 5:25:51 PM",
-            "dateFinished": "Jun 8, 2016 5:25:51 PM",
+            "dateStarted": "Jun 8, 2016 10:38:49 PM",
+            "dateFinished": "Jun 8, 2016 10:38:49 PM",
             "status": "FINISHED",
             "progressUpdateIntervalMs": 500.0,
-            "$$hashKey": "object:1957"
+            "$$hashKey": "object:6027"
           }
         ],
         "editorHide": true,
@@ -1421,7 +1454,9 @@
           "Log Level": "*",
           "Date": "2016-06-08T11:31:06.000Z",
           "Records": "100",
-          "HttpRequest.requestMethod": "GET"
+          "HttpRequest.requestMethod": "GET",
+          "From Date": "2016-06-06T16:57:45.000Z",
+          "To Date": "2016-06-10T16:57:45.000Z"
         },
         "forms": {}
       },
@@ -1430,11 +1465,11 @@
       "result": {
         "code": "SUCCESS",
         "type": "TABLE",
-        "msg": "HttpRequest.requestMethod\tHttpResponse.responseSize\tHttpResponse.responseTime\tHttpResponse.status\nGET\t118\t77\t401\nGET\t101\t15\t201\nGET\t206\t46\t201\nGET\t107\t77\t400\nGET\t101\t94\t500\nGET\t206\t75\t400\nGET\t145\t59\t401\nGET\t172\t85\t201\nGET\t234\t83\t500\nGET\t172\t79\t201\nGET\t198\t46\t401\nGET\t1567\t104\t500\nGET\t145\t48\t500\nGET\t172\t98\t401\nGET\t871\t48\t500\nGET\t1982\t3\t500\nGET\t871\t12\t201\nGET\t871\t59\t201\nGET\t871\t18\t401\nGET\t107\t118\t500\nGET\t1415\t145\t401\nGET\t1415\t59\t400\nGET\t1415\t94\t200\nGET\t172\t101\t401\nGET\t234\t59\t200\nGET\t118\t46\t201\nGET\t1982\t145\t500\nGET\t198\t234\t200\nGET\t1415\t75\t400\nGET\t145\t18\t201\nGET\t107\t101\t401\nGET\t543\t51\t500\nGET\t206\t33\t400\nGET\t543\t89\t201\nGET\t543\t206\t500\nGET\t107\t4\t401\nGET\t145\t59\t201\nGET\t118\t8\t400\nGET\t871\t83\t201\nGET\t198\t16\t400\nGET\t1415\t44\t500\nGET\t198\t5\t500\nGET\t543\t89\t400\nGET\t871\t33\t200\nGET\t1415\t83\t200\nGET\t145\t89\t400\nGET\t118\t13\t500\nGET\t107\t2\t401\nGET\t871\t22\t400\nGET\t107\t198\t201\nGET\t543\t198\t500\nGET\t1567\t2\t400\nGET\t145\t70\t200\nGET\t1415\t33\t201\nGET\t107\t46\t201\nGET\t234\t35\t500\nGET\t104\t234\t400\nGET\t1415\t12\t500\nGET\t118\t13\t201\nGET\t104\t145\t400\nGET\t107\t70\t500\nGET\t871\t206\t401\nGET\t1415\t98\t200\nGET\t234\t5\t400\nGET\t543\t206\t400\nGET\t543\t50\t400\nGET\t1982\t14\t400\nGET\t1982\t14\t200\nGET\t107\t83\t201\nGET\t871\t50\t500\nGET\t871\t27\t201\nGET\t107\t68\t200\nGET\t145\t234\t201\nGET\t1567\t50\t500\nGET\t172\t107\t500\nGET\t234\t13\t200\nGET\t145\t172\t201\nGET\t206\t206\t200\nGET\t145\t234\t401\nGET\t1982\t14\t500\nGET\t172\t1\t201\nGET\t1567\t61\t201\nGET\t107\t101\t201\nGET\t198\t38\t400\nGET\t107\t13\t401\nGET\t871\t234\t200\nGET\t871\t206\t500\nGET\t543\t4\t401\nGET\t871\t83\t401\nGET\t1982\t50\t401\nGET\t871\t77\t201\nGET\t1415\t107\t201\nGET\t1415\t101\t401\nGET\t198\t6\t400\nGET\t1982\t101\t500\nGET\t206\t3\t400\nGET\t101\t2\t401\nGET\t104\t18\t500\nGET\t118\t15\t200\nGET\t1415\t33\t500\n"
+        "msg": "HttpRequest.requestMethod\tHttpResponse.responseSize\tHttpResponse.responseTime\tHttpResponse.status\nGET\t198\t48\t201\nGET\t118\t46\t201\nGET\t198\t94\t200\nGET\t543\t13\t201\nGET\t234\t83\t200\nGET\t101\t4\t500\nGET\t172\t27\t400\nGET\t172\t18\t201\nGET\t172\t79\t201\nGET\t1982\t14\t400\nGET\t118\t5\t401\nGET\t1415\t47\t201\nGET\t1567\t13\t500\nGET\t107\t234\t200\nGET\t107\t2\t200\nGET\t145\t38\t401\nGET\t234\t13\t500\nGET\t145\t35\t201\nGET\t206\t48\t401\nGET\t1567\t172\t500\nGET\t104\t206\t201\nGET\t234\t46\t400\nGET\t1415\t35\t400\nGET\t118\t51\t200\nGET\t198\t68\t401\nGET\t104\t1\t401\nGET\t198\t70\t401\nGET\t871\t89\t500\nGET\t104\t77\t401\nGET\t145\t118\t401\nGET\t871\t8\t400\nGET\t118\t94\t500\nGET\t1982\t2\t201\nGET\t206\t33\t500\nGET\t172\t18\t200\nGET\t172\t5\t401\nGET\t206\t27\t401\nGET\t145\t89\t401\nGET\t104\t18\t200\nGET\t1415\t13\t200\nGET\t234\t1\t401\nGET\t206\t5\t201\nGET\t118\t89\t500\nGET\t234\t49\t500\nGET\t234\t1\t500\nGET\t198\t101\t201\nGET\t107\t85\t401\nGET\t198\t2\t401\nGET\t1567\t33\t201\nGET\t172\t14\t401\nGET\t543\t68\t400\nGET\t104\t12\t200\nGET\t107\t59\t401\nGET\t172\t59\t200\nGET\t234\t172\t500\nGET\t145\t70\t200\nGET\t1982\t94\t400\nGET\t206\t85\t500\nGET\t1567\t13\t200\nGET\t234\t118\t400\nGET\t543\t44\t200\nGET\t543\t2\t401\nGET\t172\t1\t200\nGET\t107\t3\t400\nGET\t1567\t46\t201\nGET\t206\t107\t500\nGET\t104\t57\t500\nGET\t871\t16\t400\nGET\t104\t18\t200\nGET\t104\t145\t401\nGET\t118\t18\t200\nGET\t172\t83\t500\nGET\t172\t22\t201\nGET\t1982\t50\t401\nGET\t145\t18\t200\nGET\t206\t1\t500\nGET\t101\t5\t201\nGET\t871\t107\t200\nGET\t107\t14\t401\nGET\t101\t83\t400\nGET\t118\t75\t201\nGET\t145\t98\t401\nGET\t198\t15\t401\nGET\t871\t75\t400\nGET\t145\t22\t500\nGET\t101\t5\t200\nGET\t101\t2\t401\nGET\t871\t59\t200\nGET\t234\t38\t400\nGET\t107\t50\t200\nGET\t172\t234\t401\nGET\t145\t85\t200\nGET\t871\t38\t401\nGET\t104\t61\t500\nGET\t1982\t57\t500\nGET\t1567\t89\t400\nGET\t198\t5\t201\nGET\t234\t89\t201\nGET\t198\t50\t201\nGET\t172\t47\t400\n"
       },
       "dateCreated": "Jun 8, 2016 12:19:04 PM",
-      "dateStarted": "Jun 8, 2016 5:52:52 PM",
-      "dateFinished": "Jun 8, 2016 5:52:54 PM",
+      "dateStarted": "Jun 8, 2016 10:38:49 PM",
+      "dateFinished": "Jun 8, 2016 10:38:49 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -1480,13 +1515,13 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "title": "Average response time for different endpoints (in milliseconds)",
+      "title": "Average Response Time for Different Endpoints (in milliseconds)",
       "text": "%sql\nselect httpRequest.userAgent, httpRequest.requestUrl, httpRequest.requestMethod, httpResponse.status, httpResponse.responseSize, httpResponse.responseTime from logs ",
       "authenticationInfo": {
         "user": "admin",
         "ticket": "0235a10d-55a5-4514-b4b2-e9ad7f3424fd"
       },
-      "dateUpdated": "Jun 8, 2016 5:54:15 PM",
+      "dateUpdated": "Jun 8, 2016 10:39:49 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
