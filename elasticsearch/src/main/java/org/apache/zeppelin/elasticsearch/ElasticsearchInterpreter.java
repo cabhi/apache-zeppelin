@@ -620,7 +620,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     GetMappingsResponse mappingResponse = responseFuture.get();
     
     ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>> mappings = mappingResponse.getMappings();
-    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(urlItems[0]);
+    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(indexName);
     MappingMetaData metaData = indexMappings.get(urlItems[1]);
     
     StringBuilder response = new StringBuilder().append("{\"fields\":[");
