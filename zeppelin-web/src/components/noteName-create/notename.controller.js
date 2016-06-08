@@ -50,6 +50,6 @@ angular.module('zeppelinWebApp')
           }
         }
       });
-      return 'Untitled Note ' + newCount;
+      return 'Dashboard ' + newCount;
     };
   });
