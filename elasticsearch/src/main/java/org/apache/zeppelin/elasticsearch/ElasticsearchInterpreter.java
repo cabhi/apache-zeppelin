@@ -614,7 +614,8 @@ public class ElasticsearchInterpreter extends Interpreter {
     IndicesAdminClient indicesAdminClient = client.admin().indices();
     
     GetMappingsRequest request = new GetMappingsRequest();
-    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(urlItems[0]));
+    String indexName = getIndexName(urlItems[0]);
+    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(indexName));
     
     GetMappingsResponse mappingResponse = responseFuture.get();
     
@@ -627,6 +628,16 @@ public class ElasticsearchInterpreter extends Interpreter {
     logger.info("Metadata Json: " + metadataJson);
     
     return JsonFieldParser.getFieldsWithRaw(metadataJson);
+  }
+  
+  private String getIndexName(String indexOrAlias){
+      //try to parse it as an alias, and get first index name
+      try {
+       return client.admin().cluster().prepareState().execute().actionGet().getState().getMetaData().getAliasAndIndexLookup().get(indexOrAlias).getIndices().iterator().next().getIndex();
+      } catch(Exception e){
+	  //parse failed, return input as index name
+	  return indexOrAlias;
+      }
   }
     
   private SearchResponse searchData(String[] urlItems, String query, int size, int from) {
