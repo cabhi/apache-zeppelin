@@ -637,11 +637,9 @@ angular.module('zeppelinWebApp')
 
     $scope.runParagraphs = function (data) {
       $scope.runParagraph(data);
-      $timeout(function () {
-        $rootScope.$broadcast("drillDown", {
-          paraId: $scope.paragraph.id
-        });
-      }, 200)
+      $rootScope.$broadcast("drillDown", {
+        paraId: $scope.paragraph.id
+      });
     };
 
     $scope.scheduleParagraphToRun = function () {
@@ -1285,10 +1283,34 @@ angular.module('zeppelinWebApp')
     $scope.$on('drillDown', function (event, args) {
       var isDerived = $scope.isDerived($scope.paragraph, args.paraId);
       if (isDerived) {
+        var drilldownLevel = getMaxPathToSource($scope.paragraph, args.paraId),
+          latency = drilldownLevel * 300;
         $scope.paragraph.config.drillDown = args.params || $scope.paragraph.config.drillDown;
-        $scope.runParagraph($scope.getEditorValue());
+        $timeout(function () {
+          $scope.runParagraph($scope.getEditorValue());
+        }, latency)
       }
     });
+
+    function getMaxPathToSource(para, sourceId) {
+      var parentPara,
+        parentMaxLevel,
+        maxLevel = 0;
+      if (para && para.config) {
+        _.each(para.config.paramsDerivedFrom, function (paraId) {
+          if (paraId === sourceId) {
+            maxLevel = maxLevel || 1;
+          }
+          parentPara = _.find($scope.parentNote.paragraphs, {id: paraId});
+          parentMaxLevel = getMaxPathToSource(parentPara, sourceId);
+
+          if (parentMaxLevel !== 0 && maxLevel < parentMaxLevel + 1) {
+            maxLevel = parentMaxLevel + 1;
+          }
+        });
+      }
+      return maxLevel;
+    }
 
     $scope.$on('openEditor', function (event) {
       $scope.openEditor();
