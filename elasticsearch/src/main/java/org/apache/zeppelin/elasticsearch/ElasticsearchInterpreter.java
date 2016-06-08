@@ -939,7 +939,7 @@ public class ElasticsearchInterpreter extends Interpreter {
         		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
                   .append(operand).append("*}}"); 
         	  }else{
-            query.append("{\"match_phrase\":").append("{").append(field).append(":")
+            query.append("{\"match\":").append("{").append(field).append(":")
               .append(operand).append("}}");
         	  }
             break; 
