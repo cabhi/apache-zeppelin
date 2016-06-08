@@ -17,41 +17,28 @@
 
 package org.apache.zeppelin.display;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.stream.FileImageInputStream;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Input type.
  */
 public class Input implements Serializable {
    public static final String FILTER_TAB_KEY = "FilterTab";
-  
+   private static Logger logger = LoggerFactory.getLogger(Input.class);
    /**
    * Parameters option.
    */
@@ -361,7 +348,9 @@ public class Input implements Serializable {
       Input input = getInputForm(match);
       Object value;
       if (params.containsKey(input.name)) {
-    	  if(input.name.equalsIgnoreCase("Date")){
+    	  if(input.name.contains("Date")){
+    		  logger.info(">>>>>>>>>>>>>>>>>>> Param name is: >>>>>>>>>>>>> "+input.name);
+    		  logger.info(">>>>>>>>>>>>>>>>>>> In date quote>>>>>>>>>>>>>");
     		  value = "\""+params.get(input.name)+"\"";
     	  }else{
         value = params.get(input.name);
