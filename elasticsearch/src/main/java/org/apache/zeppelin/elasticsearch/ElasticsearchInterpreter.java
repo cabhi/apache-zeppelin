@@ -914,7 +914,7 @@ public class ElasticsearchInterpreter extends Interpreter {
           case "=": 
         	  if(rawFields.contains(field)){
             query.append("{\"term\":").append("{").append(field).append(".raw:")
-              .append(operand.toLowerCase()).append("}}");
+              .append("\"").append(operand).append("\"").append("}}");
         	  }else{
         		  query.append("{\"term\":").append("{").append(field).append(":").append("\"")
                   .append(operand.toLowerCase()).append("\"").append("}}");
@@ -951,7 +951,7 @@ public class ElasticsearchInterpreter extends Interpreter {
                   .append(operand).append("*}}"); 
         	  }else{
             query.append("{\"match\":").append("{").append(field).append(":")
-              .append(operand).append("}}");
+              .append("\"").append(operand).append("\"").append("}}");
         	  }
             break; 
           case "starts with":
