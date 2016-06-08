@@ -944,8 +944,13 @@ public class ElasticsearchInterpreter extends Interpreter {
         	  }
             break; 
           case "starts with":
-            query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
+        	  if(rawFields.contains(field)){
+            query.append("{\"prefix\":").append("{ \"").append(field).append(".raw").append("\":\"")
               .append(operand).append("\"}}");
+        	  }else{
+        		  query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
+                  .append(operand).append("\"}}");
+        	  }
       }
       query.append(",");
     } 
