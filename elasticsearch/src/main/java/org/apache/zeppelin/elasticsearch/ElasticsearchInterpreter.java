@@ -921,13 +921,8 @@ public class ElasticsearchInterpreter extends Interpreter {
         	  }
             break;
           case "!=": 
-        	  if(rawFields.contains(field)){
-            query.append("{\"not\":").append("{\"filter\":").append("{\"term\":")
-              .append("{").append(field).append(".raw:").append("\"").append(operand).append("\"").append("}}}}");
-        	  }else{
-        		  query.append("{\"not\":").append("{\"filter\":").append("{\"term\":")
-                  .append("{").append(field).append(":").append("\"").append(operand).append("\"").append("}}}}");
-        	  }
+            query.append("{\"not\":").append("{\"filter\":").append("{\"match_phrase\":")
+              .append("{").append(field).append("\":").append(operand).append("\"").append("}}}}"); 	
             break;
           case "<": 
             query.append("{\"range\":").append("{").append(field).append(":")
@@ -947,8 +942,8 @@ public class ElasticsearchInterpreter extends Interpreter {
             break;
           case "contains": 
         	  if(isValidWord(operand)){
-        		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
-                  .append(operand).append("*}}"); 
+        		  query.append("{\"wildcard\":").append("{").append(field).append(":")
+                  .append(operand.toLowerCase()).append("}}"); 
         	  }else{
             query.append("{\"match\":").append("{").append(field).append(":")
               .append("\"").append(operand).append("\"").append("}}");
@@ -956,8 +951,13 @@ public class ElasticsearchInterpreter extends Interpreter {
             break; 
           case "starts with":
         	  if(rawFields.contains(field)){
-            query.append("{\"prefix\":").append("{ \"").append(field).append(".raw").append("\":\"")
+        	if(isValidWord(field)){
+              query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
               .append(operand).append("\"}}");
+        		  }else{
+        			  query.append("{\"prefix\":").append("{ \"").append(field).append(".raw").append("\":\"")
+                      .append(operand).append("\"}}");
+        		  }
         	  }else{
         		  query.append("{\"prefix\":").append("{ \"").append(field).append("\":\"")
                   .append(operand).append("\"}}");
