@@ -945,8 +945,8 @@ logger.info("Entered processGetFields ");
             break;
           case "contains": 
         	  if(isValidWord(operand)){
-        		  query.append("{\"wildcard\":").append("{").append(field).append(":")
-                  .append(operand.toLowerCase()).append("}}"); 
+        		  query.append("{\"wildcard\":").append("{").append(field).append(":*")
+                  .append(operand.toLowerCase()).append("*}}"); 
         	  }else{
             query.append("{\"match\":").append("{").append(field).append(":")
               .append("\"").append(operand).append("\"").append("}}");
