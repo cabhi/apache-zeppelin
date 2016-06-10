@@ -973,7 +973,7 @@ logger.info("Entered processGetFields ");
   }
   
   public static boolean isValidWord(String inputString) {
-    return inputString.matches("[A-Za-z]*");
+    return inputString.matches("[A-Za-z0-9]*");
   }
   
   private static String enhanceCommand(String cmd){
