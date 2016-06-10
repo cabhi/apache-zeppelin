@@ -60,6 +60,7 @@ import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
 import org.elasticsearch.search.aggregations.metrics.InternalMetricsAggregation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonatype.inject.Sisu;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -181,7 +182,6 @@ public class ElasticsearchInterpreter extends Interpreter {
     if (StringUtils.isEmpty(cmd) || StringUtils.isEmpty(cmd.trim())) {
       return new InterpreterResult(InterpreterResult.Code.SUCCESS);
     }
-    cmd = expandedCommand(cmd, interpreterContext.getConfig().get(Input.FILTER_TAB_KEY));
     cmd = enhanceCommand(cmd);
     logger.info("Run Enhanced Elasticsearch command '" + cmd + "'");
 
@@ -259,7 +259,7 @@ public class ElasticsearchInterpreter extends Interpreter {
         return processCount(urlItems, data);
       }
       else if ("search".equalsIgnoreCase(method)) {
-        return processSearch(urlItems, data, currentResultFrom, currentResultSize);
+        return processSearch(urlItems, data, interpreterContext.getConfig().get(Input.FILTER_TAB_KEY),currentResultFrom, currentResultSize);
       }
       else if ("index".equalsIgnoreCase(method)) {
         return processIndex(urlItems, data);
@@ -268,6 +268,7 @@ public class ElasticsearchInterpreter extends Interpreter {
         return processDelete(urlItems);
       }
       else if ("getFields".equalsIgnoreCase(method)) {
+    	  logger.info(">>> Returning fields from interpret getFileds >>>> ");
         return processGetFields(urlItems);
       }
 
@@ -466,17 +467,23 @@ public class ElasticsearchInterpreter extends Interpreter {
    * @return Result of the search request, it contains a tab-formatted string of the matching hits
  * @throws ExecutionException 
    */
-  private InterpreterResult processSearch(String[] urlItems, String data, int from, int size) 
+  private InterpreterResult processSearch(String[] urlItems, String data,Object params, int from, int size) 
       throws ExecutionException {
+	  String returnedData=new String();
+	  logger.info("Entered processSearch method with urlItems with size: "+urlItems.length+" Data is: "+data);
 
     if (urlItems.length > 2) {
+    	logger.info("Returning BAD URL exception from processSearch method:");
       return new InterpreterResult(InterpreterResult.Code.ERROR,
                                    "Bad URL (it should be /index1,index2,.../type1,type2,...)");
     }
-    
-    
-    
-    Request req = new Request(urlItems, data, from, size);
+    if(data!=null){
+    	logger.info("data is not null");
+    	returnedData = expandedCommand(urlItems, data,params);
+    }
+    logger.info("Data is null so proceeding");
+    Request req = new Request(urlItems, returnedData, from, size);
+    logger.info("returning from processSearch method");
     return elasticCache.get(req);
     
   }
@@ -554,7 +561,7 @@ public class ElasticsearchInterpreter extends Interpreter {
  * @throws IOException 
    */
   private InterpreterResult processGetFields(String[] urlItems) throws InterruptedException, ExecutionException, IOException {
-
+logger.info("Entered processGetFields ");
     if (urlItems.length != 2 
         || StringUtils.isEmpty(urlItems[0]) 
         || StringUtils.isEmpty(urlItems[1])) {
@@ -565,22 +572,17 @@ public class ElasticsearchInterpreter extends Interpreter {
     IndicesAdminClient indicesAdminClient = client.admin().indices();
     
     GetMappingsRequest request = new GetMappingsRequest();
-    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(urlItems[0]));
-    
+    String indexName = getIndexName(urlItems[0]);
+    ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(indexName));
     GetMappingsResponse mappingResponse = responseFuture.get();
-    
     ImmutableOpenMap<String, ImmutableOpenMap<String, MappingMetaData>> mappings = mappingResponse.getMappings();
-    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(urlItems[0]);
+    ImmutableOpenMap<String, MappingMetaData> indexMappings = mappings.get(indexName);
     MappingMetaData metaData = indexMappings.get(urlItems[1]);
-    
     StringBuilder response = new StringBuilder().append("{\"fields\":[");
     String metadataJson = metaData.source().string();
-    logger.info("Metadata Json: " + metadataJson);
-    
     //parse fields from metadata
     Set<String> fields = JsonFieldParser.getAllFields(metadataJson);
     String prefix = "";
-    
     //add fields to the response
     for(String field: fields) {
 	response.append(prefix).append("\"").append(field).append("\"");
@@ -588,7 +590,7 @@ public class ElasticsearchInterpreter extends Interpreter {
     }
     
     response.append("]}");
-    logger.info("Returning Fields: " + response);
+    logger.info("Returning Fields:" + response);
     return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TEXT, response.toString());
   }
   
@@ -601,20 +603,13 @@ public class ElasticsearchInterpreter extends Interpreter {
  * @throws InterruptedException 
  * @throws IOException 
    */
-  private Set<String> processGetFieldsWithRaw(String cmd) throws InterruptedException, ExecutionException, IOException {
-    final String[] lines = StringUtils.split(cmd.trim(), "\n", 3);
-    String searchLine = null;
-    for(String line: lines){
-      if(line.trim().startsWith("search"))
-        searchLine = line;
-    }
-    
-    String url = StringUtils.split(searchLine.trim(), " ", 3)[1];
-    String[] urlItems = StringUtils.split(url.trim(), "/", 3);
+  private Set<String> processGetFieldsWithRaw(String [] urlItems) throws InterruptedException, ExecutionException, IOException {
+	  logger.info("Entered processGetFieldsWithRaw method with cmd value: ");
     IndicesAdminClient indicesAdminClient = client.admin().indices();
     
     GetMappingsRequest request = new GetMappingsRequest();
     String indexName = getIndexName(urlItems[0]);
+    logger.info("index name in processGetFieldsWithRaw method: "+indexName);
     ActionFuture<GetMappingsResponse> responseFuture = indicesAdminClient.getMappings(request.indices(indexName));
     
     GetMappingsResponse mappingResponse = responseFuture.get();
@@ -626,16 +621,19 @@ public class ElasticsearchInterpreter extends Interpreter {
     StringBuilder response = new StringBuilder().append("{\"fields\":[");
     String metadataJson = metaData.source().string();
     logger.info("Metadata Json: " + metadataJson);
-    
+    logger.info("exiting processGetFieldsWithRaw method : ");
     return JsonFieldParser.getFieldsWithRaw(metadataJson);
   }
   
   private String getIndexName(String indexOrAlias){
+	  logger.info("entered getIndexName method with value: "+indexOrAlias);
       //try to parse it as an alias, and get first index name
       try {
+    	  logger.info("exiting getIndexName method");
        return client.admin().cluster().prepareState().execute().actionGet().getState().getMetaData().getAliasAndIndexLookup().get(indexOrAlias).getIndices().iterator().next().getIndex();
       } catch(Exception e){
 	  //parse failed, return input as index name
+    	  logger.error("There is exception in getIndexName method with message: "+e.getLocalizedMessage());
 	  return indexOrAlias;
       }
   }
@@ -884,13 +882,17 @@ public class ElasticsearchInterpreter extends Interpreter {
     compile("\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*\\{[\\s]*\"[^\"]+\"[\\s]*:[\\s]*}[\\s]*}[\\s]*");
    
   
-  private String expandedCommand(String cmd, Object params) {
+  private String expandedCommand(String[] urlItems,String cmd, Object params) {
+	  logger.info("Entered expandedCommand method");
       String expanded;
     try {
-	expanded = getFilterTabQuery(params, processGetFieldsWithRaw(cmd));
+	expanded = getFilterTabQuery(params, processGetFieldsWithRaw(urlItems));
     } catch (Exception e) {
+    	logger.info("There is exception in expandedCommand method with message: "+e.getMessage());
+    	e.printStackTrace();
 	return cmd;
     }
+    logger.info("Exiting expandedCommand method with value:");
       return cmd.replaceFirst(Input.FILTER_TAB_KEY, expanded);
   }
   
@@ -899,6 +901,7 @@ public class ElasticsearchInterpreter extends Interpreter {
 	  logger.info("Entering getFilterTabQuery method with filter tab value: "+filterTabValue);
 	  if(filterTabValue==null){
 		  filterTabValue="";
+		  logger.info("Exiting getFilterTabQuery");
 		  return filterTabValue.toString();
 	  }
 	  
@@ -965,6 +968,7 @@ public class ElasticsearchInterpreter extends Interpreter {
       }
       query.append(",");
     } 
+    logger.info("Exiting getFilterTabQuery");
     return query.toString();
   }
   
