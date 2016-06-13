@@ -16,9 +16,9 @@
 
 angular
   .module('zeppelinWebApp')
-  .controller('SearchResultCtrl', function($scope, $routeParams, searchService) {
+  .controller('SearchResultCtrl', function($scope, $stateParams, searchService) {
 
-  var results = searchService.search({'q': $routeParams.searchTerm}).query();
+  var results = searchService.search({'q': $stateParams.searchTerm}).query();
 
   results.$promise.then(function(result) {
     $scope.notes = result.body.map(function(note) {
@@ -30,7 +30,7 @@ angular
 
       note.id = note.id.replace('paragraph/', '?paragraph=') +
         '&term=' +
-        $routeParams.searchTerm;
+        $stateParams.searchTerm;
 
       return note;
     });

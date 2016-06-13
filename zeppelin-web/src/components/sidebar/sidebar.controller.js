@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module("zeppelinWebApp")
-  .controller("sidebarCtrl", function ($scope, $rootScope, $route, $location, notebookListDataFactory) {
+  .controller("sidebarCtrl", function ($scope, $rootScope, $stateParams, $location, notebookListDataFactory) {
     $scope.nodes = notebookListDataFactory.categories;
 
     $scope.isRouteActive = function (node) {
-      var notebookId = $route.current.params.noteId;
+      var notebookId = $stateParams.noteId;
       if (node.isRoot) {
         return !!_.find(node.children, function (leaf) {
           return leaf.id === notebookId;
@@ -22,6 +22,7 @@ angular.module("zeppelinWebApp")
         var firstNote = $scope.nodes[0] && $scope.nodes[0].children && $scope.nodes[0].children[0];
         if (firstNote) {
           $rootScope.firstNoteId = firstNote.id;
+          $rootScope.$broadcast('firstNoteId', firstNote.id);
         }
       }
     });

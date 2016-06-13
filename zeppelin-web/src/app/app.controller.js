@@ -13,7 +13,7 @@
  */
 'use strict';
 
-angular.module('zeppelinWebApp').controller('MainCtrl', function($scope, $rootScope, $window) {
+angular.module('zeppelinWebApp').controller('AppCtrl', function($scope, $rootScope, $window) {
   $scope.looknfeel = 'default';
 
   var init = function() {

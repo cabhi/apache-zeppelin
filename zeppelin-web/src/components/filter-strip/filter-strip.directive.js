@@ -15,7 +15,7 @@ angular.module('zeppelinWebApp')
       controller: "filterStripCtrl"
     };
   });
-angular.module('zeppelinWebApp').controller('filterStripCtrl', function ($scope, $route, $routeParams, $location, $rootScope) {
+angular.module('zeppelinWebApp').controller('filterStripCtrl', function ($scope, $location, $rootScope) {
   $scope.filter = {};
   $scope.saveFilter = saveFilter;
   $scope.removeFilter = removeFilter;

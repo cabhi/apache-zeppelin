@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('zeppelinWebApp')
-  .controller('NavCtrl', function ($scope, $rootScope, $routeParams, $http, $location, baseUrlSrv, notebookListDataFactory, websocketMsgSrv, arrayOrderingSrv) {
+  .controller('NavCtrl', function ($scope, $rootScope, $stateParams, $http, $location, baseUrlSrv, notebookListDataFactory, websocketMsgSrv, arrayOrderingSrv, principal) {
   /** Current list of notes (ids) */
 
   $scope.showLoginWindow = function () {
@@ -72,22 +72,18 @@ angular.module('zeppelinWebApp')
   });
 
   $scope.logout = function () {
-    $http.post(baseUrlSrv.getRestApiBase() + '/login/logout')
+    $http.post(baseUrlSrv.getRestApiBase() + '/logout')
       .success(function (data, status, headers, config) {
         $rootScope.userName = '';
         $rootScope.ticket.principal = '';
         $rootScope.ticket.ticket = '';
         $rootScope.ticket.roles = '';
-        BootstrapDialog.show({
-          message: 'Logout Success'
-        });
         setTimeout(function () {
           window.location = '#';
           window.location.reload();
         }, 1000);
-      }).error(function (data, status, headers, config) {
-      console.log('Error %o %o', status, data.message);
-    });
+        principal.logout();
+      });
   };
 
   $scope.search = function () {
@@ -99,7 +95,7 @@ angular.module('zeppelinWebApp')
   }
 
   function isActive(noteId) {
-    return ($routeParams.noteId === noteId);
+    return ($stateParams.noteId === noteId);
   }
 
   vm.loadNotes = loadNotes;

@@ -14,11 +14,14 @@
 
 'use strict';
 
-angular.module('loginApp').controller('LoginCtrl',
-  function($scope, $rootScope, $http, $httpParamSerializer, baseUrlSrv) {
+angular.module('zeppelinWebApp').controller('LoginCtrl',
+  function ($scope, $rootScope, $http, $httpParamSerializer, baseUrlSrv) {
     $scope.loginParams = {};
-    $scope.login = function() {
 
+    $scope.login = function () {
+      if ($rootScope.token) {
+        $state.go('default');
+      }
       $http({
         method: 'POST',
         url: baseUrlSrv.getRestApiBase() + '/login',
@@ -34,7 +37,6 @@ angular.module('loginApp').controller('LoginCtrl',
       }, function errorCallback(errorResponse) {
         $scope.loginParams.errorText = 'The username and password that you entered don\'t match.';
       });
-
     };
   }
 );

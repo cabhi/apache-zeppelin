@@ -13,7 +13,7 @@
  */
 'use strict';
 
-angular.module('zeppelinWebApp').controller('ConfigurationCtrl', function ($scope, $route, $routeParams, $location,
+angular.module('zeppelinWebApp').controller('ConfigurationCtrl', function ($scope, $location,
   $rootScope, $http, baseUrlSrv) {
   $scope.configrations = [];
   $scope._ = _;

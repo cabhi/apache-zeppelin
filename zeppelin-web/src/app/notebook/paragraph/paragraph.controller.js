@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('zeppelinWebApp')
-  .controller('ParagraphCtrl', function ($scope, $rootScope, $route, $window, $element, $routeParams, $location,
+  .controller('ParagraphCtrl', function ($scope, $rootScope, $route, $window, $element, $stateParams, $location,
     $timeout, $compile, websocketMsgSrv, ngToast, $interval, $sce, DataTypes, utils) {
     var ANGULAR_FUNCTION_OBJECT_NAME_PREFIX = '_Z_ANGULAR_FUNC_';
     $scope.parentNote = null;
@@ -109,7 +109,7 @@ angular.module('zeppelinWebApp')
       angularBind: function (varName, value, paragraphId) {
         // Only push to server if there paragraphId is defined
         if (paragraphId) {
-          websocketMsgSrv.clientBindAngularObject($routeParams.noteId, varName, value, paragraphId);
+          websocketMsgSrv.clientBindAngularObject($stateParams.noteId, varName, value, paragraphId);
         } else {
           ngToast.danger({
             content: 'Please provide a \'paragraphId\' when calling ' +
@@ -123,7 +123,7 @@ angular.module('zeppelinWebApp')
       angularUnbind: function (varName, paragraphId) {
         // Only push to server if paragraphId is defined
         if (paragraphId) {
-          websocketMsgSrv.clientUnbindAngularObject($routeParams.noteId, varName, paragraphId);
+          websocketMsgSrv.clientUnbindAngularObject($stateParams.noteId, varName, paragraphId);
         } else {
           ngToast.danger({
             content: 'Please provide a \'paragraphId\' when calling ' +
@@ -306,14 +306,14 @@ angular.module('zeppelinWebApp')
       var selectedPref = _.map(prefs, function (item) {
         return {
           field: item,
-          name: _.startCase(_.last(item.split('.'))),
+          name: item,
           selected: true
         };
       });
       var unselectedPref = _.map(unselectedFields, function (item) {
         return {
           field: item,
-          name: _.startCase(_.last(item.split('.'))),
+          name: item,
           selected: false
         };
       });
@@ -472,7 +472,7 @@ angular.module('zeppelinWebApp')
 
     $scope.getIframeDimensions = function () {
       if ($scope.asIframe) {
-        var paragraphid = '#' + $routeParams.paragraphId + '_container';
+        var paragraphid = '#' + $stateParams.paragraphId + '_container';
         var height = angular.element(paragraphid).height();
         return height;
       }
@@ -1537,7 +1537,7 @@ angular.module('zeppelinWebApp')
           }
           $scope.data.push(row);
         }
-        $scope.gridOptions.columnDefs = colSettings && colSettings[$routeParams.noteId] ? colSettings[$routeParams.noteId] : colDef;
+        $scope.gridOptions.columnDefs = colSettings && colSettings[$stateParams.noteId] ? colSettings[$stateParams.noteId] : colDef;
       };
 
       var retryRenderer = function () {

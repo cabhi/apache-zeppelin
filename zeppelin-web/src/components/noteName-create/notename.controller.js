@@ -15,7 +15,7 @@
 'use strict';
 
 angular.module('zeppelinWebApp')
-  .controller('NotenameCtrl', function ($scope, notebookListDataFactory, $rootScope, $routeParams, websocketMsgSrv) {
+  .controller('NotenameCtrl', function ($scope, notebookListDataFactory, $rootScope, $stateParams, websocketMsgSrv) {
     var vm = this;
     vm.clone = false;
     vm.notes = notebookListDataFactory;
@@ -26,7 +26,7 @@ angular.module('zeppelinWebApp')
       if (!vm.clone) {
         vm.websocketMsgSrv.createNotebook('/' + $scope.note.category + '/' + $scope.note.notename);
       } else {
-        var noteId = $routeParams.noteId;
+        var noteId = $stateParams.noteId;
         vm.websocketMsgSrv.cloneNotebook(noteId, $scope.note.notename);
       }
     };
